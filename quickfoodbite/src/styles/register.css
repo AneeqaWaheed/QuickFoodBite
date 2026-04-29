@@ -1,0 +1,76 @@
+/* Apply a circular shadow effect to the selected radio button */
+.gender-container input[type="radio"]:checked {
+    accent-color: red; /* Ensure the radio button is red */
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.75));
+  }
+  
+  /* Optional: Apply the red color to the labels when the radio button is checked */
+  .gender-container input[type="radio"]:checked + .radio-label {
+    color: red;
+    font-weight: bold;
+  }
+/* Optional: Adjustments for smaller screens */
+/* General styles */
+.register-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  
+  .register-form {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .register-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .register-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+  
+  /* Media query for screen width 1296px and below */
+  @media (max-width: 1296px) {
+    .register-container {
+      flex-direction: column;
+    }
+  
+    .register-form {
+      width: 90%;
+      padding: 10px;
+    }
+  
+    .register-image {
+      width: 100%;
+      margin-top: 20px;
+    }
+  
+    .register-image img {
+      max-width: 100%;
+    }
+  
+    /* Resize form elements */
+    .register-form .form-label {
+      font-size: 14px;
+    }
+  
+    .register-form .form-control {
+      font-size: 14px;
+      padding: 5px 10px;
+    }
+  
+    .register-form button {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+  

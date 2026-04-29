@@ -1,0 +1,57 @@
+    .story-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* padding: 20px; */
+    overflow-x: hidden;
+  }
+  
+  .story-para {
+    
+    
+    padding: 20px;
+  }
+  
+  .story-img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .story-img img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+
+  .story-heading{
+  font-family: "Edu VIC WA NT Beginner", cursive;
+  font-optical-sizing: auto;
+  font-weight:700;
+  font-style: normal;
+  }
+  /* Media query for screen width 1296px and below */
+  @media (max-width: 550px) {
+    .story-container {
+      flex-direction: column;
+    }
+  
+    .story-para {
+      width: 90%;
+      padding: 10px;
+    }
+  
+    .story-img {
+      width: 100%;
+      margin-top: 20px;
+    }
+  
+    .story-img img {
+      max-width: 100%;
+    }
+  
+   
+  }
+  

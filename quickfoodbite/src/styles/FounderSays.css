@@ -1,0 +1,29 @@
+.founder-text {
+    /* font-size: 1.25rem;
+    font-style: italic; */
+    font-family: LibreBaskervilleRg;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+  }
+  
+  img.rounded-circle {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  .FounderName {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 12px;
+    color: #fc0505;
+    letter-spacing: 2px;
+    margin-top: 32px;
+}
+.FDes {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+    line-height: 0px;
+    letter-spacing: 2px
+}

@@ -1,0 +1,33 @@
+.nmbrs{
+    font-family: LibreBaskervilleRg;
+    font-size: 48px;
+}
+.prms{
+    font-family: LibreBaskervilleRg;
+    font-size: 48px;
+    color: rgb(149, 39, 39); 
+}
+.story-heading{
+    font-family: "Edu VIC WA NT Beginner", cursive;
+    font-optical-sizing: auto;
+    font-weight:300;
+    font-style: normal;
+    margin: 0px 0px;
+    }
+.underlined-heading {
+    display: inline-block;
+    position: relative;
+    font-size: px;
+    font-weight: bold;
+    padding-bottom: 20px;
+  }
+  
+  .underlined-heading::after {
+    content: '';
+    display: block;
+    width: 50px; /* Adjust the width as needed */
+    height: 3px; /* Adjust the thickness */
+    background-color: red; /* Adjust the color */
+    margin: 0 0;
+    margin-top: 15px;
+  }

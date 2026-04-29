@@ -1,0 +1,32 @@
+.burger-categories {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+  
+  .burger-category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    text-align: center;
+  }
+  
+  .burger-image {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ff6347; /* Optional: adds a border around the image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow */
+  }
+  
+  .burger-title {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+  }
+  

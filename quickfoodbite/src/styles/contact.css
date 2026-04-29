@@ -1,0 +1,139 @@
+.story-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* padding: 20px; */
+    overflow-x: hidden;
+  }
+  
+  .story-para {
+    flex: 1;
+    height: 450px;
+  
+  }
+  
+  .story-img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .story-img iframe {
+    width: 100%;
+    /* max-width: 500px; */
+    /* height: auto; */
+  }
+
+  .story-heading{
+  font-family: "Edu VIC WA NT Beginner", cursive;
+  font-optical-sizing: auto;
+  font-weight:700;
+  font-style: normal;
+  margin: 20px 100px;
+  }
+
+  .underlined-heading {
+    display: inline-block;
+    position: relative;
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 5px;
+  }
+  
+  .underlined-heading::after {
+    content: '';
+    display: block;
+    width: 50px; /* Adjust the width as needed */
+    height: 2px; /* Adjust the thickness */
+    background-color: red; /* Adjust the color */
+    margin: 0 0;
+    margin-top: 5px;
+  }
+  .contact-form{
+    margin: 0 100px;
+  }
+
+  /* Media query for screen width 1296px and below */
+  @media (max-width: 700px) {
+    .story-container {
+      flex-direction: column;
+    }
+  
+    .story-para {
+      width: 90%;
+      padding: 10px;
+    }
+  
+    .story-img {
+      width: 100%;
+      margin-top: 20px;
+    }
+  
+    .story-img iframe {
+      max-width: 90%;
+    }
+    .contact-form {
+      margin: 0;
+    }
+   
+  }
+  
+/* ✅ Feedback Heading */
+.fdbck {
+  font-size: 48px;
+  text-align: center;
+}
+
+/* ✅ Image Styling */
+.feedback-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* ✅ Image Container */
+.img-container {
+  justify-content: end;
+  margin-top: 10px;
+}
+
+/* ✅ Media Query for Tablets */
+@media (max-width: 768px) {
+  .fdbck {
+    font-size: 36px;
+  }
+
+  .feedback-img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .img-container {
+    justify-content: center;
+  }
+}
+
+/* ✅ Media Query for Mobile */
+@media (max-width: 576px) {
+  .fdbck {
+    font-size: 28px;
+  }
+
+  .feedback-img {
+    width: 120px;
+    height: 120px;
+    margin-top: 10px;
+  }
+
+  .p-3 {
+    font-size: 16px;
+    margin: 0 10px;
+  }
+
+  .img-container {
+    justify-content: center;
+  }
+}

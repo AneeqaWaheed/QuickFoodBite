@@ -1,0 +1,31 @@
+.category-filter ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 0;
+  }
+  
+  .category-filter li {
+    list-style: none;
+  }
+  
+  .category-filter a:hover {
+    color: red;
+    text-decoration: underline;
+  }
+  
+  /* ✅ Media Query for Small Screens */
+  @media (max-width: 768px) {
+    .category-filter ul {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .category-filter a {
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+    }
+  }
+  

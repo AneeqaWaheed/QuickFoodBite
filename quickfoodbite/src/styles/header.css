@@ -1,0 +1,102 @@
+/* Existing Styles */
+.header-section {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+}
+
+.header-image {
+  width: 100%;
+  height: 85%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.header-text {
+  position: absolute;
+  top: 40%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  z-index: 2;
+  padding: 20px;
+  font-family: "Edu VIC WA NT Beginner", cursive;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.header-text h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.header-text p {
+  font-size: 1.5rem;
+}
+
+/* ✅ Responsive Adjustments */
+@media (max-width: 1024px) {
+  .header-text {
+    top: 45%;
+    left: 50%;
+  }
+
+  .header-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .header-text p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-section {
+    height: 65vh;
+  }
+
+  .header-text {
+    top: 50%;
+    left: 50%;
+  }
+
+  .header-text h1 {
+    font-size: 2rem;
+  }
+
+  .header-text p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-section {
+    height: 50vh;
+  }
+
+  .header-text {
+    top: 55%;
+    left: 50%;
+    padding: 10px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-text p {
+    font-size: 1rem;
+  }
+
+  .header-text .btn {
+    width: 80%;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+}

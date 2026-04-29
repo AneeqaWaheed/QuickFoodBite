@@ -1,0 +1,33 @@
+.navbar {
+  font-family: "Play", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  /* position: absolute; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Make sure it's above the image */
+  /* Semi-transparent background */
+  padding: 10px 20px;
+}
+.active {
+  border-bottom: 2px solid red;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+.faburger {
+  display: inline-block;
+  font-size: 1.5em;
+  margin: 10px;
+}
+@media (max-width: 991px) {
+  .faburger {
+    display: none;
+  }
+  .navbar-brand {
+    display: none;
+  }
+}
