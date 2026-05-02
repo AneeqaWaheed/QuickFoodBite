@@ -34,7 +34,7 @@ const GeneralLayout = ({
 };
 
 GeneralLayout.defaultProps = {
-  title: "BurgerShop",
+  title: "QuickFoodBite",
   minHeight: "80vh",
   description: "Burger Shop for killing your hunger",
   keywords: "Burger, ecommerce, food, fast food, hunger",

@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
-import AdminMenu from "../../Components/Layout/AdminMenu";
-import bgImage from "../../assets/bg-boxed.jpg";
+import React, { useEffect, useState }  from "react";
+import { useAuth } from "../../context/auth";
+import pickUp from "../../assets/pickUp.png";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/auth";
-const AdminOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(5); // Number of products per page
- const [auth, setAuth] = useAuth();
+import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
+import SimpleLayout from "../../Components/Layout/SimpleLayout";
+
+const ModeratorOrders = () => {
+    const [orders, setOrders] = useState([]);
+      const [currentPage, setCurrentPage] = useState(1);
+      const [productsPerPage] = useState(5); 
+    const [auth, setAuth] = useAuth();
+    console.log("Auth user:", auth)
     const navigate = useNavigate();
    const handleLogout = () => {
       toast.success("Logout Successfully");
@@ -26,7 +28,7 @@ const AdminOrders = () => {
   
       navigate("/login");
     };
-  useEffect(() => {
+    useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
@@ -63,56 +65,51 @@ const AdminOrders = () => {
     }
   };
 
-
-
   return (
-      <>
-      <nav
-      className="navbar navbar-expand-lg"
-      style={{ backgroundColor: "#000", padding: "10px 20px" }}
-    >
-      <div className="container-fluid d-flex justify-content-end">
-    
-        <NavLink
-          onClick={handleLogout}
-          to="/login"
-          className="nav-link text-white"
-          style={{ fontWeight: "500" }}
-        >
-          Logout
-        </NavLink>
-    
-      </div>
-    </nav>
-    <div
-        className="container-fluid"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-          height: "100vh",
-          width: "100%",
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <div
-          className="row"
+   <>
+ <SimpleLayout title="Moderator - Profile">
+
+  {/* NAVBAR */}
+  <nav className="navbar navbar-dark bg-dark px-3">
+    <div className="container-fluid justify-content-end">
+      <button onClick={handleLogout} className="btn btn-outline-light btn-sm">
+        Logout
+      </button>
+    </div>
+  </nav>
+
+  {/* MAIN SECTION */}
+   <div
+          className="container-fluid"
           style={{
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            backgroundImage: `url(${pickUp})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundAttachment: "fixed",
             height: "100vh",
             width: "100%",
-            margin: "0px",
-            padding: "20px",
-            overflowY: "auto",
+            margin: 0,
+            padding: 0,
           }}
         >
-          {/* Sidebar for Admin Menu */}
-          <div className="col-lg-3 col-md-4 mb-4">
-            <AdminMenu />
-          </div>
+          <div
+            className="row"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              height: "100vh",
+              width: "100%",
+              margin: "0px",
+              padding: "20px",
+              overflowY: "auto",
+            }}
+          >
+      {/* SIDEBAR */}
+      <div className="col-md-3 mb-4 mb-md-0">
+        <div className="bg-black p-3 rounded shadow">
+          <ModeratorMenu />
+        </div>
+      </div>
 
           {/* Main Content */}
           <div className="col-lg-9 col-md-8 rounded">
@@ -172,8 +169,10 @@ const AdminOrders = () => {
           </div>
         </div>
       </div>
-    </>
+
+</SimpleLayout>
+   </>
   );
 };
 
-export default AdminOrders;
+export default ModeratorOrders;

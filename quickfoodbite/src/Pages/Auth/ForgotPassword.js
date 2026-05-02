@@ -39,7 +39,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <GeneralLayout title={"ForgotPassword - BurgerShop"}>
+    <GeneralLayout title={"ForgotPassword - QuickFoodBite"}>
       <div className="register-container">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Forgot Password</h1>

@@ -41,7 +41,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <GeneralLayout title={"Reset Password - BurgerShop"}>
+    <GeneralLayout title={"Reset Password - QuickFoodBite"}>
       <div className="register-container">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Reset Password</h1>

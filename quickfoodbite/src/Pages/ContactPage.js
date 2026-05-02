@@ -4,7 +4,7 @@ import ContactForm from "../Components/ContactForm";
 import "../styles/ContactPage.css";
 const ContactPage = () => {
   return (
-    <Layout title="Contact - BurgerShop">
+    <Layout title="Contact - QuickFoodBite">
       <div className="container d-flex flex-column justify-content-center align-items-center">
         <h1 className="text-danger fw-bold fdbck">Your FeedBack</h1>
         <p className="p-3 m-4 text-center fs-4">

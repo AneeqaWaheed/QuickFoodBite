@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+import SimpleLayout from "../../Components/Layout/SimpleLayout.js";
 import "../../styles/register.css";
 
 const Register = () => {
@@ -36,7 +36,7 @@ const Register = () => {
   };
 
   return (
-    <GeneralLayout title={"Register - BurgerShop"}>
+    <SimpleLayout title={"Register - QuickFoodBite"}>
       <div className="register-container">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Registration Form</h1>
@@ -233,7 +233,7 @@ const Register = () => {
           <img src="/Images/register.png" alt="Registration Illustration" />
         </div> */}
       </div>
-    </GeneralLayout>
+    </SimpleLayout>
   );
 };
 

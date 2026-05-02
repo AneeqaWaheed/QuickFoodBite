@@ -4,11 +4,14 @@ import { FaBurger } from "react-icons/fa6";
 import { useAuth } from "../../context/auth";
 import { toast } from "react-toastify";
 import "../../styles/navbar.css";
+import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../context/cart";
+import CartPage from "../../Pages/Orders/orders";
 const Navbar = ({ backgroundColor, textColor, linkColor, position }) => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
-  const { cart, setCart } = useCart();
+  const { cart, setCart, setCartOpen, cartOpen } = useCart();
+
   const handleLogout = () => {
     toast.success("Logout Successfully");
     setAuth({
@@ -24,7 +27,7 @@ const Navbar = ({ backgroundColor, textColor, linkColor, position }) => {
   return (
     <>
       <nav
-        className="navbar navbar-expand-lg "
+        className="navbar navbar-expand-lg bg-light"
         style={{ backgroundColor: backgroundColor, position: position }}
       >
         <div className="container-fluid">
@@ -49,51 +52,37 @@ const Navbar = ({ backgroundColor, textColor, linkColor, position }) => {
             </svg>
           </button>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <Link className="navbar-brand text-white fw-bold" to="/">
-              <FaBurger className="faburger" />
-              QUICKFOODBITE
-            </Link>
-            {/* <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link  text-white"
-                  aria-current="page"
-                  to="/home"
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link  text-white"
-                  aria-current="page"
-                  to="/"
-                >
-                  Menu
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link text-white" to="/about">
-                  About
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/contact" className="nav-link  text-white">
-                  Contact
-                </NavLink>
-              </li>
-            </ul> */}
+            <Link
+  className="navbar-brand fw-bold"
+  to="/"
+  style={{ color: "rgb(225 29 72)" }}
+>
+  <FaBurger className="faburger" />
+  QUICKFOODBITE
+</Link>
+           
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
              
               <li className="nav-item">
-                <NavLink className="nav-link text-white" to="/cart">
-                  Cart {cart.length > 0 ? `(${cart.length})` : "(0)"}
-                </NavLink>
+        <div onClick={() => setCartOpen(true)}>
+    <span className="cart-circle">
+      <>
+      <FaShoppingCart /> ({cart.length})
+     
+      </>
+    </span>
+
+  
+
+  </div>
+
+
               </li>
             </ul>
           </div>
         </div>
       </nav>
+      <CartPage />
     </>
   );
 };

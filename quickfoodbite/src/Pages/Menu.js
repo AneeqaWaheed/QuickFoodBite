@@ -77,12 +77,12 @@ const styles = {
   };
 
   return (
-    <Layout title="Menu - BurgerShop">
-    <div className="container-fluid ">
+    <Layout title="Menu - QuickFoodBite">
+  
   <div className="text-center">
   
     <div
-  className="mb-4 "
+  className="mb-4 mt-0"
   style={{
     display: "flex",
     overflowX: "auto",
@@ -161,7 +161,7 @@ const styles = {
       )}
     </div>
   </div>
-</div>
+
     </Layout>
   );
 };

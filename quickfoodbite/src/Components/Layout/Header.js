@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <>
-      <Navbar position="absolute" />
-      <section className="header-section m-0">
+      <Navbar position="fixed" />
+      <section className="header-section m-0 mb-0 p-0">
         <img
           src="/Images/header1.jpg"
           alt="My Image"
@@ -15,11 +15,7 @@ const Header = () => {
         <div className="header-text">
           <h1>QUICKFOODBITE</h1>
           <p>Where Every Bite is a Flavor Explosion.</p>
-          <Link to={"/"}>
-            <button type="button" class="btn btn-danger">
-              Order Now
-            </button>
-          </Link>
+        
         </div>
       </section>
     </>

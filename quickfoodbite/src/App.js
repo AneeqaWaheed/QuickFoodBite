@@ -27,6 +27,9 @@ import AdminOrders from "./Pages/Admin/Orders";
 import AdminCharges from "./Pages/Admin/Charges";
 import ModeratorDashboard from "./Pages/Moderator/ModeratorDashboard";
 import ModeratorRoute from "./Components/Routes/ModeratorRoute";
+import ModeratorProfile from "./Pages/Moderator/ModeratorProfile";
+import ModeratorOrders from "./Pages/Moderator/ModeratorOrders";
+import ClaimOrder from "./Pages/Moderator/OrderClaimPage";
 
 function App() {
   return (
@@ -35,8 +38,6 @@ function App() {
         <Route path="/" element={<Menu />} />
         <Route path="/home" element={<HomePage />} />
     
-      
-          <Route path="/cart" element={<CartPage />} />
      
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<AdminRoute />}>
@@ -51,6 +52,9 @@ function App() {
         </Route>
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
+        <Route path="moderator/My-Profile" element={<ModeratorProfile/>}/>
+        <Route path="moderator/orders" element={<ModeratorOrders/>}/>
+        <Route path="moderator/claim/:orderId" element={<ClaimOrder />} />
 
         </Route>
 

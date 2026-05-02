@@ -43,6 +43,17 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+     // ✅ NEW FIELD (IMPORTANT)
+    claimToken: {
+      type: String,
+      unique: true,
+    },
+
+    // ✅ OPTIONAL (for expiry logic later)
+    isClaimed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

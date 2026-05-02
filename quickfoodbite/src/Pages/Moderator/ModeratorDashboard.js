@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
+import SimpleLayout from "../../Components/Layout/SimpleLayout";
 const ModeratorDashboard = () => {
     const [auth, setAuth] = useAuth();
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ const ModeratorDashboard = () => {
     };
   return (
    <>
+   <SimpleLayout title={"Dashboard - Moderator"}>
   <nav
   className="navbar navbar-expand-lg"
   style={{ backgroundColor: "#000", padding: "10px 20px" }}
@@ -77,17 +79,10 @@ const ModeratorDashboard = () => {
               We really appreciate your contribution to the Application{" "}
             </p>
           </div>
-          {/* <div className="col-md-9">
-            <div className="card">
-              <h3>
-                Admin Name: {auth?.user?.firstName + " " + auth?.user?.lastName}
-              </h3>
-              <h3>Admin Email: {auth?.user?.email}</h3>
-              <h3>Admin Gender: {auth?.user?.gender}</h3>
-            </div>
-          </div> */}
+         
         </div>
       </div>
+      </SimpleLayout>
    </>
   );
 };

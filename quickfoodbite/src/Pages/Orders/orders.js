@@ -7,9 +7,10 @@ import "./orderStyle.css";
 import { Button } from "react-bootstrap";
 import { useState, react,useEffect } from "react";
 import axios from "axios";
+import { FaWhatsapp } from "react-icons/fa6";
 
-const CartPage = () => {
-  const { cart, setCart } = useCart();
+const CartPage = ({ show, onClose }) => {
+  const { cart, setCart, cartOpen, setCartOpen, increaseQty, decreaseQty   } = useCart();
   const [auth] = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [OrderPrice, setOrderPrice] = useState();
@@ -134,7 +135,7 @@ const handleProceed = async () => {
   const { name, phone, location } = userInfo;
 
   if (!name || !phone || !location) {
-    toast.error("All fields are required");
+    toast.error("Please Fill all of your information");
     return;
   }
 
@@ -179,16 +180,12 @@ const handleProceed = async () => {
       toast.error("Order failed");
       return;
     }
+    const orderToken = data.token; 
     const orderId = data.order._id;
 
     // 🔥 2. OPTIONAL: WhatsApp message
   const message = `
 🛒 *New Order Received*
-
-👤 Customer:
-Name: ${name}
-Phone: ${phone}
-Location: ${location}
 
 📦 *Items:*
 ${cart
@@ -201,16 +198,17 @@ ${cart
   .join("\n")}
 
 📊 *Summary:*
+
 Subtotal: Rs ${summary.subtotal}
-Item Discount: -Rs ${summary.itemDiscount}
-Global Discount: -Rs ${summary.globalDiscountAmount}
+${summary.itemDiscount !== 0 ? `Item Discount: -Rs ${summary.itemDiscount}\n` : ""}
+${summary.globalDiscountAmount !== 0 ? `Global Discount: -Rs ${summary.globalDiscountAmount}\n` : ""}
 Delivery: Rs ${summary.deliveryCharge}
 Packaging: Rs ${summary.packagingCharge}
 
-💰 *TOTAL: Rs ${summary.grandTotal}*
+💰 TOTAL: Rs ${summary.grandTotal}
 
 👉 *Pick Order Link:*
-${process.env.FRONTEND}/dashboard/moderator
+http://localhost:3000/dashboard/moderator/claim/${orderId}
 `;
 
     const whatsappURL = `https://wa.me/923437648604?text=${encodeURIComponent(
@@ -237,190 +235,221 @@ useEffect(() => {
   setOrderPrice(finalTotal);
 }, [cart]);
   return (
-    <GeneralLayout title="Cart - BurgerShop">
-      <div className="row justify-content-center m-0">
-        <div className="col-md-8 mt-5 mb-5 cardsdetails">
-          <div className="card">
-            <div
-              className="card-header p-3"
-              style={{ backgroundColor: "rgb(140, 16, 10)" }}
-            >
-              <h5 className="text-white m-0">
-                Cart Calculation
-                {cart.length > 0 ? `(${cart.length})` : ""}
-              </h5>
+  <>
+    {/* OVERLAY */}
+    {cartOpen && (
+      <div
+        className="cart-overlay"
+        onClick={() => setCartOpen(false)}
+      />
+    )}
+
+    {/* DRAWER */}
+   <div className={`cart-drawer ${cartOpen ? "open" : ""}`}>
+  
+  {/* HEADER */}
+  <div className="cart-header">
+    <h5>Your Order ({cart.length})</h5>
+    <button
+      type="button"
+      className="btn-close"
+      onClick={() => setCartOpen(false)}
+    ></button>
+  </div>
+
+  {/* SCROLLABLE BODY */}
+  <div className="cart-body">
+    {cart.length === 0 ? (
+      <p className="text-center mt-4">Cart is empty</p>
+    ) : (
+      <>
+        {cart.map((p) => (
+          <div className="cart-items" key={p.id || p._id}>
+            <div>
+              <h6 className="fw-bold">{p.name}</h6>
+              <p className="fw-light fs-6">
+                Rs. {p.price} x {p.quantity}
+              </p>
             </div>
-            <div className="card-body p-0">
-              {cart.length === 0 ? (
-                <div className="cart-empty text-center">
-                  <i className="fa fa-shopping-cart"></i>
-                  <p>Your cart Is Empty</p>
-                </div>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table cart-table mb-0">
-                    <thead>
-                      <tr>
-                        <th>Action</th>
-                        
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Type</th>
-                        <th>Price</th>
-                        <th>Discount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {cart.map((p) => (
-                        <tr key={p._id}>
-                          <td>
-                            <button
-                              className="prdct-delete"
-                              onClick={() => removecart(p._id)}
-                            >
-                              <i className="fa fa-trash-alt"></i>
-                            </button>
-                          </td>
-                          
-                          <td>
-                            <div className="product-name">
-                              <p>{p.name}</p>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="product-name">
-                              <p>{p.category}</p>
-                            </div>
-                          </td>
-                          
 
-                          <td>{p.quantity}</td>
-                          <td>{p.type}</td>
-                          <td>{p.price}</td>
-                          <td>{p.discount}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th>&nbsp;</th>
-                        <th colSpan={3}>&nbsp;</th>
-                        <th className="text-right">
-                          Total Price:{" "}
-                          <span className="text-danger">{totalPrice()}</span>
-                        </th>
-                        <th className="text-right">
-                          <Button
-  variant="success"
-  className="w-100 mt-2"
-  onClick={() => {
-    const { finalTotal } = calculateSummary();
+            <div className="qty-container">
+              <button
+                className="qty-btn"
+                onClick={() => decreaseQty(p.id || p._id)}
+              >
+                −
+              </button>
 
-    if (finalTotal < 300) {
-      toast.error("Minimum order must be Rs 300");
-      return;
-    }
+              <span className="qty-number">{p.quantity}</span>
 
-    setShowModal(true);
-  }}
->
-  Proceed to Checkout
-</Button>
-                        </th>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              )}
+              <button
+                className="qty-btn"
+                onClick={() => increaseQty(p.id || p._id)}
+              >
+                +
+              </button>
             </div>
           </div>
-        </div>
-      </div>
-      {showModal && (
-  <div className="modal show d-block" style={{ background: "#00000080" }}>
-    <div className="modal-dialog">
-      <div className="modal-content p-3">
+        ))}
 
-        <h5>Enter Details</h5>
+        {/* USER FORM */}
+        <div className="cart-form m-3">
+          <h6>Enter Your Details</h6>
 
-        <input
-          type="text"
-          placeholder="Name"
-          className="form-control mb-2"
-          value={userInfo.name}
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, name: e.target.value })
-          }
-        />
-<input
+          <input
+            type="text"
+            placeholder="Name *"
+            className="form-control mb-2"
+            value={userInfo.name}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, name: e.target.value })
+            }
+          />
+
+          <input
   type="text"
-  placeholder="Phone (03XXXXXXXXX)"
+  placeholder="Phone (03XXXXXXXXX) *"
   className="form-control mb-2"
   value={userInfo.phone}
   maxLength={11}
   onChange={(e) => {
     let value = e.target.value;
 
-    // allow only numbers
+    // ✅ allow only digits
     if (!/^\d*$/.test(value)) return;
 
-    // must start with 0
+    // ✅ must start with 0
     if (value.length === 1 && value !== "0") return;
 
     setUserInfo({ ...userInfo, phone: value });
   }}
 />
 
-        <input
-          type="text"
-          placeholder="Location"
-          className="form-control mb-3"
-          value={userInfo.location}
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, location: e.target.value })
-          }
-          
-        />
-<h4>Order Summary</h4>
-        {/* Summary */}
-        
-              {(() => {
-                const s = calculateSummary();
-                return (
-                  <div>
-                    <p>Items: {s.items}</p>
-                    <p>Subtotal: Rs {s.subtotal}</p>
-                    <p>Item Discount: -Rs {s.itemDiscount}</p>
-                    <p>Global Discount: -Rs {s.globalDiscountAmount}</p>
-                    <p>Delivery: Rs {s.deliveryCharge}</p>
-                    <p>Packaging: Rs {s.packagingCharge}</p>
-                    <h5>Grand Total: Rs {s.grandTotal}</h5>
-                  </div>
-                );
-              })()}
+          <input
+            type="text"
+            placeholder="Location *"
+            className="form-control"
+            value={userInfo.location}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, location: e.target.value })
+            }
+          />
+        </div>
+      </>
+    )}
+  </div>
 
-        <button
-          className="btn btn-success w-100"
-          onClick={() => handleProceed()}
-        >
-          Confirm Order
-        </button>
+  {/* 🔥 FIXED SUMMARY FOOTER */}
+  {cart.length > 0 && (
+    <div className="cart-footer">
+      {(() => {
+        const s = calculateSummary();
+        return (
+          <>
+            <div className="summary">
+              <p>Subtotal <span>Rs {s.subtotal}</span></p>
+              {s.itemDiscount !== 0 && (
+                <p>Discount <span>-Rs {s.itemDiscount}</span></p>
+              )}
+              {s.globalDiscountAmount !== 0 && (
+                <p>Global Discount <span>-Rs {s.globalDiscountAmount}</span></p>
+              )}
+              <p>Delivery <span>Rs {s.deliveryCharge}</span></p>
+              <p>Packaging <span>Rs {s.packagingCharge}</span></p>
 
-        <button
-          className="btn btn-secondary w-100 mt-2"
-          onClick={() => setShowModal(false)}
-        >
-          Cancel
-        </button>
+              <h5>Total <span>Rs {s.grandTotal}</span></h5>
+            </div>
+
+            <Button
+              variant="danger"
+              className="w-100 checkout-btn"
+              onClick={() => {
+                if (s.grandTotal < 300) {
+                  toast.error("Minimum order Rs 300");
+                  return;
+                }
+                if (!userInfo.name || !userInfo.phone || !userInfo.location) {
+      toast.error("Please fill all fields");
+      return;
+    }
+                setShowModal(true);
+                setCartOpen(false)
+              }}
+            >
+              Proceed to Checkout
+            </Button>
+          </>
+        );
+      })()}
+    </div>
+  )}
+</div>
+
+    {/* CHECKOUT MODAL */}
+  {showModal && (
+  <div
+    className="modal fade show d-block"
+    tabIndex="-1"
+    style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+  >
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content rounded-3 shadow">
+
+        {/* HEADER */}
+        <div className="modal-header border-0">
+          <h5 className="modal-title fw-bold">
+            We’re finding a moderator for your order 🍔
+          </h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setShowModal(false)}
+          ></button>
+        </div>
+
+        {/* BODY */}
+        <div className="modal-body text-center">
+
+          <p className="mb-2">
+            Please wait while your order is being picked by a moderator.
+          </p>
+
+          <p className="text-muted mb-2">
+            This may take a few minutes. You will receive a WhatsApp message once it's picked.
+          </p>
+
+          <p className="text-danger small">
+            If not picked within 10 minutes, you can place your order again.
+          </p>
+
+        </div>
+
+        {/* FOOTER */}
+        <div className="modal-footer border-0 d-flex flex-column gap-2">
+
+          <button
+            className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
+            onClick={handleProceed}
+          >
+            <FaWhatsapp size={20} />
+             Confirm Order via WhatsApp
+          </button>
+
+          <button
+            className="btn btn-outline-secondary w-100"
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </button>
+
+        </div>
 
       </div>
     </div>
   </div>
 )}
-    </GeneralLayout>
-
-  );
+  </>
+);
 };
 
 

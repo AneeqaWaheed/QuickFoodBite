@@ -4,7 +4,7 @@ import burgerCategories from "../data/category.js";
 const BurgerCategories = () => {
   return (
     <>
-      <h1 className="text-danger text-center"> Categories</h1>
+      <h1 className="text-danger text-center mt-0"> Categories</h1>
       <div className="burger-categories">
         {burgerCategories.map((burger) => (
           <div key={burger.id} className="burger-category">

@@ -17,7 +17,7 @@ const ModeratorMenu = () => {
               My Profile
             </NavLink>
             <NavLink
-              to="/dashboard/moderator/My-orders"
+              to="/dashboard/moderator/orders"
               className="list-group-item list-group-item-action "
             >
               My Orders

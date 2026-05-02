@@ -52,7 +52,7 @@ const ProductPage = () => {
       id,
       name,
       price,
-      quantity,
+      quantity : 1,
       category,
       type,
       discount
@@ -64,7 +64,7 @@ const ProductPage = () => {
   };
 
   return (
-    <Layout title="Menu - BurgerShop">
+ 
       <div className="container mt-5">
         <div className="row align-items-center">
           
@@ -95,7 +95,7 @@ const ProductPage = () => {
       </div>
 
      
-    </Layout>
+  
   );
 };
 

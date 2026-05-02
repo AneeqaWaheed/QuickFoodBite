@@ -5,6 +5,8 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import GeneralLayout from "../../Components/Layout/GeneralLayout";
 import "../../styles/register.css";
 import { useAuth } from "../../context/auth";
+import Layout from "../../Components/Layout/Layout";
+import SimpleLayout from "../../Components/Layout/SimpleLayout";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +29,7 @@ const Login = () => {
 
       const user = res.data.user;
       const token = res.data.token;
+      console.log("Login User:", user)
 
       setAuth({
         ...auth,
@@ -52,8 +55,8 @@ const Login = () => {
   }
 };
   return (
-    <GeneralLayout title={"Login - BurgerShop"}>
-      <div className="register-container">
+    <SimpleLayout title={"Login - QuickFoodBite"}>
+      <div className="register-container" title="Login-QuickFoodBite">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Login Form</h1>
           <form onSubmit={handleSubmit}>
@@ -120,7 +123,7 @@ const Login = () => {
           <img src="/Images/login.jpg" alt="Registration Illustration" />
         </div> */}
       </div>
-    </GeneralLayout>
+    // </SimpleLayout>
   );
 };
 
