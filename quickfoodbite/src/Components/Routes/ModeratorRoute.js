@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function ModeratorRoute() {
   const [ok, setOk] = useState(false);
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
  const location = useLocation();
   useEffect(() => {
     const authCheck = async () => {

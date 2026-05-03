@@ -1,16 +1,14 @@
 
 import { toast } from "react-toastify";
 import { useCart } from "../../context/cart";
-import { useAuth } from "../../context/auth";
 import "./orderStyle.css";
 import { Button } from "react-bootstrap";
-import { useState, react,useEffect } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 import { FaWhatsapp } from "react-icons/fa6";
 
-const CartPage = ({ show, onClose }) => {
+const CartPage = () => {
   const { cart, setCart, cartOpen, setCartOpen, increaseQty, decreaseQty   } = useCart();
-  const [auth] = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [OrderPrice, setOrderPrice] = useState();
 const [userInfo, setUserInfo] = useState({
@@ -20,17 +18,7 @@ const [userInfo, setUserInfo] = useState({
 });
 const [settings, setSettings] = useState({});
 const [charges, setCharges] = useState([]);
-  const removecart = async (pid) => {
-    try {
-      let mycart = [...cart];
-      let index = mycart.findIndex((item) => item._id === pid);
-      mycart.splice(index, 1);
-      setCart(mycart);
-      localStorage.setItem("cart", JSON.stringify(mycart));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
 const fetchSettings = async () => {
   try {
     const { data } = await axios.get(
@@ -58,22 +46,6 @@ const fetchCharges = async () => {
     console.log(error);
   }
 };
-
-
-  const totalPrice = () => {
-    try {
-      let total = 0;
-      cart?.forEach((item) => {
-        if (item.price && item.quantity) {
-          total += item.price * item.quantity;
-        }
-      });
-      return total
-    } catch (error) {
-      console.log(error);
-      return "$0.00";
-    }
-  };
 
 const calculateSummary = () => {
   console.log("Settings: ",settings, settings?.minOrderPrice);
@@ -193,7 +165,7 @@ const handleProceed = async () => {
       return;
     }
     const orderToken = data.token; 
-    const orderId = data.order._id;
+
 
     // 🔥 2. OPTIONAL: WhatsApp message
   const message = `

@@ -1,5 +1,5 @@
 // ProductCard.js
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { useCart } from "../../context/cart";
 import { toast } from "react-toastify";
@@ -31,10 +31,9 @@ const ProductCard = ({ product }) => {
       console.log("error ", error);
     }
   };
-
-  useEffect(() => {
-    getSingleProduct();
-  }, []);
+useEffect(() => {
+  getSingleProduct(id);
+}, [getSingleProduct, id]);
   const handleAddToCart = () => {
       const productDetails = {
         id,

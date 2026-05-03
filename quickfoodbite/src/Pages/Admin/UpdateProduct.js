@@ -38,7 +38,7 @@ const UpdateProduct = () => {
   };
   useEffect(() => {
     getSingleProduct();
-    //eslint-disable-next-line
+  
   }, []);
   //get all category
   const getAllCategory = async () => {

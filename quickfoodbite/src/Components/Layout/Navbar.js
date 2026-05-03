@@ -1,29 +1,14 @@
 import React from "react";
-import {  Link, useNavigate } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import { FaBurger } from "react-icons/fa6";
-import { useAuth } from "../../context/auth";
-import { toast } from "react-toastify";
+
 import "../../styles/navbar.css";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../context/cart";
 import CartPage from "../../Pages/Orders/orders";
 const Navbar = ({ backgroundColor, position }) => {
-  const [auth, setAuth] = useAuth();
-  const navigate = useNavigate();
   const { cart, setCartOpen, } = useCart();
 
-  const handleLogout = () => {
-    toast.success("Logout Successfully");
-    setAuth({
-      ...auth,
-      user: null,
-      token: "",
-    });
-
-    localStorage.removeItem("auth");
-
-    navigate("/login");
-  };
   return (
     <>
       <nav
