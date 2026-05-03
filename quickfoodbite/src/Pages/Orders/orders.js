@@ -91,7 +91,7 @@ const calculateSummary = () => {
         itemDiscount += (total * item.discount) / 100;
       }
 
-      if (item.type === "liquid") 
+      if (item.type === "Liquid") 
         {liquid += item.quantity}
       else solid += item.quantity;
     });
@@ -108,7 +108,17 @@ const calculateSummary = () => {
       charges.find((c) => c.type === "packaging" && c.category === "Solid")?.amount || 0;
 
     const packagingCharge = liquid * packagingLiquid + solid * packagingSolid;
-    const deliveryCharge = liquid * deliveryLiquid +  deliverySolid;
+const liquidDeliveryTotal = liquid > 0 ? liquid * deliveryLiquid : 0;
+const solidDeliveryTotal = solid > 0 ? deliverySolid : 0;
+
+const calculatedDelivery = liquidDeliveryTotal + solidDeliveryTotal;
+const minDelivery = subtotal * 0.18;
+
+const isMinApplied = calculatedDelivery < minDelivery;
+
+const deliveryCharge = isMinApplied
+  ? minDelivery
+  : calculatedDelivery;
 
     const globalDiscount = settings.globalDiscount || 0;
     const globalDiscountAmount = (subtotal * globalDiscount) / 100;
@@ -128,6 +138,7 @@ const calculateSummary = () => {
       solid,
       finalTotal:subtotal,
       itemsCount: cart.length,
+      isMinDeliveryApplied: isMinApplied, 
     };
   };
 const handleProceed = async () => {
@@ -223,19 +234,24 @@ ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 
     setShowModal(false);
 
-    toast.success("Order placed successfully!");
+    // toast.success("Order placed successfully!");
 
   } catch (error) {
     console.log(error);
     toast.error("Something went wrong");
   }
 };
+// ✅ fetch once on mount
 useEffect(() => {
-    fetchSettings();
+  fetchSettings();
   fetchCharges();
+}, []);
+
+// ✅ recalculate whenever cart, charges, OR settings change
+useEffect(() => {
   const { grandTotal } = calculateSummary();
   setOrderPrice(grandTotal);
-}, [cart]);
+}, [cart, charges, settings]);
   return (
   <>
     {/* OVERLAY */}
@@ -360,30 +376,43 @@ useEffect(() => {
               {s.globalDiscountAmount !== 0 && (
                 <p>Global Discount <span>-Rs {s.globalDiscountAmount}</span></p>
               )}
-              <p>Delivery <span>Rs {s.deliveryCharge}</span></p>
+              <p>
+  Delivery{" "}
+  <span>
+    Rs {s.deliveryCharge}
+    {s.isMinDeliveryApplied && (
+      <small style={{ color: "gray", marginLeft: "5px" }}>
+        (18% minimum applied)
+      </small>
+    )}
+  </span>
+</p>
               <p>Packaging <span>Rs {s.packagingCharge}</span></p>
 
               <h5>Total <span>Rs {s.grandTotal}</span></h5>
             </div>
+<Button
+  variant="danger"
+  className="w-100 checkout-btn"
+  onClick={() => {
+    const minOrder = settings?.minOrderPrice ?? 0;
 
-            <Button
-              variant="danger"
-              className="w-100 checkout-btn"
-              onClick={() => {
-                if (s.grandTotal < 300) {
-                  toast.error("Minimum order Rs 300");
-                  return;
-                }
-                if (!userInfo.name || !userInfo.phone || !userInfo.location) {
+    if (s.grandTotal < minOrder) {
+      toast.error(`Minimum order is Rs ${minOrder}`);
+      return;
+    }
+
+    if (!userInfo.name || !userInfo.phone || !userInfo.location) {
       toast.error("Please fill all fields");
       return;
     }
-                setShowModal(true);
-                setCartOpen(false)
-              }}
-            >
-              Proceed to Checkout
-            </Button>
+
+    setShowModal(true);
+    setCartOpen(false);
+  }}
+>
+  Proceed to Checkout
+</Button>
           </>
         );
       })()}

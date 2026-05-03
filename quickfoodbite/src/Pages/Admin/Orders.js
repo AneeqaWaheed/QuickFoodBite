@@ -150,7 +150,7 @@ const AdminOrders = () => {
                       <td>Rs{order?.total}</td>
                       <td>Rs{order?.subtotal}</td>
                       <td>{order?.status}</td>
-                     <td>{order?.assignedModerator?.name}</td>
+                     <td>{order?.assignedModerator?.firstName}</td>
                     </tr>
                   ))}
                 </tbody>
