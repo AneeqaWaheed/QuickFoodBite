@@ -3,19 +3,16 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Layout from "../Components/Layout/Layout";
-import { OrderDetails } from "../Components/Routes/orderDetails";
+
 import { useCart } from "../context/cart"; // Import Cart Context
-import { toast } from "react-toastify";
+
 
 const ProductPage = () => {
   const { addToCart } = useCart(); // Access the addToCart function from context
   const [quantity, setQuantity] = useState(1);
   const params = useParams();
   const [name, setName] = useState("");
-  // const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
   const [id, setId] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
