@@ -7,10 +7,10 @@ import "../../styles/navbar.css";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../context/cart";
 import CartPage from "../../Pages/Orders/orders";
-const Navbar = ({ backgroundColor, textColor, linkColor, position }) => {
+const Navbar = ({ backgroundColor, position }) => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
-  const { cart, setCart, setCartOpen, cartOpen } = useCart();
+  const { cart, setCartOpen, } = useCart();
 
   const handleLogout = () => {
     toast.success("Logout Successfully");

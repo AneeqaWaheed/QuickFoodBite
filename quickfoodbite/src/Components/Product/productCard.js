@@ -1,7 +1,6 @@
 // ProductCard.js
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useCart } from "../../context/cart";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";

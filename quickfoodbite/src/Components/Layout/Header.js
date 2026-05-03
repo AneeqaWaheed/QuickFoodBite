@@ -1,7 +1,7 @@
-import React from "react";
+
 import Navbar from "./Navbar";
 import "../../styles/header.css";
-import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
     <>
@@ -9,7 +9,7 @@ const Header = () => {
       <section className="header-section m-0 mb-0 p-0">
         <img
           src="/Images/header1.jpg"
-          alt="My Image"
+          alt="Delicious food dishes displayed for QuickFoodBite homepage banner"
           className="header-image"
         />
         <div className="header-text">

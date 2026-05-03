@@ -1,5 +1,5 @@
 // ProductPage.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback} from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -22,7 +22,7 @@ const ProductPage = () => {
     setQuantity(e.target.value);
   };
 
-  const getSingleProduct = async () => {
+  const getSingleProduct = useCallback(async () => {
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/product/single-product/${params.id}`
@@ -38,11 +38,11 @@ const ProductPage = () => {
     } catch (error) {
       console.log("error ", error);
     }
-  };
+  },[params.id]);
 
   useEffect(() => {
     getSingleProduct();
-  }, []);
+  }, [getSingleProduct]);
 
   const handleAddToCart = () => {
     const productDetails = {
