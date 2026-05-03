@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../../context/auth";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import axios from "axios";
 
 
 export default function ModeratorRoute() {
-  const [ok, setOk] = useState(false);
-  const [auth] = useAuth();
+  
+  const [auth, setAuth] = useAuth();
  const location = useLocation();
   useEffect(() => {
     const authCheck = async () => {
@@ -15,13 +15,13 @@ export default function ModeratorRoute() {
           `${process.env.REACT_APP_API}/api/v1/auth/user-auth`
         );
         if (res.data.ok) {
-          setOk(true);
+       
         } else {
-          setOk(false);
+        
         }
       } catch (error) {
         console.error("Error during admin authentication check:", error);
-        setOk(false);
+       
       }
     };
 

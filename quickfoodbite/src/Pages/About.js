@@ -1,4 +1,4 @@
-import React from "react";
+
 import Layout from "../Components/Layout/Layout";
 import HomeSection1 from "../Components/HomeSection1";
 import FounderSays from "../Components/FounderSays";

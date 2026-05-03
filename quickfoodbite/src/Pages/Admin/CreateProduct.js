@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";

@@ -1,4 +1,4 @@
-import React from "react";
+
 import "../styles/FounderSays.css"; // Import your custom CSS file
 
 const FounderSays = () => {

@@ -1,5 +1,5 @@
 // ProductPage.js
-import React, { useEffect, useState, useCallback} from "react";
+import  { useEffect, useState, useCallback} from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import { useParams } from "react-router-dom";
 import axios from "axios";

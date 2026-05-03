@@ -1,4 +1,4 @@
-
+import React from "react";
 import { toast } from "react-toastify";
 import { useCart } from "../../context/cart";
 import "./orderStyle.css";
@@ -46,7 +46,71 @@ const fetchCharges = async () => {
     console.log(error);
   }
 };
+const calculateSummary = () => {
+  console.log("Settings: ",settings, settings?.minOrderPrice);
+    let subtotal = 0;
+    let itemDiscount = 0;
+    let liquid = 0;
+    let solid = 0;
 
+    cart.forEach((item) => {
+      const total = item.price * item.quantity;
+      subtotal += total;
+
+      if (item.discount) {
+        itemDiscount += (total * item.discount) / 100;
+      }
+
+      if (item.type === "Liquid") 
+        {liquid += item.quantity}
+      else solid += item.quantity;
+    });
+
+    const deliveryLiquid =
+      charges.find((c) => c.type === "delivery" && c.category === "Liquid")?.amount || 0;
+    const deliverySolid =
+      charges.find((c) => c.type === "delivery" && c.category === "Solid")?.amount || 0;
+
+    const packagingLiquid =
+      charges.find((c) => c.type === "packaging" && c.category === "Liquid")?.amount || 0;
+
+    const packagingSolid =
+      charges.find((c) => c.type === "packaging" && c.category === "Solid")?.amount || 0;
+
+    const packagingCharge = liquid * packagingLiquid + solid * packagingSolid;
+const liquidDeliveryTotal = liquid > 0 ? liquid * deliveryLiquid : 0;
+const solidDeliveryTotal = solid > 0 ? deliverySolid : 0;
+
+const calculatedDelivery = liquidDeliveryTotal + solidDeliveryTotal;
+const minDelivery = subtotal * 0.18;
+
+const isMinApplied = calculatedDelivery < minDelivery;
+
+const deliveryCharge = isMinApplied
+  ? minDelivery
+  : calculatedDelivery;
+
+    const globalDiscount = settings.globalDiscount || 0;
+    const globalDiscountAmount = (subtotal * globalDiscount) / 100;
+
+    const beforeTotal = subtotal - itemDiscount - globalDiscountAmount;
+
+    const grandTotal = beforeTotal + deliveryCharge + packagingCharge;
+
+    return {
+      subtotal,
+      itemDiscount,
+      globalDiscountAmount,
+      deliveryCharge,
+      packagingCharge,
+      grandTotal,
+      liquid,
+      solid,
+      finalTotal:subtotal,
+      itemsCount: cart.length,
+      isMinDeliveryApplied: isMinApplied, 
+    };
+  };
 
 const handleProceed = async () => {
   const { name, phone, location } = userInfo;
@@ -160,8 +224,7 @@ useEffect(() => {
 // ✅ recalculate whenever cart, charges, OR settings change
 useEffect(() => {
   calculateSummary();
- 
-}, [cart, charges, settings]);
+}, []);
   return (
   <>
     {/* OVERLAY */}

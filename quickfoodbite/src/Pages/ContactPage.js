@@ -1,4 +1,4 @@
-import React from "react";
+
 import Layout from "../Components/Layout/Layout";
 import ContactForm from "../Components/ContactForm";
 import "../styles/ContactPage.css";

@@ -1,4 +1,4 @@
-import React from "react";
+
 import "../styles/category.css";
 import burgerCategories from "../data/category.js";
 const BurgerCategories = () => {
