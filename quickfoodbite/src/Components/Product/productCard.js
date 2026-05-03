@@ -3,15 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { useCart } from "../../context/cart";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+
 import axios from "axios";
 const ProductCard = ({ product }) => {
    const { addToCart } = useCart(); 
   const { name, price, } = product;
-   const params = useParams();
-
-  //  const [price, setPrice] = useState("");
-    const [image, setImage] = useState("");
     const [id, setId] = useState("");
     const [category, setCategory] = useState("");
     const [type, setType] = useState("");
