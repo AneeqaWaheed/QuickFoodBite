@@ -3,17 +3,22 @@ import GeneralLayout from "../../Components/Layout/GeneralLayout";
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10); // Number of products per page
-
+const [auth, setAuth] = useAuth();
+    const navigate = useNavigate();
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.React_App_API}/api/v1/auth/all-users`
+          `${process.env.REACT_APP_API}/api/v1/auth/all-users`
         );
         setUsers(response.data);
       } catch (error) {
@@ -23,6 +28,18 @@ const Users = () => {
 
     fetchUsers();
   }, []);
+     const handleLogout = () => {
+        toast.success("Logout Successfully");
+        setAuth({
+          ...auth,
+          user: null,
+          token: "",
+        });
+    
+        localStorage.removeItem("auth");
+    
+        navigate("/login");
+      };
 
   // Calculate pagination indices
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -45,7 +62,24 @@ const Users = () => {
   };
 
   return (
-    <GeneralLayout title={"DashBoard - All Users"}>
+    <>
+     <nav
+      className="navbar navbar-expand-lg"
+      style={{ backgroundColor: "#000", padding: "10px 20px" }}
+    >
+      <div className="container-fluid d-flex justify-content-end">
+    
+        <NavLink
+          onClick={handleLogout}
+          to="/login"
+          className="nav-link text-white"
+          style={{ fontWeight: "500" }}
+        >
+          Logout
+        </NavLink>
+    
+      </div>
+    </nav>
       <div
         className="container-fluid"
         style={{
@@ -129,7 +163,8 @@ const Users = () => {
           </div>
         </div>
       </div>
-    </GeneralLayout>
+      </>
+    
   );
 };
 

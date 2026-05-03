@@ -164,7 +164,7 @@ const Checkout = () => {
       const fetchPaymentStatus = async () => {
         try {
           const response = await fetch(
-            `${process.env.React_App_API}/api/v1/payment/status/${sessionId}`,
+            `${process.env.REACT_APP_API}/api/v1/payment/status/${sessionId}`,
             {
               method: "GET",
               headers: {

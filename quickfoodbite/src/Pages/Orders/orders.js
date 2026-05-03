@@ -35,10 +35,11 @@ const [charges, setCharges] = useState([]);
 const fetchSettings = async () => {
   try {
     const { data } = await axios.get(
-      `${process.env.React_App_API}/api/v1/charges/getsetting`
+      `${process.env.REACT_APP_API}/api/v1/charges/getsetting`
     );
 
     setSettings(data || {});
+    console.log("Min Order and GlobalDiscount: ", data)
   } catch (error) {
     console.log(error);
   }
@@ -47,21 +48,19 @@ const fetchSettings = async () => {
 const fetchCharges = async () => {
   try {
     const { data } = await axios.get(
-      `${process.env.React_App_API}/api/v1/charges/all`
+      `${process.env.REACT_APP_API}/api/v1/charges/all`
     );
 
     if (data?.success) {
       setCharges(data.charges);
     }
+    console.log("Chargesss:", data)
   } catch (error) {
     console.log(error);
   }
 };
 
-useEffect(() => {
-  fetchSettings();
-  fetchCharges();
-}, []);
+
   const totalPrice = () => {
     try {
       let total = 0;
@@ -70,10 +69,7 @@ useEffect(() => {
           total += item.price * item.quantity;
         }
       });
-      return total.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
+      return total
     } catch (error) {
       console.log(error);
       return "$0.00";
@@ -81,6 +77,7 @@ useEffect(() => {
   };
 
 const calculateSummary = () => {
+  console.log("Settings: ",settings, settings?.minOrderPrice);
     let subtotal = 0;
     let itemDiscount = 0;
     let liquid = 0;
@@ -94,23 +91,24 @@ const calculateSummary = () => {
         itemDiscount += (total * item.discount) / 100;
       }
 
-      if (item.type === "liquid") liquid += item.quantity;
+      if (item.type === "liquid") 
+        {liquid += item.quantity}
       else solid += item.quantity;
     });
 
     const deliveryLiquid =
-      charges.find((c) => c.type === "delivery"&& c.category === "liquid")?.amount || 0;
+      charges.find((c) => c.type === "delivery" && c.category === "Liquid")?.amount || 0;
     const deliverySolid =
-      charges.find((c) => c.type === "delivery"&& c.category === "Solid")?.amount || 0;
+      charges.find((c) => c.type === "delivery" && c.category === "Solid")?.amount || 0;
 
     const packagingLiquid =
-      charges.find((c) => c.type === "packaging" && c.category === "liquid")?.amount || 0;
+      charges.find((c) => c.type === "packaging" && c.category === "Liquid")?.amount || 0;
 
     const packagingSolid =
       charges.find((c) => c.type === "packaging" && c.category === "Solid")?.amount || 0;
 
     const packagingCharge = liquid * packagingLiquid + solid * packagingSolid;
-    const deliveryCharge = liquid * deliveryLiquid + solid * deliverySolid;
+    const deliveryCharge = liquid * deliveryLiquid +  deliverySolid;
 
     const globalDiscount = settings.globalDiscount || 0;
     const globalDiscountAmount = (subtotal * globalDiscount) / 100;
@@ -128,6 +126,7 @@ const calculateSummary = () => {
       grandTotal,
       liquid,
       solid,
+      finalTotal:subtotal,
       itemsCount: cart.length,
     };
   };
@@ -140,7 +139,7 @@ const handleProceed = async () => {
   }
 
   const summary = calculateSummary();
-  const minOrder = settings.minOrderPrice || 0;
+  const minOrder = settings?.minOrderPrice || 0;
   if (summary.grandTotal < minOrder) {
       toast.error(`Minimum order is Rs ${minOrder}`);
       return;
@@ -158,7 +157,7 @@ const handleProceed = async () => {
   try {
     // 🔥 1. SAVE ORDER IN DATABASE
     const res = await fetch(
-      `${process.env.React_App_API}/api/v1/orders/create-order`,
+      `${process.env.REACT_APP_API}/api/v1/orders/create-order`,
       {
         method: "POST",
         headers: {
@@ -169,6 +168,7 @@ const handleProceed = async () => {
     phone,
     location,
     items: formattedItems, // ✅ MUST BE ARRAY
+    total:OrderPrice,
    ...summary,
   }),
       }
@@ -208,7 +208,7 @@ Packaging: Rs ${summary.packagingCharge}
 💰 TOTAL: Rs ${summary.grandTotal}
 
 👉 *Pick Order Link:*
-http://localhost:3000/dashboard/moderator/claim/${orderId}
+${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 `;
 
     const whatsappURL = `https://wa.me/923437648604?text=${encodeURIComponent(
@@ -231,8 +231,10 @@ http://localhost:3000/dashboard/moderator/claim/${orderId}
   }
 };
 useEffect(() => {
-  const { finalTotal } = calculateSummary();
-  setOrderPrice(finalTotal);
+    fetchSettings();
+  fetchCharges();
+  const { grandTotal } = calculateSummary();
+  setOrderPrice(grandTotal);
 }, [cart]);
   return (
   <>
@@ -306,20 +308,24 @@ useEffect(() => {
             }
           />
 
-          <input
+    <input
   type="text"
-  placeholder="Phone (03XXXXXXXXX) *"
+  placeholder="Phone (92XXXXXXXXXX) *"
   className="form-control mb-2"
   value={userInfo.phone}
-  maxLength={11}
+  maxLength={12}
   onChange={(e) => {
     let value = e.target.value;
 
-    // ✅ allow only digits
+    // ✅ only digits allowed
     if (!/^\d*$/.test(value)) return;
 
-    // ✅ must start with 0
-    if (value.length === 1 && value !== "0") return;
+    // ❌ must start with 92 (after first 2 digits)
+    if (value.length === 1 && value !== "9") return;
+    if (value.length === 2 && value !== "92") return;
+
+    // ❌ block anything not starting with 92
+    if (value.length >= 2 && !value.startsWith("92")) return;
 
     setUserInfo({ ...userInfo, phone: value });
   }}

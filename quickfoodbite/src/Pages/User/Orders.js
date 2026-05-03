@@ -15,7 +15,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `${process.env.React_App_API}/api/v1/orders/user/${userId}`
+          `${process.env.REACT_APP_API}/api/v1/orders/user/${userId}`
         );
         setOrders(response.data.orders);
       } catch (error) {

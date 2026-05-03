@@ -12,7 +12,7 @@ export default function AdminRoute() {
     const authCheck = async () => {
       try {
         const res = await axios.get(
-          `${process.env.React_App_API}/api/v1/auth/admin-auth`
+          `${process.env.REACT_APP_API}/api/v1/auth/admin-auth`
         );
         if (res.data.ok) {
           setOk(true);

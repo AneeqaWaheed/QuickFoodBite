@@ -30,7 +30,7 @@ const Products = () => {
   const getAllProducts = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/product/get-product`
+        `${process.env.REACT_APP_API}/api/v1/product/get-product`
       );
       setProducts(data?.products);
       console.log("asnbansm", data);
@@ -46,7 +46,7 @@ const Products = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `${process.env.React_App_API}/api/v1/product/delete-product/${id}`
+        `${process.env.REACT_APP_API}/api/v1/product/delete-product/${id}`
       );
 
       // Check the response data to ensure the deletion was successful

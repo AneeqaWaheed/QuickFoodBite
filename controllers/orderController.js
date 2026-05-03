@@ -193,39 +193,69 @@ export const claimOrder = async (req, res) => {
   try {
     const { token } = req.params;
 
-    const order = await Order.findOne({ claimToken: token });
+    const order = await Order.findOneAndUpdate(
+      {
+        claimToken: token,
+        assignedModerator: null,
+        isClaimed: false, // ✅ extra safety
+      },
+      {
+        assignedModerator: req.user._id,
+        status: "picked",
+        isClaimed: true, // ✅ boolean
+      },
+      {
+        new: true, // ✅ return updated doc
+      }
+    );
 
     if (!order) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
-        message: "Order not found",
+        message: "Order already taken or invalid token",
       });
     }
 
-    // ❌ Already taken
-    if (order.assignedModerator) {
-      return res.send({
-        success: false,
-        message: "Order already picked by another moderator",
-      });
-    }
-
-    // ✅ Assign to logged-in moderator
-    order.assignedModerator = req.user._id;
-    order.status = "picked";
-
-    await order.save();
-
-    res.send({
+    return res.send({
       success: true,
       message: "Order assigned successfully",
       order,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Error claiming order",
+    });
+  }
+};
+export const getMyModeratorOrders = async (req, res) => {
+  console.log("USER:", req.user);
+  try {
+
+    if (!req.user || !req.user._id) {
+      return res.status(401).send({
+        success: false,
+        message: "Unauthorized - user not found",
+      });
+    }
+
+    const orders = await Order.find({
+      assignedModerator: req.user._id,
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).send({
+      success: true,
+      orders,
+    });
+
+  } catch (error) {
+    console.log("MY ORDERS ERROR:", error);
+
+    return res.status(500).send({
+      success: false,
+      message: "Server error in my-orders",
+      error: error.message,
     });
   }
 };

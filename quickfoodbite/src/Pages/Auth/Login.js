@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -12,15 +12,19 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
-
   const location = useLocation();
+
+
+  const [finalRedirect, setFinalRedirect] = useState(null);
+const redirectPath = location.state?.from?.pathname;
+
 
   //form submission
  const handleSubmit = async (e) => {
   e.preventDefault();
   try {
     const res = await axios.post(
-      `${process.env.React_App_API}/api/v1/auth/login`,
+      `${process.env.REACT_APP_API}/api/v1/auth/login`,
       { email, password }
     );
 
@@ -31,29 +35,34 @@ const Login = () => {
       const token = res.data.token;
       console.log("Login User:", user)
 
-      setAuth({
-        ...auth,
-        user,
-        token,
-      });
+      setAuth({ user, token });
 
       localStorage.setItem("auth", JSON.stringify(res.data));
 
       // 🔥 Role-based navigation
-      if (user.role === 1) {
-        navigate("/dashboard/admin");
-      } else {
-        navigate("/dashboard/moderator");
-      }
+    if (redirectPath) {
 
-    } else {
-      toast.error(res.data.message);
-    }
+          setFinalRedirect(redirectPath);
+        } else {
+          setFinalRedirect(
+            user.role === 1
+              ? "/dashboard/admin"
+              : "/dashboard/moderator"
+          );
+        }
+      } else {
+        toast.error(res.data.message);
+      }
   } catch (error) {
     console.log(error);
     toast.error("Something went Wrong");
   }
 };
+ useEffect(() => {
+    if (finalRedirect) {
+      navigate(finalRedirect, { replace: true });
+    }
+  }, [finalRedirect, navigate]);
   return (
     <SimpleLayout title={"Login - QuickFoodBite"}>
       <div className="register-container" title="Login-QuickFoodBite">
@@ -123,7 +132,7 @@ const Login = () => {
           <img src="/Images/login.jpg" alt="Registration Illustration" />
         </div> */}
       </div>
-    // </SimpleLayout>
+     </SimpleLayout>
   );
 };
 

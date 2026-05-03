@@ -29,7 +29,7 @@ const styles = {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          `${process.env.React_App_API}/api/v1/category/get-category`
+          `${process.env.REACT_APP_API}/api/v1/category/get-category`
         );
         const data = await response.json();
         console.log("Categories:", data?.category);
@@ -44,7 +44,7 @@ const styles = {
       try {
         const response = await fetch(
           `${
-            process.env.React_App_API
+            process.env.REACT_APP_API
           }/api/v1/product/product-list?page=${page}&category=${
             selectedCategory === "All" ? "" : selectedCategory
           }`

@@ -149,8 +149,9 @@ a, a:hover, a:focus {
 .cart-drawer {
   position: fixed;
   top: 0;
-  right: -450px;
+  right: -100%;
   width: 420px;
+  max-width: 100%;
   height: 100vh;
   background: white;
   z-index: 9999;
@@ -164,6 +165,12 @@ a, a:hover, a:focus {
   right: 0;
 }
 
+/* 📱 Mobile */
+@media (max-width: 576px) {
+  .cart-drawer {
+    width: 100%;
+  }
+}
 .cart-header {
   padding: 15px;
   border-bottom: 1px solid #ddd;
@@ -172,13 +179,26 @@ a, a:hover, a:focus {
   align-items: center;
 }
 .cart-items {
-  padding: 3px;
+  padding: 10px;
   border-bottom: 1px solid #eeecec;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
+/* 📱 Mobile stacking */
+@media (max-width: 576px) {
+  .cart-items {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* .qty-container {
+    width: 100%;
+    justify-content: space-between;
+  } */
+}
 .cart-body {
   flex: 1;
   overflow-y: auto;
@@ -251,4 +271,32 @@ a, a:hover, a:focus {
 .checkout-btn {
   margin-top: 10px;
   border-radius: 8px;
+}
+@media (max-width: 576px) {
+  .cart-footer {
+    padding: 10px;
+  }
+
+  .summary p,
+  .summary h5 {
+    font-size: 13px;
+  }
+
+  .checkout-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+.cart-form input {
+  font-size: 14px;
+}
+
+@media (max-width: 576px) {
+  .cart-form {
+    margin: 10px !important;
+  }
+
+  .cart-form input {
+    font-size: 13px;
+  }
 }

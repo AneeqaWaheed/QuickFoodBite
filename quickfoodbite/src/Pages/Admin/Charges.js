@@ -38,7 +38,7 @@ const [settingValue, setSettingValue] = useState("");
   const fetchCharges = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/charges/all`
+        `${process.env.REACT_APP_API}/api/v1/charges/all`
       );
       console.log("Charges : ", data)
       if (data?.success) {
@@ -51,7 +51,7 @@ const [settingValue, setSettingValue] = useState("");
 const fetchSettings = async () => {
   try {
     const { data } = await axios.get(
-      `${process.env.React_App_API}/api/v1/charges/getsetting`
+      `${process.env.REACT_APP_API}/api/v1/charges/getsetting`
     );
 console.log("Data for settings: ",data)
     setSettings(data || {});
@@ -82,7 +82,7 @@ console.log("Data for settings: ",data)
       setLoading(true);
 
       const { data } = await axios.put(
-        `${process.env.React_App_API}/api/v1/charges/update/${selectedCharge._id}`,
+        `${process.env.REACT_APP_API}/api/v1/charges/update/${selectedCharge._id}`,
         { amount: newAmount }
       );
 
@@ -102,7 +102,7 @@ console.log("Data for settings: ",data)
  const handleSettingsUpdate = async () => {
   try {
     const { data } = await axios.put(
-      `${process.env.React_App_API}/api/v1/charges/updatesetting`,
+      `${process.env.REACT_APP_API}/api/v1/charges/updatesetting`,
       {
         [settingKey]: Number(settingValue),
       }

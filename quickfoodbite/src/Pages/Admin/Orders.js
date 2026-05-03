@@ -30,9 +30,10 @@ const AdminOrders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `${process.env.React_App_API}/api/v1/orders/all-orders`
+          `${process.env.REACT_APP_API}/api/v1/orders/all-orders`
         );
         setOrders(response.data.orders);
+        console.log("Orders for Admin:", response)
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -124,25 +125,32 @@ const AdminOrders = () => {
                 <thead className="table-dark">
                   <tr>
                     <th scope="col">User Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Product Price</th>
-                    <th scope="col">Quantity</th>
+                    <th scope="col">User Contact</th>
+                    <th scope="col">Product Details</th>
                     <th scope="col">Total Amount</th>
+                    <th scope="col">Product Amount</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Assigned Mod</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {currentProducts.map((order) => (
+                  {orders.map((order) => (
                     <tr key={order?._id}>
-                      <td>{order?.userId?.firstName}</td>
-                      <td>{order?.userId?.email}</td>
-                      <td>{order?.items?.[0]?.productId?.name}</td>
-                      <td>${order?.items?.[0]?.productId?.price}</td>
-                      <td>{order?.items?.[0]?.quantity}</td>
-                      <td>${order?.totalAmount}</td>
+                      <td>{order?.userName}</td>
+                      <td>{order?.phone}</td>
+                       <td>
+  {order?.items?.map((p) => (
+    <p key={p._id}>
+      {p?.name} x {p?.quantity} Rs{p?.price}
+    </p>
+  ))}
+</td>
+                     
+                      <td>Rs{order?.total}</td>
+                      <td>Rs{order?.subtotal}</td>
                       <td>{order?.status}</td>
+                     <td>{order?.assignedModerator?.name}</td>
                     </tr>
                   ))}
                 </tbody>

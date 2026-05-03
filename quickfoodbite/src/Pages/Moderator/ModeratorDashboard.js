@@ -4,12 +4,14 @@ import pickUp from "../../assets/pickUp.png";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
 const ModeratorDashboard = () => {
     const [auth, setAuth] = useAuth();
     const navigate = useNavigate();
+        const location = useLocation();
+    
    const handleLogout = () => {
       toast.success("Logout Successfully");
       setAuth({
@@ -21,6 +23,7 @@ const ModeratorDashboard = () => {
       localStorage.removeItem("auth");
   
       navigate("/login");
+      console.log("LOCATION STATE:", location.state);
     };
   return (
    <>

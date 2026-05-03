@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
    const { addToCart } = useCart(); 
   const { name, price, } = product;
    const params = useParams();
-  console.log("asbndasdnasm", product);
+
   //  const [price, setPrice] = useState("");
     const [image, setImage] = useState("");
     const [id, setId] = useState("");
@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
     const getSingleProduct = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/product/single-product/${product._id}`
+        `${process.env.REACT_APP_API}/api/v1/product/single-product/${product._id}`
       );
       
       setId(data?.product?._id);
@@ -57,25 +57,32 @@ const ProductCard = ({ product }) => {
     };
   
   return (
-    <Link
-      
-      style={{
-        textDecoration: "none",
-      }}
-    >
-      <Card className="m-1" style={{ width: "22rem", marginRight: "3px" }}>
+    <Card className="w-100 h-100 shadow-sm border-0 product-card">
+      <Card.Body className="d-flex flex-column">
         
-        <Card.Body className="text-start">
-          <Card.Title style={{ fontSize: "20px", fontWeight: "bold" }}>{name}</Card.Title>
-          {/* <Card.Text>{shortDesc}</Card.Text> */}
-       <Card.Text style={{ color: "rgb(225, 29, 72)", fontSize: "20px" }}>
-  Rs. {price}
-</Card.Text>
+        {/* Product Name */}
+        <Card.Title className="fw-bold fs-6 fs-md-5">
+          {name}
+        </Card.Title>
 
-          <Button variant="danger" className="w-100" onClick={handleAddToCart}>Order Now</Button>
-        </Card.Body>
-      </Card>
-    </Link>
+        {/* Price */}
+        <Card.Text className="text-danger fs-5 mb-2">
+          Rs. {price}
+        </Card.Text>
+
+        {/* Spacer */}
+        <div className="mt-auto">
+          <Button
+            variant="danger"
+            className="w-100"
+            onClick={handleAddToCart}
+          >
+            Order Now
+          </Button>
+        </div>
+
+      </Card.Body>
+    </Card>
   );
 };
 

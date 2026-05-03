@@ -28,7 +28,7 @@ const ProductPage = () => {
   const getSingleProduct = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/product/single-product/${params.id}`
+        `${process.env.REACT_APP_API}/api/v1/product/single-product/${params.id}`
       );
       setName(data?.product?.name);
       setId(data?.product?._id);

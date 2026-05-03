@@ -28,20 +28,24 @@ const ModeratorOrders = () => {
   
       navigate("/login");
     };
-    useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.React_App_API}/api/v1/orders/all-orders`
-        );
-        setOrders(response.data.orders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
+  useEffect(() => {
+  const fetchOrders = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/api/v1/orders/my-orders`,
+      {},
+      {
+        headers: {
+          Authorization: auth?.token,
+        },
       }
-    };
+    );
+    console.log("My orders: ", data)
 
-    fetchOrders();
-  }, []);
+    setOrders(data.orders);
+  };
+
+  fetchOrders();
+}, []);
 
   // Calculate the index of the last product on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -121,11 +125,11 @@ const ModeratorOrders = () => {
                 <thead className="table-dark">
                   <tr>
                     <th scope="col">User Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Product Price</th>
-                    <th scope="col">Quantity</th>
+                    <th scope="col">User Contact </th>
+                    <th scope="col">User Location</th>
+                    <th scope="col">Products</th>
                     <th scope="col">Total Amount</th>
+                    <th scope="col">Product Amount</th>
                     <th scope="col">Status</th>
                   </tr>
                 </thead>
@@ -133,12 +137,19 @@ const ModeratorOrders = () => {
                 <tbody>
                   {currentProducts.map((order) => (
                     <tr key={order?._id}>
-                      <td>{order?.userId?.firstName}</td>
-                      <td>{order?.userId?.email}</td>
-                      <td>{order?.items?.[0]?.productId?.name}</td>
-                      <td>${order?.items?.[0]?.productId?.price}</td>
-                      <td>{order?.items?.[0]?.quantity}</td>
-                      <td>${order?.totalAmount}</td>
+                      <td>{order?.userName}</td>
+                      <td>{order?.phone}</td>
+                      <td>{order?.location}</td>
+                     <td>
+  {order?.items?.map((p) => (
+    <p key={p._id}>
+      {p.name} x {p.quantity}
+    </p>
+  ))}
+</td>
+                   
+                      <td>Rs.{order?.total}</td>
+                      <td>Rs.{order?.subtotal}</td>
                       <td>{order?.status}</td>
                     </tr>
                   ))}

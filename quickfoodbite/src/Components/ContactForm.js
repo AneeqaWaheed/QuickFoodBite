@@ -20,7 +20,7 @@ const ContactForm = () => {
 
     try {
       const res = await axios.post(
-        `${process.env.React_App_API}/api/v1/contact/contact`,
+        `${process.env.REACT_APP_API}/api/v1/contact/contact`,
         formData
       );
       console.log("form data: ", res);

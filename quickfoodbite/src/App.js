@@ -30,6 +30,7 @@ import ModeratorRoute from "./Components/Routes/ModeratorRoute";
 import ModeratorProfile from "./Pages/Moderator/ModeratorProfile";
 import ModeratorOrders from "./Pages/Moderator/ModeratorOrders";
 import ClaimOrder from "./Pages/Moderator/OrderClaimPage";
+import ClaimRedirectPage from "./Pages/Moderator/OrderClaimPage";
 
 function App() {
   return (
@@ -54,7 +55,7 @@ function App() {
         <Route path="moderator" element={<ModeratorDashboard/>}/>
         <Route path="moderator/My-Profile" element={<ModeratorProfile/>}/>
         <Route path="moderator/orders" element={<ModeratorOrders/>}/>
-        <Route path="moderator/claim/:orderId" element={<ClaimOrder />} />
+        <Route path="moderator/claim/:orderId" element={<ClaimRedirectPage />} />
 
         </Route>
 

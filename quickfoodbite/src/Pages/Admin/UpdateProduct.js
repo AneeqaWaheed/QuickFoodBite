@@ -26,7 +26,7 @@ const UpdateProduct = () => {
   const getSingleProduct = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/product/single-product/${params.id}`
+        `${process.env.REACT_APP_API}/api/v1/product/single-product/${params.id}`
       );
       console.log("asdjashdjas", data);
       setName(data?.product?.name);
@@ -48,7 +48,7 @@ const UpdateProduct = () => {
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.React_App_API}/api/v1/category/get-category`
+        `${process.env.REACT_APP_API}/api/v1/category/get-category`
       );
       if (data?.success) {
         setCategories(data?.category);
@@ -78,7 +78,7 @@ const UpdateProduct = () => {
     
       // Send the formData to the server
       const { data } = await axios.put(
-        `${process.env.React_App_API}/api/v1/product/update-product/${id}`,
+        `${process.env.REACT_APP_API}/api/v1/product/update-product/${id}`,
         productData,
         {
           headers: {

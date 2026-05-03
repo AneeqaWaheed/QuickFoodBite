@@ -12,7 +12,7 @@ const ProductsList = ({ products }) => {
 
   return (
     <Container className="my-5">
-      <Row className="">
+      <Row className="g-3">
         {products.map((product) => (
           <Col
             key={product._id}
