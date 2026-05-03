@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
     const [category, setCategory] = useState("");
     const [type, setType] = useState("");
     const [discount, setDiscount] = useState("");
-    const [quantity, setQuantity] = useState(1);
+
   // const shortDesc = description.split(" ").slice(0, 10).join(" ");
     const getSingleProduct = async () => {
     try {

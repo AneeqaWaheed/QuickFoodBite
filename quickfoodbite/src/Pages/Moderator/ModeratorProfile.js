@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../../context/auth";
 import pickUp from "../../assets/pickUp.png";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
