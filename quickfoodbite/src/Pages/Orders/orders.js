@@ -198,6 +198,7 @@ const handleProceed = async () => {
     // 🔥 2. OPTIONAL: WhatsApp message
   const message = `
 🛒 *New Order Received*
+*Location: *, ${location}
 
 📦 *Items:*
 ${cart
