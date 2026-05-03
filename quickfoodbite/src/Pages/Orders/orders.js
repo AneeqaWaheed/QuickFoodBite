@@ -151,7 +151,7 @@ const handleProceed = async () => {
 
   const summary = calculateSummary();
   const minOrder = settings?.minOrderPrice || 0;
-  if (summary.grandTotal < minOrder) {
+  if (summary.subtotal < minOrder) {
       toast.error(`Minimum order is Rs ${minOrder}`);
       return;
     }
@@ -180,6 +180,8 @@ const handleProceed = async () => {
     location,
     items: formattedItems, // ✅ MUST BE ARRAY
     total:OrderPrice,
+    deliveryCharges:summary.deliveryCharge,
+    PackagingFee: summary.packagingCharge,
    ...summary,
   }),
       }
@@ -397,7 +399,7 @@ useEffect(() => {
   onClick={() => {
     const minOrder = settings?.minOrderPrice ?? 0;
 
-    if (s.grandTotal < minOrder) {
+    if (s.subtotal < minOrder) {
       toast.error(`Minimum order is Rs ${minOrder}`);
       return;
     }

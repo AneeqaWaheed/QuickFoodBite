@@ -128,8 +128,10 @@ const ModeratorOrders = () => {
                     <th scope="col">User Contact </th>
                     <th scope="col">User Location</th>
                     <th scope="col">Products</th>
-                    <th scope="col">Total Amount</th>
                     <th scope="col">Product Amount</th>
+                    <th scope="col">Delivery Charges</th>
+                    <th scope="col">Packaging Fee</th>
+                    <th scope="col">Total Amount</th>
                     <th scope="col">Status</th>
                   </tr>
                 </thead>
@@ -148,8 +150,10 @@ const ModeratorOrders = () => {
   ))}
 </td>
                    
-                      <td>Rs.{order?.total}</td>
                       <td>Rs.{order?.subtotal}</td>
+                      <td>Rs.{order?.deliveryCharges}</td>
+                      <td>Rs.{order?.PackagingFee}</td>
+                      <td>Rs.{order?.total}</td>
                       <td>{order?.status}</td>
                     </tr>
                   ))}

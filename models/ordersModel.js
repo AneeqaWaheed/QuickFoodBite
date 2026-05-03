@@ -28,7 +28,8 @@ const orderSchema = new mongoose.Schema(
     subtotal: Number,
     discountTotal: Number,
     total: Number,
-
+    deliveryCharges: Number,
+    PackagingFee: Number,
     userName: String,
     phone: String,
     location: String,

@@ -14,6 +14,8 @@ export const createOrder = async (req, res) => {
       userName,
       phone,
       location,
+      deliveryCharges,
+      PackagingFee
     } = req.body;
 
     if (!items || items.length === 0) {
@@ -32,6 +34,8 @@ const token = uuidv4();
       userName,
       phone,
       location,
+      deliveryCharges,
+      PackagingFee,
        claimToken: token,
     }).save();
 
