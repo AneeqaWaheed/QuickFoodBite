@@ -1,4 +1,4 @@
-import React from "react";
+
 import "../styles/HomeSection1.css";
 
 const HomeSection1 = ({ linkElement, imageUrl }) => {

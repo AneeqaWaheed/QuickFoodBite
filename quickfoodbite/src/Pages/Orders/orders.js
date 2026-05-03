@@ -1,7 +1,6 @@
 
 import { toast } from "react-toastify";
 import { useCart } from "../../context/cart";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
 import { useAuth } from "../../context/auth";
 import "./orderStyle.css";
 import { Button } from "react-bootstrap";

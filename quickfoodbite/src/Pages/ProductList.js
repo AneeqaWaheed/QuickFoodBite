@@ -1,8 +1,7 @@
 // ProductsList.js
-import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import ProductCard from "../Components/Product/productCard";
-import { toast } from "react-toastify";
+
 
 const ProductsList = ({ products }) => {
   // Check if products list is empty

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Modal, Input, Button } from "antd";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../context/auth";
 import { NavLink, useNavigate } from "react-router-dom";

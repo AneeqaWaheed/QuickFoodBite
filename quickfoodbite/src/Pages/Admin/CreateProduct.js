@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { storage } from "../../firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 } from "uuid";
-import { Button, Select } from "antd";
+import {  Select } from "antd";
 import { useAuth } from "../../context/auth";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { NavLink, useNavigate } from "react-router-dom";
 const { Option } = Select;
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/contact.css";
 import { toast } from "react-toastify";
 import axios from "axios";

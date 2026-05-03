@@ -1,4 +1,4 @@
-import React from "react";
+
 import Slider from "react-slick";
 import "../styles/clientsays.css";
 import Clients from "../data/ClientSays";

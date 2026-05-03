@@ -1,10 +1,7 @@
-import React from "react";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import { useAuth } from "../../context/auth";
 import bgImage from "../../assets/bg-boxed.jpg";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 const AdminDashboard = () => {

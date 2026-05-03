@@ -1,11 +1,9 @@
-import React, { useEffect, useState }  from "react";
+import { useEffect, useState }  from "react";
 import { useAuth } from "../../context/auth";
 import pickUp from "../../assets/pickUp.png";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { NavLink, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
 

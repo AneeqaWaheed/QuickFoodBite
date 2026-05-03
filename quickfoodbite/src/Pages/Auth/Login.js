@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+
 import "../../styles/register.css";
 import { useAuth } from "../../context/auth";
-import Layout from "../../Components/Layout/Layout";
+
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
 const Login = () => {
   const [email, setEmail] = useState("");

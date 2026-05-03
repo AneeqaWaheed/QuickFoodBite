@@ -1,5 +1,4 @@
-import React from "react";
-import Footer from "./Footer";
+
 import Navbar from "./Navbar";
 import { Helmet } from "react-helmet";
 import { ToastContainer } from "react-toastify";
@@ -7,9 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const GeneralLayout = ({
   children,
   title,
-  description,
-  keywords,
-  author,
+
   minHeight,
 }) => {
   return (

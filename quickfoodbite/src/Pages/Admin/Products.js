@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminMenu from "../../Components/Layout/AdminMenu";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 const Products = () => {
   const [products, setProducts] = useState([]);

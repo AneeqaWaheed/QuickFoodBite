@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import AdminMenu from "../../Components/Layout/AdminMenu";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
 import { toast } from "react-toastify";
 import CategoryForm from "../../Components/Form/CategoryForm";
 import axios from "axios";
 import { Modal } from "antd";
 import bgImage from "../../assets/bg-boxed.jpg";
 import "../../styles/createCategory.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../context/auth";
 import { NavLink, useNavigate } from "react-router-dom";
 const CreateCategory = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import { FaBurger } from "react-icons/fa6";
 import { useAuth } from "../../context/auth";
 import { toast } from "react-toastify";

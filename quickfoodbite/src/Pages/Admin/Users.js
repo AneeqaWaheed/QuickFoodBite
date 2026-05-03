@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import GeneralLayout from "../../Components/Layout/GeneralLayout";
+import  { useEffect, useState } from "react";
 import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
