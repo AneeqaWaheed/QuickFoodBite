@@ -15,16 +15,8 @@ const Navbar = ({ backgroundColor, position }) => {
         className="navbar navbar-expand-lg bg-light"
         style={{ backgroundColor: backgroundColor, position: position }}
       >
-        <div className="container-fluid">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
+        <div className="container-fluid mb-2">
+          
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -35,8 +27,8 @@ const Navbar = ({ backgroundColor, position }) => {
             >
               <path d="M2.5 12.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5z" />
             </svg>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+          
+        <div className="navbar-collapse">
             <Link
   className="navbar-brand fw-bold"
   to="/"
@@ -50,12 +42,14 @@ const Navbar = ({ backgroundColor, position }) => {
              
               <li className="nav-item">
         <div onClick={() => setCartOpen(true)}>
-    <span className="cart-circle">
-      <>
-      <FaShoppingCart /> ({cart.length})
-     
-      </>
-    </span>
+    <div
+  onClick={() => setCartOpen(true)}
+  className="position-fixed top-0 end-0 m-3 px-3 py-2 bg-danger text-white rounded-pill shadow d-flex align-items-center"
+  style={{ zIndex: 1050, cursor: "pointer" }}
+>
+  <FaShoppingCart className="me-1" />
+  {cart.length}
+</div>
 
   
 

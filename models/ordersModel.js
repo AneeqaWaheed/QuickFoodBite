@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "picked", "delivered"],
+      enum: ["pending", "picked", "delivered", "cancelled"],
       default: "pending",
     },
 
@@ -55,6 +55,9 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    expiresAt: {
+  type: Date,
+},
   },
   { timestamps: true }
 );

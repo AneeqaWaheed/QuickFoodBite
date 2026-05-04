@@ -120,8 +120,9 @@ const [auth, setAuth] = useAuth();
                   <tr>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
-                    <th scope="col">Gender</th>
+                    <th scope="col">Phone</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Student Id</th>
                     <th scope="col">Role</th>
                   </tr>
                 </thead>
@@ -130,7 +131,8 @@ const [auth, setAuth] = useAuth();
                     <tr key={user._id}>
                       <td>{user.firstName}</td>
                       <td>{user.lastName || "No Last Name"}</td>
-                      <td>{user.gender}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.studentId}</td>
                       <td>{user.email}</td>
                       <td>{user.role}</td>
                     </tr>

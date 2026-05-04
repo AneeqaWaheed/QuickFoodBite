@@ -47,8 +47,7 @@ useEffect(() => {
         
       };
       addToCart(productDetails); // Add product details to cart context
-      toast.success(`Added ${quantity} of ${name} to the cart`);
-      console.log(`Added ${quantity} of ${name} to the cart`);
+  
     };
   
   return (

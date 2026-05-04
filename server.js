@@ -10,6 +10,9 @@ import paymentRoute from "./routes/paymentRoute.js";
 import orderRoute from "./routes/orderRoute.js";
 import contactRoute from "./routes/contactRoute.js";
 import chargesRoutes from "./routes/chargesRoute.js";
+import cron from "node-cron";
+import Order from "./models/ordersModel.js";
+
 // import deliveryChargeRoute from "./routes/SettingSchemaRoute.js";
 // import SettingSchema from "./models/SettingSchema.js";
 
@@ -48,6 +51,25 @@ app.use("/api/v1/charges", chargesRoutes);
 app.use("/api/v1/orders", orderRoute);
 // app.use("/api/v1/deliveryCharges", deliveryChargeRoute);
 // //rest api
+
+
+cron.schedule("* * * * *", async () => {
+  try {
+    const result = await Order.updateMany(
+      {
+        status: "pending",
+        expiresAt: { $lte: new Date() },
+      },
+      {
+        $set: { status: "cancelled" },
+      }
+    );
+
+    console.log("UPDATED:", result.modifiedCount);
+  } catch (error) {
+    console.log("CRON ERROR:", error);
+  }
+});
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to QUICKFOODBITE</h1>");
 });

@@ -153,6 +153,7 @@ const ModeratorOrders = () => {
                       <td>Rs.{order?.PackagingFee}</td>
                       <td>Rs.{order?.total}</td>
                       <td>{order?.status}</td>
+                      
                     </tr>
                   ))}
                 </tbody>

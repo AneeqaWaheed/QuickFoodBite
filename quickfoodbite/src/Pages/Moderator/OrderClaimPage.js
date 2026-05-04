@@ -1,46 +1,41 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
 
 const ClaimRedirectPage = () => {
-    const location = useLocation();
-const token = new URLSearchParams(location.search).get("token");
-const { orderId } = useParams();
+  const location = useLocation();
+  const token = new URLSearchParams(location.search).get("token"); // (optional if you use later)
+  const { orderId } = useParams();
   const [auth] = useAuth();
   const navigate = useNavigate();
-  const hasCalled = useRef(false);
-   const claimOrder = async () => {
-  console.log("STEP 1: inside claimOrder");
+  
+  const [errorMsg, setErrorMsg] = useState("");
 
-  try {
-    console.log("STEP 2: before auth check");
+  // ✅ Claim Order Function
+  const claimOrder = async () => {
+    try {
+      const { data } = await axios.put(
+        `${process.env.REACT_APP_API}/api/v1/orders/claim/${orderId}`,
+        {},
+        {
+          headers: {
+            Authorization: auth?.token,
+          },
+        }
+      );
+      const itemsText = data?.order?.items
+  ?.map((i) => `${i.name} x ${i.quantity}`)
+  .join("\n");
 
-    if (!auth?.user) {
-      console.log("STEP 3: NOT LOGGED IN");
-      navigate("/login", {
-        state: {
-          redirect: `/dashboard/moderator/claim/${orderId}`,
-        },
-      });
-      return;
-    }
+const message = `${itemsText}\nPicked by ${auth?.user?.firstName}. It will be delivered soon.`;
 
-    console.log("STEP 4: calling backend");
-
-    const { data } = await axios.put(
-      `${process.env.REACT_APP_API}/api/v1/orders/claim/${orderId}`,
-      {},
-      {
-        headers: {
-          Authorization: auth?.token,
-        },
-      }
-    );
-
-    console.log("STEP 5: response", auth);
      if (data?.success) {
-  const message = `Your Order is Picked by ${auth?.user?.firstName}`;
+  const itemsText = data?.order?.items
+    ?.map((i) => `${i.name} x ${i.quantity}`)
+    .join("\n");
+
+  const message = `${itemsText}\nPicked by me ${auth?.user?.firstName}. It will be delivered soon.`;
 
   const whatsappURL = `https://wa.me/${data?.order?.phone}?text=${encodeURIComponent(message)}`;
 
@@ -48,29 +43,82 @@ const { orderId } = useParams();
 
   navigate("/dashboard/moderator/orders", { replace: true });
 }
-  } catch (err) {
-   console.log("ERROR:", err.response?.data);
+    } catch (err) {
+  console.log("ERROR:", err.response?.data);
 
-  // 👉 If already claimed, still redirect
-  setTimeout(() => {
-        navigate("/dashboard/moderator/orders", { replace: true });
-      }, 5000);
-  if (err.response?.status === 400) {
-    navigate("/dashboard/moderator/my-orders", { replace: true });
-  }
+if (err.response?.status === 400) {
+  setErrorMsg("⚠️ This order is already picked by another moderator");
+} 
+else if (err.response?.data?.status === "cancelled") {
+  setErrorMsg("⚠️ Order is cancelled");
+} 
+else {
+  setErrorMsg("Something went wrong. Please try again.");
+}
+}
+  };
 
-  }
-};
+  // ✅ Check Auth Only (NO auto claim)
+  useEffect(() => {
+    if (!orderId) return;
 
-useEffect(() => {
-  if (!orderId || !auth?.user) return;
+    if (!auth?.user) {
+      navigate("/login", {
+        state: {
+          redirect: `/dashboard/moderator/claim/${orderId}`,
+        },
+      });
+    }
+  }, [orderId, auth?.user, navigate]);
 
-  if (hasCalled.current) return;   // 🚫 block duplicate
-  hasCalled.current = true;
+  // ✅ UI
+  return (
+  <div
+  className="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 vh-100"
+  style={{
+    background: "rgba(0,0,0,0.6)",
+    backdropFilter: "blur(10px)",
+    zIndex: 1050,
+  }}
+>
+  <div className="card shadow p-4 text-center" style={{ minWidth: "300px" }}>
+    
+    {/* ✅ Show error if exists */}
+    {errorMsg ? (
+      <>
+        <h5 className="text-danger mb-3">{errorMsg}</h5>
 
-  claimOrder();
-}, [orderId, auth?.user]);
-  return <h4>Assigning order...</h4>;
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/dashboard/moderator/orders")}
+        >
+          Go Back
+        </button>
+      </>
+    ) : (
+      <>
+        <h4 className="mb-3">Do you want to pick this order?</h4>
+
+        <div className="d-flex justify-content-center">
+          <button
+            className="btn btn-success me-2"
+            onClick={claimOrder}
+          >
+            Yes, Pick Order
+          </button>
+
+          <button
+            className="btn btn-danger"
+            onClick={() => navigate("/dashboard/moderator/orders")}
+          >
+            Cancel
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+</div>
+  );
 };
 
 export default ClaimRedirectPage;

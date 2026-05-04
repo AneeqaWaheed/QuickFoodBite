@@ -81,8 +81,12 @@ const calculateSummary = () => {
 const liquidDeliveryTotal = liquid > 0 ? liquid * deliveryLiquid : 0;
 const solidDeliveryTotal = solid > 0 ? deliverySolid : 0;
 
-const calculatedDelivery = liquidDeliveryTotal + solidDeliveryTotal;
-const minDelivery = subtotal * 0.18;
+const calculatedDelivery = settings?.minOrderPrice
+  ? (liquid > solid
+      ? liquidDeliveryTotal + solidDeliveryTotal * 0.5
+      : liquidDeliveryTotal + solidDeliveryTotal)
+  : liquidDeliveryTotal + solidDeliveryTotal;
+const minDelivery = subtotal * 0.17;
 
 const isMinApplied = calculatedDelivery < minDelivery;
 
@@ -109,6 +113,7 @@ const deliveryCharge = isMinApplied
       finalTotal:subtotal,
       itemsCount: cart.length,
       isMinDeliveryApplied: isMinApplied, 
+      deliveryLiquid
     };
   };
 
@@ -350,7 +355,15 @@ useEffect(() => {
                 <p>Global Discount <span>-Rs {s.globalDiscountAmount}</span></p>
               )}
               <p>
+                <div>
   Delivery{" "}
+  {s.liquid ?(
+  <small style={{ color: "gray", marginLeft: "5px" }}>
+        (Liquid Delivery per item { s.deliveryLiquid} )
+      </small>
+  ) : null}
+      </div>
+  
   <span>
     Rs {s.deliveryCharge}
     {s.isMinDeliveryApplied && (
@@ -423,11 +436,11 @@ useEffect(() => {
           </p>
 
           <p className="text-muted mb-2">
-            This may take a few minutes. You will receive a WhatsApp message once it's picked.
+           Your order will be placed when you receive a confirmation message from the moderator
           </p>
 
           <p className="text-danger small">
-            If not picked within 10 minutes, you can place your order again.
+            If not picked within 5 minutes, you can place your order again.
           </p>
 
         </div>

@@ -62,7 +62,7 @@ export const getProductController = async (req, res) => {
   try {
     const products = await Product.find({})
       .populate("category")
-      .limit(12)
+      .limit(1000)
       .sort({ createdAt: -1 });
     res.status(200).send({
       success: true,
