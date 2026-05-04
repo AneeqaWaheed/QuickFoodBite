@@ -27,11 +27,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // //routes
-// app.use(
-//   cors({
-//     origin: "https://burger-shop-eight.vercel.app", // Replace with your Vercel URL
-//   })
-// );
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 app.use(cors());
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/category", categoryRoute);
@@ -49,7 +48,7 @@ app.get("/", (req, res) => {
   res.send("<h1>Welcome to QUICKFOODBITE</h1>");
 });
 //PORT
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 //run listen
 app.listen(PORT, () => {

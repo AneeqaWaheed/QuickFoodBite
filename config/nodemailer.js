@@ -9,10 +9,7 @@ console.log("EMAIL_PASSWORD:", process.env.EMAIL_PASSWORD);
 const transport = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 587,              // 👈 use 587 instead of 465
-  secure: false,          // 👈 must be false for 587
-  requireTLS: true,       // 👈 enforce TLS
-  family: 4, 
+  port: 465,
   secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL,
