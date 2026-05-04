@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 //PORT
 const PORT = process.env.PORT || 8080;
 
-//run listen
-app.listen(PORT, () => {
-  console.log(`Server running  mode on ${PORT}`);
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on ${PORT}`);
 });
