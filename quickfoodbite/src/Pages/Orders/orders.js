@@ -196,7 +196,7 @@ Packaging: Rs ${summary.packagingCharge}
 ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 `;
 
-    const whatsappURL = `https://wa.me/923437648604?text=${encodeURIComponent(
+    const whatsappURL = `https://wa.me/03265349097?text=${encodeURIComponent(
       message
     )}`;
 
