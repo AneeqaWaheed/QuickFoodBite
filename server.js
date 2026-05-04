@@ -17,7 +17,9 @@ import chargesRoutes from "./routes/chargesRoute.js";
 dotenv.config();
 
 //database config
-connectDB();
+connectDB()
+  .then(() => console.log("DB Connected"))
+  .catch((err) => console.log("DB Error", err));
 
 //rest objects
 const app = express();
@@ -28,10 +30,12 @@ app.use(morgan("dev"));
 
 // //routes
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "https://69f7b5824041630008847b14--qucikfoodbite.netlify.app/"
+  ],
   credentials: true
 }));
-app.use(cors());
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use(express.urlencoded({ extended: true }));
