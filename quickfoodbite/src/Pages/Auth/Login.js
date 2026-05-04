@@ -13,6 +13,7 @@ const Login = () => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [errorMessage, setErrorMessage] = useState("");
 
 
   const [finalRedirect, setFinalRedirect] = useState(null);
@@ -53,10 +54,35 @@ const redirectPath = location.state?.from?.pathname;
       } else {
         toast.error(res.data.message);
       }
-  } catch (error) {
-    console.log(error);
-    toast.error("Something went Wrong");
+ } catch (error) {
+  console.log(error);
+
+  const status = error.response?.status;
+  const message = error.response?.data?.message;
+
+  if (!error.response) {
+    toast.error("Network error. Please check your internet.");
+    setErrorMessage(error.message)
+    return;
   }
+
+  if (status === 404) {
+    toast.error(message || "User not found");
+    setErrorMessage(message || "User not found")
+  } 
+  else if (status === 401) {
+    toast.error(message || "Unauthorized access");
+    setErrorMessage(message || "Password Incorrect")
+  } 
+  else if (status === 400) {
+    toast.error(message || "Invalid request");
+    setErrorMessage(message || "Invalid Request")
+  } 
+  else {
+    toast.error(message || "Something went wrong");
+    setErrorMessage(message || "Something went wrong")
+  }
+}
 };
  useEffect(() => {
     if (finalRedirect) {
@@ -79,7 +105,10 @@ const redirectPath = location.state?.from?.pathname;
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+  setEmail(e.target.value);
+  setErrorMessage(""); // clear error when user edits
+}}
                 className="form-control"
                 id="email"
                 placeholder="Enter Your Email"
@@ -99,13 +128,21 @@ const redirectPath = location.state?.from?.pathname;
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+  setPassword(e.target.value);
+  setErrorMessage(""); // clear error when user edits
+}}
                 className="form-control"
                 id="password"
                 placeholder="Enter Your Password"
                 required
               />
             </div>
+            {errorMessage && (
+  <small className="text-danger d-block mt-1">
+    {errorMessage}
+  </small>
+)}
 
             <button type="submit" className="btn btn-danger">
               Submit
