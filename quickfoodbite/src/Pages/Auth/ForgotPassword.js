@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import GeneralLayout from "../../Components/Layout/GeneralLayout";
 import "../../styles/register.css";
+import SimpleLayout from "../../Components/Layout/SimpleLayout";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <GeneralLayout title={"ForgotPassword - QuickFoodBite"}>
+    <SimpleLayout title={"ForgotPassword - QuickFoodBite"}>
       <div className="register-container">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Forgot Password</h1>
@@ -74,7 +75,7 @@ const ForgotPassword = () => {
           <img src="/Images/login.jpg" alt="Registration Illustration" />
         </div> */}
       </div>
-    </GeneralLayout>
+    </SimpleLayout>
   );
 };
 

@@ -61,25 +61,25 @@ const redirectPath = location.state?.from?.pathname;
   const message = error.response?.data?.message;
 
   if (!error.response) {
-    toast.error("Network error. Please check your internet.");
+  
     setErrorMessage(error.message)
     return;
   }
 
   if (status === 404) {
-    toast.error(message || "User not found");
+
     setErrorMessage(message || "User not found")
   } 
   else if (status === 401) {
-    toast.error(message || "Unauthorized access");
+  
     setErrorMessage(message || "Password Incorrect")
   } 
   else if (status === 400) {
-    toast.error(message || "Invalid request");
+ 
     setErrorMessage(message || "Invalid Request")
   } 
   else {
-    toast.error(message || "Something went wrong");
+  
     setErrorMessage(message || "Something went wrong")
   }
 }
