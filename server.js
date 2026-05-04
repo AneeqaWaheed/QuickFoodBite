@@ -32,7 +32,7 @@ app.use(morgan("dev"));
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://69f7b5824041630008847b14--qucikfoodbite.netlify.app/"
+    "https://69f808f399c8c1e818d10792--qucikfoodbite.netlify.app"
   ],
   credentials: true
 }));
