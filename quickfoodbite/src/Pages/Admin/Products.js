@@ -9,9 +9,8 @@ import { Link } from "react-router-dom";
 import { NavLink, useNavigate } from "react-router-dom";
 const Products = () => {
   const [products, setProducts] = useState([]);
-  console.log("Products: ", products)
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(7); // Number of products per page
+  const [productsPerPage] = useState(5); // Number of products per page
  const [auth, setAuth] = useAuth();
     const navigate = useNavigate();
    const handleLogout = () => {

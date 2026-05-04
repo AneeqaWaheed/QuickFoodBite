@@ -132,26 +132,25 @@ const AdminOrders = () => {
                   </tr>
                 </thead>
 
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order?._id}>
-                      <td>{order?.userName}</td>
-                      <td>{order?.phone}</td>
-                       <td>
-  {order?.items?.map((p) => (
-    <p key={p._id}>
-      {p?.name} x {p?.quantity} Rs{p?.price}
-    </p>
+            <tbody>
+  {currentProducts.map((order) => (
+    <tr key={order?._id}>
+      <td>{order?.userName}</td>
+      <td>{order?.phone}</td>
+      <td>
+        {order?.items?.map((p) => (
+          <p key={p._id}>
+            {p?.name} x {p?.quantity} Rs{p?.price}
+          </p>
+        ))}
+      </td>
+      <td>Rs{order?.total}</td>
+      <td>Rs{order?.subtotal}</td>
+      <td>{order?.status}</td>
+      <td>{order?.assignedModerator?.firstName}</td>
+    </tr>
   ))}
-</td>
-                     
-                      <td>Rs{order?.total}</td>
-                      <td>Rs{order?.subtotal}</td>
-                      <td>{order?.status}</td>
-                     <td>{order?.assignedModerator?.firstName}</td>
-                    </tr>
-                  ))}
-                </tbody>
+</tbody>
               </table>
             </div>
 

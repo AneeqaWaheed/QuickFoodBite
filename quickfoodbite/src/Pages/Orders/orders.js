@@ -357,21 +357,25 @@ useEffect(() => {
               <p>
                 <div>
   Delivery{" "}
+  
   {s.liquid ?(
-  <small style={{ color: "gray", marginLeft: "5px" }}>
+  <small style={{ color: "gray", marginLeft: "5px", display: "block" }}>
         (Liquid Delivery per item { s.deliveryLiquid} )
       </small>
   ) : null}
       </div>
   
-  <span>
-    Rs {s.deliveryCharge}
-    {s.isMinDeliveryApplied && (
-      <small style={{ color: "gray", marginLeft: "5px" }}>
-        (18% maximum applied)
-      </small>
-    )}
-  </span>
+<div>
+  <div style={{ textAlign: "right" }}>
+    <span>Rs {s.deliveryCharge}</span>
+  </div>
+
+  {s.isMinDeliveryApplied && (
+    <small style={{ color: "gray", display: "block" }}>
+      (17% maximum applied)
+    </small>
+  )}
+</div>
 </p>
               <p>Packaging <span>Rs {s.packagingCharge}</span></p>
 
