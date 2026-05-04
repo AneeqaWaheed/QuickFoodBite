@@ -196,7 +196,7 @@ Packaging: Rs ${summary.packagingCharge}
 ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 `;
 
-    const whatsappURL = `https://wa.me/03265349097?text=${encodeURIComponent(
+    const whatsappURL = `https://wa.me/923265349097?text=${encodeURIComponent(
       message
     )}`;
 
@@ -355,7 +355,7 @@ useEffect(() => {
     Rs {s.deliveryCharge}
     {s.isMinDeliveryApplied && (
       <small style={{ color: "gray", marginLeft: "5px" }}>
-        (18% minimum applied)
+        (18% maximum applied)
       </small>
     )}
   </span>
