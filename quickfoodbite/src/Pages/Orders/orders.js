@@ -77,7 +77,7 @@ const calculateSummary = () => {
     const packagingSolid =
       charges.find((c) => c.type === "packaging" && c.category === "Solid")?.amount || 0;
 
-    const packagingCharge = liquid * packagingLiquid + solid * packagingSolid;
+    const packagingCharge =  packagingSolid;
 const liquidDeliveryTotal = liquid > 0 ? liquid * deliveryLiquid : 0;
 const solidDeliveryTotal = solid > 0 ? deliverySolid : 0;
 
