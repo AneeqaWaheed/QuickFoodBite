@@ -12,6 +12,7 @@ const ProductCard = ({ product }) => {
     const [category, setCategory] = useState("");
     const [type, setType] = useState("");
     const [discount, setDiscount] = useState("");
+    const [loading, setLoading] = useState(false);
     const quantity = 1;
 
   // const shortDesc = description.split(" ").slice(0, 10).join(" ");
@@ -36,6 +37,7 @@ useEffect(() => {
   getSingleProduct(id);
 }, [getSingleProduct, id]);
   const handleAddToCart = () => {
+    setLoading(true);
       const productDetails = {
         id,
         name,
@@ -46,7 +48,16 @@ useEffect(() => {
         discount
         
       };
-      addToCart(productDetails); // Add product details to cart context
+     try {
+    addToCart(productDetails);
+   
+  } catch (error) {
+    toast.error("Failed to add");
+  } finally {
+    setTimeout(() => {
+      setLoading(false);
+    }, 300); // small delay for better UX
+  }
   
     };
   
@@ -66,13 +77,14 @@ useEffect(() => {
 
         {/* Spacer */}
         <div className="mt-auto">
-          <Button
-            variant="danger"
-            className="w-100"
-            onClick={handleAddToCart}
-          >
-            Order Now
-          </Button>
+         <Button
+  variant="danger"
+  className="w-100"
+  onClick={handleAddToCart}
+  disabled={loading}
+>
+  {loading ? "Adding..." : "Add to Cart"}
+</Button>
         </div>
 
       </Card.Body>
