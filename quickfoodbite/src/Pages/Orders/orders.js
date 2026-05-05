@@ -8,7 +8,15 @@ import axios from "axios";
 import { FaWhatsapp } from "react-icons/fa6";
 
 const CartPage = () => {
-  const { cart, setCart, cartOpen, setCartOpen, increaseQty, decreaseQty   } = useCart();
+  const {
+  cart,
+  setCart,
+  cartOpen,
+  setCartOpen,
+  increaseQty,
+  decreaseQty,
+  clearCart   // 🔥 ADD THIS
+} = useCart();
   const [showModal, setShowModal] = useState(false);
 
 const [userInfo, setUserInfo] = useState({
@@ -18,7 +26,7 @@ const [userInfo, setUserInfo] = useState({
 });
 const [settings, setSettings] = useState({});
 const [charges, setCharges] = useState([]);
-
+const getId = (item) => item._id || item.id;
 const fetchSettings = async () => {
   try {
     const { data } = await axios.get(
@@ -46,6 +54,7 @@ const fetchCharges = async () => {
     console.log(error);
   }
 };
+const round = (num) => Math.round(num);
 const calculateSummary = () => {
   console.log("Settings: ",settings, settings?.minOrderPrice);
     let subtotal = 0;
@@ -90,27 +99,27 @@ const minDelivery = subtotal * 0.17;
 
 const isMinApplied = calculatedDelivery < minDelivery;
 
-const deliveryCharge = isMinApplied
+const deliveryCharge = round(isMinApplied
   ? minDelivery
-  : calculatedDelivery;
+  : calculatedDelivery);
 
     const globalDiscount = settings.globalDiscount || 0;
     const globalDiscountAmount = (subtotal * globalDiscount) / 100;
 
     const beforeTotal = subtotal - itemDiscount - globalDiscountAmount;
 
-    const grandTotal = beforeTotal + deliveryCharge + packagingCharge;
+    const grandTotal = round(beforeTotal + deliveryCharge + packagingCharge);
 
     return {
-      subtotal,
-      itemDiscount,
-      globalDiscountAmount,
+        subtotal: round(subtotal),
+  itemDiscount: round(itemDiscount),
+  globalDiscountAmount: round(globalDiscountAmount),
       deliveryCharge,
-      packagingCharge,
+      packagingCharge: round(packagingCharge),
       grandTotal,
       liquid,
       solid,
-      finalTotal:subtotal,
+      finalTotal: round(subtotal),
       itemsCount: cart.length,
       isMinDeliveryApplied: isMinApplied, 
       deliveryLiquid
@@ -208,8 +217,7 @@ ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
     window.open(whatsappURL, "_blank");
 
     // 🔥 3. CLEAR CART
-    setCart([]);
-    localStorage.removeItem("cart");
+    clearCart();
 
     setShowModal(false);
 
@@ -260,7 +268,7 @@ useEffect(() => {
     ) : (
       <>
         {cart.map((p) => (
-          <div className="cart-items" key={p.id || p._id}>
+          <div className="cart-items" key={getId(p)}>
             <div>
               <h6 className="fw-bold">{p.name}</h6>
               <p className="fw-light fs-6">
@@ -271,7 +279,7 @@ useEffect(() => {
             <div className="qty-container">
               <button
                 className="qty-btn"
-                onClick={() => decreaseQty(p.id || p._id)}
+               onClick={() => decreaseQty(getId(p))}
               >
                 −
               </button>
@@ -280,7 +288,7 @@ useEffect(() => {
 
               <button
                 className="qty-btn"
-                onClick={() => increaseQty(p.id || p._id)}
+               onClick={() => increaseQty(getId(p))}
               >
                 +
               </button>

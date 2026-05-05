@@ -4,90 +4,111 @@ const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-const [cartOpen, setCartOpen] = useState(false);
-  // Load cart once
+  const [cartOpen, setCartOpen] = useState(false);
+
+  // ✅ Helper: always use ONE ID
+  const getId = (item) => item._id || item.id;
+
+  // ✅ Load cart once (and normalize old data)
   useEffect(() => {
     const existingCart = localStorage.getItem("cart");
+
     if (existingCart) {
-      setCart(JSON.parse(existingCart));
+      const parsed = JSON.parse(existingCart);
+
+      const normalized = parsed.map((item) => ({
+        ...item,
+        _id: item._id || item.id, // 🔥 normalize
+      }));
+
+      setCart(normalized);
     }
   }, []);
 
-  // Save helper
+  // ✅ Sync helper (single source of truth)
   const syncCart = (updatedCart) => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // ✅ ADD TO CART (with quantity logic)
+  // ✅ ADD TO CART (no duplicates)
   const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+    const id = getId(product);
 
-      let updatedCart;
+    const exists = cart.find((item) => getId(item) === id);
 
-      if (existing) {
-        updatedCart = prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        updatedCart = [...prev, { ...product, quantity: 1 }];
-      }
+    let updatedCart;
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  };
-
-  // ✅ INCREASE
-  const increaseQty = (id) => {
-    setCart((prev) => {
-      const updated = prev.map((item) =>
-        item.id === id
+    if (exists) {
+      updatedCart = cart.map((item) =>
+        getId(item) === id
           ? { ...item, quantity: item.quantity + 1 }
           : item
       );
+    } else {
+      updatedCart = [
+        ...cart,
+        {
+          ...product,
+          _id: id, // 🔥 enforce single ID
+          quantity: 1,
+        },
+      ];
+    }
 
-      localStorage.setItem("cart", JSON.stringify(updated));
-      return updated;
-    });
+    syncCart(updatedCart);
   };
 
-  // ✅ DECREASE
-  const decreaseQty = (id) => {
-    setCart((prev) => {
-      const updated = prev
-        .map((item) =>
-          item.id === id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0);
+  // ✅ INCREASE QTY
+  const increaseQty = (id) => {
+    const updated = cart.map((item) =>
+      getId(item) === id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    );
 
-      localStorage.setItem("cart", JSON.stringify(updated));
-      return updated;
-    });
+    syncCart(updated);
+  };
+
+  // ✅ DECREASE QTY
+  const decreaseQty = (id) => {
+    const updated = cart
+      .map((item) =>
+        getId(item) === id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter((item) => item.quantity > 0);
+
+    syncCart(updated);
   };
 
   // ✅ REMOVE ITEM
   const removeFromCart = (id) => {
-    const updated = cart.filter((item) => item.id !== id);
+    const updated = cart.filter((item) => getId(item) !== id);
     syncCart(updated);
   };
 
+  // ✅ CLEAR CART (use this after order / logout)
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
   return (
-    <CartContext.Provider value={{
-  cart,
-  setCart,
-  addToCart,
-  increaseQty,
-  decreaseQty,
-  removeFromCart,
-  cartOpen,
-  setCartOpen
-}}>
+    <CartContext.Provider
+      value={{
+        cart,
+        setCart,
+        addToCart,
+        increaseQty,
+        decreaseQty,
+        removeFromCart,
+        clearCart,
+        cartOpen,
+        setCartOpen,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
