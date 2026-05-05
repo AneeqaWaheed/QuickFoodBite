@@ -129,6 +129,7 @@ const AdminOrders = () => {
                     <th scope="col">Product Amount</th>
                     <th scope="col">Status</th>
                     <th scope="col">Assigned Mod</th>
+                    <th scope="col">Order Date</th>
                   </tr>
                 </thead>
 
@@ -148,6 +149,10 @@ const AdminOrders = () => {
       <td>Rs{order?.subtotal}</td>
       <td>{order?.status}</td>
       <td>{order?.assignedModerator?.firstName}</td>
+      <td>
+  {new Date(order?.createdAt).toLocaleDateString()}{" "}
+  {new Date(order?.createdAt).toLocaleTimeString()}
+</td>
     </tr>
   ))}
 </tbody>

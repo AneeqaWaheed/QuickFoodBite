@@ -12,6 +12,7 @@ const ModeratorOrders = () => {
       const [currentPage, setCurrentPage] = useState(1);
       const [productsPerPage] = useState(5); 
     const [auth, setAuth] = useAuth();
+    const [loading, setLoading] = useState(false);
     console.log("Auth user:", auth)
     const navigate = useNavigate();
    const handleLogout = () => {
@@ -26,25 +27,31 @@ const ModeratorOrders = () => {
   
       navigate("/login");
     };
-  useEffect(() => {
+useEffect(() => {
   const fetchOrders = async () => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/api/v1/orders/my-orders`,
-      {},
-      {
-        headers: {
-          Authorization: auth?.token,
-        },
-      }
-    );
-    console.log("My orders: ", data)
+    try {
+      setLoading(true);
 
-    setOrders(data.orders);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/orders/my-orders`,
+        {
+          headers: {
+            Authorization: auth?.token,
+          },
+        }
+      );
+
+      setOrders(data.orders);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load orders");
+    } finally {
+      setLoading(false);
+    }
   };
 
   fetchOrders();
 }, []);
-
   // Calculate the index of the last product on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   // Calculate the index of the first product on the current page
@@ -116,7 +123,10 @@ const ModeratorOrders = () => {
           {/* Main Content */}
           <div className="col-lg-9 col-md-8 rounded">
             <h1 className="text-center text-white">Orders</h1>
-
+{loading ? (
+  <h3 className="text-white text-center">Loading orders...</h3>
+) : (
+  <>
             {/* Responsive Table */}
             <div className="table-responsive">
               <table className="table table-striped table-bordered text-center">
@@ -159,6 +169,8 @@ const ModeratorOrders = () => {
                 </tbody>
               </table>
             </div>
+            </>
+)}
 
             {/* Pagination Controls */}
             <div className="pagination-controls d-flex align-items-center justify-content-center mt-3">
