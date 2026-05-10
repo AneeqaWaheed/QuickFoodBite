@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 import {useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
+import OrderStats from "../../utils/OrderStats";
 
 const ModeratorOrders = () => {
     const [orders, setOrders] = useState([]);
+    const [filter, setFilter] = useState("all");
       const [currentPage, setCurrentPage] = useState(1);
       const [productsPerPage] = useState(5); 
     const [auth, setAuth] = useAuth();
@@ -52,15 +54,51 @@ useEffect(() => {
 
   fetchOrders();
 }, []);
+const filteredOrders = orders.filter((order) => {
+  if (filter === "all") return true;
+
+  const orderDate = new Date(order.createdAt);
+  const today = new Date();
+
+  // DAILY
+  if (filter === "daily") {
+    return (
+      orderDate.getDate() === today.getDate() &&
+      orderDate.getMonth() === today.getMonth() &&
+      orderDate.getFullYear() === today.getFullYear()
+    );
+  }
+
+  // WEEKLY
+  if (filter === "weekly") {
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
+
+    return orderDate >= weekAgo;
+  }
+
+  // MONTHLY
+  if (filter === "monthly") {
+    return (
+      orderDate.getMonth() === today.getMonth() &&
+      orderDate.getFullYear() === today.getFullYear()
+    );
+  }
+
+  return true;
+});
   // Calculate the index of the last product on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   // Calculate the index of the first product on the current page
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   // Get the current products
-  const currentProducts = orders.slice(indexOfFirstProduct, indexOfLastProduct);
+ const currentProducts = filteredOrders.slice(
+  indexOfFirstProduct,
+  indexOfLastProduct
+);
 
   // Handle pagination
-  const totalPages = Math.ceil(orders.length / productsPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / productsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -127,6 +165,55 @@ useEffect(() => {
   <h3 className="text-white text-center">Loading orders...</h3>
 ) : (
   <>
+  <div className="mb-3 text-center">
+  <button
+    className={`btn btn-sm me-2 ${
+      filter === "all" ? "btn-primary" : "btn-outline-primary"
+    }`}
+    onClick={() => {
+      setFilter("all");
+      setCurrentPage(1);
+    }}
+  >
+    All
+  </button>
+
+  <button
+    className={`btn btn-sm me-2 ${
+      filter === "daily" ? "btn-primary" : "btn-outline-primary"
+    }`}
+    onClick={() => {
+      setFilter("daily");
+      setCurrentPage(1);
+    }}
+  >
+    Daily
+  </button>
+
+  <button
+    className={`btn btn-sm me-2 ${
+      filter === "weekly" ? "btn-primary" : "btn-outline-primary"
+    }`}
+    onClick={() => {
+      setFilter("weekly");
+      setCurrentPage(1);
+    }}
+  >
+    Weekly
+  </button>
+
+  <button
+    className={`btn btn-sm ${
+      filter === "monthly" ? "btn-primary" : "btn-outline-primary"
+    }`}
+    onClick={() => {
+      setFilter("monthly");
+      setCurrentPage(1);
+    }}
+  >
+    Monthly
+  </button>
+</div>
             {/* Responsive Table */}
             <div className="table-responsive">
               <table className="table table-striped table-bordered text-center">
@@ -141,6 +228,7 @@ useEffect(() => {
                     <th scope="col">Packaging Fee</th>
                     <th scope="col">Total Amount</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Date & Time</th>
                   </tr>
                 </thead>
 
@@ -163,11 +251,20 @@ useEffect(() => {
                       <td>Rs.{order?.PackagingFee}</td>
                       <td>Rs.{order?.total}</td>
                       <td>{order?.status}</td>
-                      
+                      <td>
+  {new Date(order?.createdAt).toLocaleString("en-PK", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })}
+</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <OrderStats orders={orders} filter={filter} />
             </div>
             </>
 )}
@@ -192,6 +289,7 @@ useEffect(() => {
                 Next
               </button>
             </div>
+            
           </div>
         </div>
       </div>

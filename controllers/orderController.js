@@ -38,7 +38,7 @@ const token = uuidv4();
       deliveryCharges,
       PackagingFee,
        claimToken: token,
-       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     }).save();
 
     res.status(201).send({

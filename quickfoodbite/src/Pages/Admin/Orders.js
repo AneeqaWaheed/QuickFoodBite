@@ -6,7 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
+import { Button } from "react-bootstrap";
 const AdminOrders = () => {
+  const [moderatorSearch, setModeratorSearch] = useState("");
+  const [filter, setFilter] = useState("all");
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(5); // Number of products per page
@@ -39,16 +42,51 @@ const AdminOrders = () => {
 
     fetchOrders();
   }, []);
+const now = new Date();
 
+const filteredOrders = orders.filter((order) => {
+  const orderDate = new Date(order.createdAt);
+
+  // 🔎 moderator filter
+  const moderatorName =
+    order?.assignedModerator?.firstName?.toLowerCase() || "";
+
+  const matchModerator = moderatorName.includes(
+    moderatorSearch.toLowerCase()
+  );
+
+  if (!matchModerator) return false;
+
+  if (filter === "daily") {
+    return orderDate.toDateString() === now.toDateString();
+  }
+
+  if (filter === "weekly") {
+    const diff = (now - orderDate) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }
+
+  if (filter === "monthly") {
+    return (
+      orderDate.getMonth() === now.getMonth() &&
+      orderDate.getFullYear() === now.getFullYear()
+    );
+  }
+
+  return true;
+});
   // Calculate the index of the last product on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   // Calculate the index of the first product on the current page
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   // Get the current products
-  const currentProducts = orders.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredOrders.slice(
+  indexOfFirstProduct,
+  indexOfLastProduct
+);
 
   // Handle pagination
-  const totalPages = Math.ceil(orders.length / productsPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / productsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -116,12 +154,67 @@ const AdminOrders = () => {
           {/* Main Content */}
           <div className="col-lg-9 col-md-8 rounded">
             <h1 className="text-center text-white">Orders</h1>
+<div className="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
 
+  {/* LEFT SIDE: Filter Buttons */}
+  <div className="d-flex flex-wrap gap-2">
+
+    <button
+      className={`btn btn-sm ${
+        filter === "all" ? "btn-primary" : "btn-outline-primary"
+      }`}
+      onClick={() => setFilter("all")}
+    >
+      All
+    </button>
+
+    <button
+      className={`btn btn-sm ${
+        filter === "daily" ? "btn-primary" : "btn-outline-primary"
+      }`}
+      onClick={() => setFilter("daily")}
+    >
+      Daily
+    </button>
+
+    <button
+      className={`btn btn-sm ${
+        filter === "weekly" ? "btn-primary" : "btn-outline-primary"
+      }`}
+      onClick={() => setFilter("weekly")}
+    >
+      Weekly
+    </button>
+
+    <button
+      className={`btn btn-sm ${
+        filter === "monthly" ? "btn-primary" : "btn-outline-primary"
+      }`}
+      onClick={() => setFilter("monthly")}
+    >
+      Monthly
+    </button>
+
+  </div>
+
+  {/* RIGHT SIDE: Search */}
+  <div style={{ minWidth: "250px" }}>
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Search moderator name..."
+      value={moderatorSearch}
+      onChange={(e) => setModeratorSearch(e.target.value)}
+    />
+  </div>
+
+</div>
             {/* Responsive Table */}
             <div className="table-responsive">
               <table className="table table-striped table-bordered text-center">
                 <thead className="table-dark">
                   <tr>
+                    <th scope="col">Sr. No</th>
                     <th scope="col">User Name</th>
                     <th scope="col">User Contact</th>
                     <th scope="col">Product Details</th>
@@ -134,8 +227,12 @@ const AdminOrders = () => {
                 </thead>
 
             <tbody>
-  {currentProducts.map((order) => (
+  {currentProducts.map((order, index) => (
     <tr key={order?._id}>
+       <td>
+        {indexOfFirstProduct + index + 1}
+      </td>
+
       <td>{order?.userName}</td>
       <td>{order?.phone}</td>
       <td>

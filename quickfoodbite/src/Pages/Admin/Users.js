@@ -118,6 +118,7 @@ const [auth, setAuth] = useAuth();
               <table className="table table-striped table-bordered text-center">
                 <thead className="table-dark">
                   <tr>
+                    <th scope="col">Sr No</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">Phone</th>
@@ -127,14 +128,15 @@ const [auth, setAuth] = useAuth();
                   </tr>
                 </thead>
                 <tbody>
-                  {currentProducts.map((user) => (
+                  {currentProducts.map((user, index) => (
                     <tr key={user._id}>
+                      <td>{indexOfFirstProduct + index + 1}</td>
                       <td>{user.firstName}</td>
                       <td>{user.lastName || "No Last Name"}</td>
                       <td>{user.phone}</td>
                       <td>{user.studentId}</td>
                       <td>{user.email}</td>
-                      <td>{user.role}</td>
+                      <td>{user.role === 1 ? "Admin" : "Moderator"}</td>
                     </tr>
                   ))}
                 </tbody>
