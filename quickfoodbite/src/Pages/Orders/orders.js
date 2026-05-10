@@ -147,21 +147,29 @@ useEffect(() => {
   className="form-control mb-2"
   value={userInfo.phone}
   maxLength={12}
-  onChange={(e) => {
-    let value = e.target.value;
+onChange={(e) => {
+  let value = e.target.value;
 
-    // ✅ only digits allowed
-    if (!/^\d*$/.test(value)) return;
+  // allow only digits
+  if (!/^\d*$/.test(value)) return;
 
-    // ❌ must start with 92 (after first 2 digits)
-    if (value.length === 1 && value !== "9") return;
-    if (value.length === 2 && value !== "92") return;
+  // if user starts with 0 → convert 0 to 92
+  if (value.startsWith("0")) {
+    value = "92" + value.slice(1);
+  }
 
-    // ❌ block anything not starting with 92
-    if (value.length >= 2 && !value.startsWith("92")) return;
+  // if user types without 92, auto add it
+  if (value.length > 0 && !value.startsWith("92")) {
+    value = "92" + value;
+  }
 
-    setUserInfo({ ...userInfo, phone: value });
-  }}
+  // prevent multiple 92 duplication
+  if (value.startsWith("9292")) {
+    value = "92" + value.slice(4);
+  }
+
+  setUserInfo({ ...userInfo, phone: value });
+}}
 />
 
           <input
