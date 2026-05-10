@@ -84,7 +84,7 @@ useEffect(() => {
   
   {/* HEADER */}
   <div className="cart-header">
-    <h5>Your Order Testinggggggggggg({cart.length})</h5>
+    <h5>Your Order({cart.length})</h5>
     <button
       type="button"
       className="btn-close"

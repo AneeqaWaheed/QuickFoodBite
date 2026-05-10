@@ -1,5 +1,22 @@
 import { toast } from "react-toastify";
+const generateOrderNumber = () => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
 
+  let result = "";
+
+  // 3 random letters
+  for (let i = 0; i < 3; i++) {
+    result += letters[Math.floor(Math.random() * letters.length)];
+  }
+
+  // 3 random numbers
+  for (let i = 0; i < 3; i++) {
+    result += numbers[Math.floor(Math.random() * numbers.length)];
+  }
+
+  return result;
+};
 const proceedOrder = async ({
   loading,
   setLoading,
@@ -14,17 +31,12 @@ const proceedOrder = async ({
   if (loading) return;
 
   setLoading(true);
-
+const orderNumber = generateOrderNumber();
   try {
     const { name, phone, location } = userInfo;
 
     if (!name || !phone || !location) {
       toast.error("Please Fill all fields");
-      return;
-    }
-
-    if (!/^92\d{10}$/.test(phone)) {
-      toast.error("Enter valid phone number");
       return;
     }
 
@@ -87,6 +99,7 @@ const proceedOrder = async ({
     const orderToken = data.token;
 
     const message = `
+🧾 *ORDER #: ${orderNumber}*
 🛒 *New Order Received*
 *Location:* ${location}
 
@@ -99,6 +112,14 @@ ${cart
       }`
   )
   .join("\n")}
+
+📊 *Summary:*
+
+Subtotal: Rs ${summary.subtotal}
+${summary.itemDiscount !== 0 ? `Item Discount: -Rs ${summary.itemDiscount}\n` : ""}
+${summary.globalDiscountAmount !== 0 ? `Global Discount: -Rs ${summary.globalDiscountAmount}\n` : ""}
+Delivery: Rs ${summary.deliveryCharge}
+Packaging: Rs ${summary.packagingCharge}
 
 💰 TOTAL: Rs ${summary.grandTotal}
 

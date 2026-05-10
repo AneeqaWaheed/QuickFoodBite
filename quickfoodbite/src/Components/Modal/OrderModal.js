@@ -42,7 +42,7 @@ const OrderModal = ({
             </p>
 
             <p className="text-danger small">
-              If not picked within 5 minutes, you can place your order again.
+              If not picked within 10 minutes, you can place your order again.
             </p>
 
           </div>
