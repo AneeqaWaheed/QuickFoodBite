@@ -26,6 +26,7 @@ const [userInfo, setUserInfo] = useState({
 });
 const [settings, setSettings] = useState({});
 const [charges, setCharges] = useState([]);
+const [loading, setLoading] = useState(false);
 const getId = (item) => item._id || item.id;
 const fetchSettings = async () => {
   try {
@@ -127,6 +128,9 @@ const deliveryCharge = round(isMinApplied
   };
 
 const handleProceed = async () => {
+  if (loading) return;
+
+setLoading(true);
   const { name, phone, location } = userInfo;
 
   if (!name || !phone || !location) {
@@ -141,7 +145,7 @@ const handleProceed = async () => {
       return;
     }
  const formattedItems = cart.map((item) => ({
-  productId: item.id || item._id,
+  productId: getId(item),
   name: item.name,
   price: Number(item.price),
   quantity: Number(item.quantity),
@@ -172,12 +176,20 @@ const handleProceed = async () => {
       }
     );
 
-    const data = await res.json();
+if (!res.ok) {
+  const text = await res.text();
+  console.log("Server Error:", text);
 
-    if (!data.success) {
-      toast.error("Order failed");
-      return;
-    }
+  toast.error("Server error. Please try again.");
+  return;
+}
+
+const data = await res.json();
+
+if (!data?.success) {
+  toast.error(data?.message || "Order failed");
+  return;
+}
     const orderToken = data.token; 
 
 
@@ -210,11 +222,17 @@ Packaging: Rs ${summary.packagingCharge}
 ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 `;
 
-    const whatsappURL = `https://wa.me/923265349097?text=${encodeURIComponent(
-      message
-    )}`;
+  const encodedMessage = encodeURIComponent(message);
 
-    window.open(whatsappURL, "_blank");
+const isMobile = /Android|iPhone|iPad|iPod/i.test(
+  navigator.userAgent
+);
+
+const whatsappURL = isMobile
+  ? `whatsapp://send?phone=923265349097&text=${encodedMessage}`
+  : `https://web.whatsapp.com/send?phone=923265349097&text=${encodedMessage}`;
+
+window.location.href = whatsappURL;
 
     // 🔥 3. CLEAR CART
     clearCart();
@@ -227,6 +245,9 @@ ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
     console.log(error);
     toast.error("Something went wrong");
   }
+  finally {
+  setLoading(false);
+}
 };
 // ✅ fetch once on mount
 useEffect(() => {
@@ -234,10 +255,7 @@ useEffect(() => {
   fetchCharges();
 }, []);
 
-// ✅ recalculate whenever cart, charges, OR settings change
-useEffect(() => {
-  calculateSummary();
-}, []);
+
   return (
   <>
     {/* OVERLAY */}
@@ -460,13 +478,13 @@ useEffect(() => {
         {/* FOOTER */}
         <div className="modal-footer border-0 d-flex flex-column gap-2">
 
-          <button
-            className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
-            onClick={handleProceed}
-          >
-            <FaWhatsapp size={20} />
-             Confirm Order via WhatsApp
-          </button>
+         <button
+  className="btn btn-success w-100"
+  onClick={handleProceed}
+  disabled={loading}
+>
+  {loading ? "Processing..." : "Confirm Order via WhatsApp"}
+</button>
 
           <button
             className="btn btn-outline-secondary w-100"
