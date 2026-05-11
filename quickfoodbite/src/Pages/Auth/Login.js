@@ -150,11 +150,11 @@ const redirectPath = location.state?.from?.pathname;
 
             <div className="container mt-3">
               <p>
-                Don't have an account?{" "}
+                {/* Don't have an account?{" "}
                 <Link to="/register" className="text-danger fw-semibold">
                   Sign Up
                 </Link>
-                <br />
+                <br /> */}
                 <Link
                   to="/forgot-password"
                   className="text-danger fw-semibold "

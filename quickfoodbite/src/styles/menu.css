@@ -28,4 +28,17 @@
       font-size: 16px;
     }
   }
-  
+  .product-card {
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    border-radius: 12px;
+  }
+}

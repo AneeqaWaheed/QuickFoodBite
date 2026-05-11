@@ -34,8 +34,8 @@ const ProductCard = ({ product }) => {
     }
   };
 useEffect(() => {
-  getSingleProduct(id);
-}, [getSingleProduct, id]);
+  getSingleProduct();
+}, []);
   const handleAddToCart = () => {
     setLoading(true);
       const productDetails = {
@@ -61,35 +61,73 @@ useEffect(() => {
   
     };
   
-  return (
-    <Card className="w-100 h-100 shadow-sm border-0 product-card">
-      <Card.Body className="d-flex flex-column">
-        
-        {/* Product Name */}
-        <Card.Title className="fw-bold fs-6 fs-md-5">
-          {name}
-        </Card.Title>
+ return (
+  <Card
+    className="w-100 h-100 shadow-sm product-card"
+   style={{
+  borderRadius: "16px",
+  overflow: "hidden",
+  border: "5px solid rgba(236, 16, 38, 0.18)",
+  boxShadow: "0 4px 14px rgba(243, 12, 35, 0.12)",
+  transition: "all 0.3s ease",
+}}
+  >
+    <Card.Body
+      className="d-flex flex-column"
+      style={{
+        padding: "clamp(12px, 2vw, 20px)",
+      }}
+    >
 
-        {/* Price */}
-        <Card.Text className="text-danger fs-5 mb-2">
-          Rs. {price}
-        </Card.Text>
+      {/* Product Name */}
+      <Card.Title
+        style={{
+          fontWeight: "700",
+          fontSize: "clamp(14px, 2vw, 20px)",
+          lineHeight: "1.3",
+          marginBottom: "10px",
+          wordBreak: "break-word",
+        }}
+      >
+        {name}
+      </Card.Title>
 
-        {/* Spacer */}
-        <div className="mt-auto">
-         <Button
-  variant="danger"
-  className="w-100"
-  onClick={handleAddToCart}
-  disabled={loading}
->
-  {loading ? "Adding..." : "Add to Cart"}
-</Button>
-        </div>
+      {/* Price */}
+      <Card.Text
+        style={{
+          color: "#dc3545",
+          fontWeight: "600",
+          fontSize: "clamp(14px, 2vw, 22px)",
+          marginBottom: "15px",
+        }}
+      >
+        Rs. {price}
+      </Card.Text>
 
-      </Card.Body>
-    </Card>
-  );
+      {/* Spacer */}
+      <div className="mt-auto">
+
+        <Button
+          variant="danger"
+          className="w-100"
+          onClick={handleAddToCart}
+          disabled={loading}
+          style={{
+            borderRadius: "12px",
+            padding: "clamp(8px, 1.5vw, 12px)",
+            fontSize: "clamp(12px, 1.8vw, 16px)",
+            fontWeight: "600",
+            border: "none",
+          }}
+        >
+          {loading ? "Adding..." : "Add to Cart"}
+        </Button>
+
+      </div>
+
+    </Card.Body>
+  </Card>
+);
 };
 
 export default ProductCard;

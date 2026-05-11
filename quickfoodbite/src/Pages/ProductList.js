@@ -10,7 +10,7 @@ const ProductsList = ({ products }) => {
   }
 
   return (
-    <Container className="my-5">
+    <Container className="my-4">
       <Row className="g-3">
         {products.map((product) => (
           <Col
