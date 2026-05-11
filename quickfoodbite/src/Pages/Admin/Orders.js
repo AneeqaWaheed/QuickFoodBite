@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Button } from "react-bootstrap";
+import AdminOrderStats from "../../utils/AdminOrderStats.js";
 const AdminOrders = () => {
   const [moderatorSearch, setModeratorSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -220,6 +221,8 @@ const filteredOrders = orders.filter((order) => {
                     <th scope="col">Product Details</th>
                     <th scope="col">Total Amount</th>
                     <th scope="col">Product Amount</th>
+                    <th scope="col">Delivery Charges</th>
+<th scope="col">Packaging Charges</th>
                     <th scope="col">Status</th>
                     <th scope="col">Assigned Mod</th>
                     <th scope="col">Order Date</th>
@@ -244,6 +247,8 @@ const filteredOrders = orders.filter((order) => {
       </td>
       <td>Rs{order?.total}</td>
       <td>Rs{order?.subtotal}</td>
+      <td>Rs {order?.deliveryCharges || 0}</td>
+<td>Rs {order?.PackagingFee || 0}</td>
       <td>{order?.status}</td>
       <td>{order?.assignedModerator?.firstName}</td>
       <td>
@@ -254,6 +259,7 @@ const filteredOrders = orders.filter((order) => {
   ))}
 </tbody>
               </table>
+              <AdminOrderStats orders={filteredOrders} />
             </div>
 
             {/* Pagination Controls */}

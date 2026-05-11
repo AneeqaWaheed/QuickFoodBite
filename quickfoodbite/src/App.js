@@ -25,6 +25,7 @@ import ModeratorRoute from "./Components/Routes/ModeratorRoute";
 import ModeratorProfile from "./Pages/Moderator/ModeratorProfile";
 import ModeratorOrders from "./Pages/Moderator/ModeratorOrders";
 import ClaimRedirectPage from "./Pages/Moderator/OrderClaimPage";
+import AdminOrderStats from "./utils/AdminOrderStats";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<AdminRoute />}>
           <Route path="admin" element={<AdminDashboard />} />
+          {/* <Route path="admin/stats" element={<AdminOrderStats />} /> */}
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/product" element={<Products />} />

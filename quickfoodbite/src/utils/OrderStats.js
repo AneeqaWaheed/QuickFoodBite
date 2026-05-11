@@ -1,67 +1,68 @@
 import React from "react";
 
 const OrderStats = ({ orders, filter }) => {
-  const calculateStats = () => {
-    let filteredOrders = orders;
+ const calculateStats = () => {
+  let filteredOrders = orders;
 
-    const today = new Date();
+  const today = new Date();
 
-    // DAILY
-    if (filter === "daily") {
-      filteredOrders = orders.filter((order) => {
-        const orderDate = new Date(order.createdAt);
+  // DAILY
+  if (filter === "daily") {
+    filteredOrders = orders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
 
-        return (
-          orderDate.getDate() === today.getDate() &&
-          orderDate.getMonth() === today.getMonth() &&
-          orderDate.getFullYear() === today.getFullYear()
-        );
-      });
-    }
-
-    // WEEKLY
-    else if (filter === "weekly") {
-      const weekAgo = new Date();
-      weekAgo.setDate(today.getDate() - 7);
-
-      filteredOrders = orders.filter(
-        (order) => new Date(order.createdAt) >= weekAgo
+      return (
+        orderDate.getDate() === today.getDate() &&
+        orderDate.getMonth() === today.getMonth() &&
+        orderDate.getFullYear() === today.getFullYear()
       );
-    }
+    });
+  }
 
-    // MONTHLY
-    else if (filter === "monthly") {
-      filteredOrders = orders.filter((order) => {
-        const orderDate = new Date(order.createdAt);
+  // WEEKLY
+  else if (filter === "weekly") {
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
 
-        return (
-          orderDate.getMonth() === today.getMonth() &&
-          orderDate.getFullYear() === today.getFullYear()
-        );
-      });
-    }
-
-    const deliveryTotal = filteredOrders.reduce(
-      (acc, item) => acc + (Number(item.deliveryCharges) || 0),
-      0
+    filteredOrders = orders.filter(
+      (order) => new Date(order.createdAt) >= weekAgo
     );
+  }
 
-    const packagingTotal = filteredOrders.reduce(
-      (acc, item) => acc + (Number(item.PackagingFee) || 0),
-      0
-    );
+  // MONTHLY
+  else if (filter === "monthly") {
+    filteredOrders = orders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
 
-    const total = deliveryTotal + packagingTotal;
+      return (
+        orderDate.getMonth() === today.getMonth() &&
+        orderDate.getFullYear() === today.getFullYear()
+      );
+    });
+  }
 
-    const adminReturn = total * 0.15;
+  const deliveryTotal = filteredOrders.reduce(
+    (acc, item) => acc + (Number(item.deliveryCharges) || 0),
+    0
+  );
 
-    return {
-      deliveryTotal,
-      packagingTotal,
-      total,
-      adminReturn,
-    };
+  const packagingTotal = filteredOrders.reduce(
+    (acc, item) => acc + (Number(item.PackagingFee) || 0),
+    0
+  );
+
+  const adminDeliveryShare = Math.round(deliveryTotal * 0.15);
+  const userEarnings = Math.round(deliveryTotal * 0.85);
+
+  const adminReturn = Math.round(adminDeliveryShare + packagingTotal);
+
+  return {
+    deliveryTotal: Math.round(deliveryTotal),
+    packagingTotal: Math.round(packagingTotal),
+    adminReturn,
+    userEarnings,
   };
+};
 
   const stats = calculateStats();
 
@@ -89,7 +90,7 @@ const OrderStats = ({ orders, filter }) => {
       {/* Row 2 */}
       <div className="col-6">
         <p className="mb-0">
-          <strong>Earnings:</strong> Rs. {stats.total}
+          <strong>Earnings:</strong> Rs. {stats.userEarnings}
         </p>
       </div>
 
