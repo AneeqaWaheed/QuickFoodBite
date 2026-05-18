@@ -340,8 +340,8 @@ const filteredOrders = orders.filter((order) => {
                   ))}
                 </tbody>
               </table>
-              <OrderStats orders={orders} filter={filter} />
             </div>
+              <OrderStats orders={orders} filter={filter} />
             </>
 )}
 
