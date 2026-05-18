@@ -141,9 +141,12 @@ const categoryIcons = [
       boxShadow: "none",
     }}
   >
-    <span style={{ fontSize: "16px" }}>
-      {categoryIcons[index % categoryIcons.length]}
-    </span>
+    <span
+  className="category-icon"
+  style={{ fontSize: "16px" }}
+>
+  {categoryIcons[index % categoryIcons.length]}
+</span>
 
     <span>{category.name}</span>
   </Button>
