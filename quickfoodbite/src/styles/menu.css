@@ -42,3 +42,9 @@
     border-radius: 12px;
   }
 }
+/* Hide category icons on smaller screens */
+@media (max-width: 768px) {
+  .category-icon {
+    display: none;
+  }
+}

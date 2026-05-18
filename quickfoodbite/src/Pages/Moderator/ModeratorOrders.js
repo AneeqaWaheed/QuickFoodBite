@@ -111,6 +111,34 @@ const filteredOrders = orders.filter((order) => {
       setCurrentPage(currentPage - 1);
     }
   };
+  const updateOrderStatus = async (orderId) => {
+  try {
+    const { data } = await axios.put(
+      `${process.env.REACT_APP_API}/api/v1/orders/status/${orderId}`,
+      { status: "Delivered" },
+      {
+        headers: {
+          Authorization: auth?.token,
+        },
+      }
+    );
+
+    if (data?.success) {
+      toast.success("Order marked as delivered");
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === orderId
+            ? { ...order, status: "Delivered" }
+            : order
+        )
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to update status");
+  }
+};
 
   return (
    <>
@@ -215,8 +243,21 @@ const filteredOrders = orders.filter((order) => {
   </button>
 </div>
             {/* Responsive Table */}
-            <div className="table-responsive">
-              <table className="table table-striped table-bordered text-center">
+            <div
+  className="table-responsive"
+  style={{
+    overflowX: "auto",
+    width: "100%",
+  }}
+>
+              <table
+  className="table table-striped table-bordered text-center align-middle"
+  style={{
+    minWidth: "1200px",
+    whiteSpace: "nowrap",
+    fontSize: "14px",
+  }}
+>
                 <thead className="table-dark">
                   <tr>
                     <th scope="col">User Name</th>
@@ -228,6 +269,7 @@ const filteredOrders = orders.filter((order) => {
                     <th scope="col">Packaging Fee</th>
                     <th scope="col">Total Amount</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Action</th>
                     <th scope="col">Date & Time</th>
                   </tr>
                 </thead>
@@ -238,11 +280,11 @@ const filteredOrders = orders.filter((order) => {
                       <td>{order?.userName}</td>
                       <td>{order?.phone}</td>
                       <td>{order?.location}</td>
-                     <td>
+                    <td style={{ maxWidth: "220px", whiteSpace: "normal" }}>
   {order?.items?.map((p) => (
-    <p key={p._id}>
+    <div key={p._id}>
       {p.name} x {p.quantity}
-    </p>
+    </div>
   ))}
 </td>
                    
@@ -250,15 +292,49 @@ const filteredOrders = orders.filter((order) => {
                       <td>Rs.{order?.deliveryCharges}</td>
                       <td>Rs.{order?.PackagingFee}</td>
                       <td>Rs.{order?.total}</td>
-                      <td>{order?.status}</td>
-                      <td>
-  {new Date(order?.createdAt).toLocaleString("en-PK", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  })}
+                      <td style={{ minWidth: "140px" }}>
+  <span
+    className={`badge ${
+      order?.status === "Delivered"
+        ? "bg-success"
+        : "bg-warning text-dark"
+    }`}
+  >
+    {order?.status}
+  </span>
+</td>
+
+<td style={{ minWidth: "140px" }}>
+  {order?.status !== "Delivered" && (
+    <button
+  className="btn btn-success btn-sm"
+  style={{
+    fontSize: "12px",
+    padding: "4px 8px",
+    whiteSpace: "nowrap",
+    lineHeight: "1.2",
+  }}
+  onClick={() => updateOrderStatus(order._id)}
+>
+  Delivered?
+</button>
+  )}
+</td>
+                      <td style={{ minWidth: "150px" }}>
+  <div>
+    {new Date(order?.createdAt).toLocaleDateString("en-PK", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })}
+  </div>
+
+  <small className="text-muted">
+    {new Date(order?.createdAt).toLocaleTimeString("en-PK", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+  </small>
 </td>
                     </tr>
                   ))}

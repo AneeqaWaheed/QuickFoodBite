@@ -51,8 +51,8 @@ const OrderStats = ({ orders, filter }) => {
     0
   );
 
-  const adminDeliveryShare = Math.round(deliveryTotal * 0.15);
-  const userEarnings = Math.round(deliveryTotal * 0.85);
+  const adminDeliveryShare = Math.round(deliveryTotal * 0.17);
+  const userEarnings = Math.round(deliveryTotal * 0.83);
 
   const adminReturn = Math.round(adminDeliveryShare + packagingTotal);
 
@@ -96,7 +96,7 @@ const OrderStats = ({ orders, filter }) => {
 
       <div className="col-6">
         <p className="mb-0">
-          <strong>Admin (15%):</strong> Rs.{" "}
+          <strong>Admin (17%):</strong> Rs.{" "}
           {stats.adminReturn.toFixed(0)}
         </p>
       </div>

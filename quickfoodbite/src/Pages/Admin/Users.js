@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 
 const Users = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10); // Number of products per page
@@ -41,12 +42,22 @@ const [auth, setAuth] = useAuth();
       };
 
   // Calculate pagination indices
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = users.slice(indexOfFirstProduct, indexOfLastProduct);
+
+ const filteredUsers = users.filter((user) => {
+  const fullName = `${user.firstName} ${user.lastName || ""}`.toLowerCase();
+  return fullName.includes(searchTerm.toLowerCase());
+});
+
+const indexOfLastProduct = currentPage * productsPerPage;
+const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
+const currentProducts = filteredUsers.slice(
+  indexOfFirstProduct,
+  indexOfLastProduct
+);
 
   // Handle pagination
-  const totalPages = Math.ceil(users.length / productsPerPage);
+  const totalPages = Math.ceil(filteredUsers.length / productsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -112,7 +123,22 @@ const [auth, setAuth] = useAuth();
           {/* Main Content */}
           <div className="col-lg-9 col-md-8">
             <h1 className="text-center text-white">USERS</h1>
-
+<div className="mb-3 d-flex justify-content-end">
+  <input
+    type="text"
+    className="form-control"
+    style={{
+      width: "40%",
+      maxWidth: "400px",
+    }}
+    placeholder="Search user by name..."
+    value={searchTerm}
+    onChange={(e) => {
+      setSearchTerm(e.target.value);
+      setCurrentPage(1);
+    }}
+  />
+</div>
             {/* Responsive Table */}
             <div className="table-responsive">
               <table className="table table-striped table-bordered text-center">
