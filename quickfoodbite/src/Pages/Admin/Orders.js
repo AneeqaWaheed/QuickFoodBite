@@ -259,7 +259,11 @@ const filteredOrders = orders.filter((order) => {
   ))}
 </tbody>
               </table>
-              <AdminOrderStats orders={filteredOrders} />
+              <AdminOrderStats
+  orders={filteredOrders.filter(
+    (order) => order.status?.toLowerCase() !== "cancelled"
+  )}
+/>
             </div>
 
             {/* Pagination Controls */}
