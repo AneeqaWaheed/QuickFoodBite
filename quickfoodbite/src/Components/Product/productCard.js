@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { useCart } from "../../context/cart";
 import { toast } from "react-toastify";
-
+import "../../styles/menu.css";
 import axios from "axios";
 const ProductCard = ({ product }) => {
    const { addToCart } = useCart(); 
@@ -62,71 +62,97 @@ useEffect(() => {
     };
   
  return (
-  <Card
-    className="w-100 h-100 shadow-sm product-card"
-   style={{
-  borderRadius: "16px",
-  overflow: "hidden",
-  border: "5px solid rgba(236, 16, 38, 0.18)",
-  boxShadow: "0 4px 14px rgba(243, 12, 35, 0.12)",
-  transition: "all 0.3s ease",
-}}
+  <Card className="food-card">
+
+  <div className="food-tag">
+    {category}
+  </div>
+
+  <h3 className="food-title">
+    {name}
+  </h3>
+
+  <p className="food-desc">
+    Delicious fresh food made with quality ingredients.
+  </p>
+
+  <div className="food-price">
+    Rs. {price}
+  </div>
+
+  <Button
+    className="cart-action"
+    onClick={handleAddToCart}
   >
-    <Card.Body
-      className="d-flex flex-column"
-      style={{
-        padding: "clamp(12px, 2vw, 20px)",
-      }}
-    >
+    Add to Cart
+  </Button>
 
-      {/* Product Name */}
-      <Card.Title
-        style={{
-          fontWeight: "700",
-          fontSize: "clamp(14px, 2vw, 20px)",
-          lineHeight: "1.3",
-          marginBottom: "10px",
-          wordBreak: "break-word",
-        }}
-      >
-        {name}
-      </Card.Title>
+</Card>
+//   <Card
+//     className="w-100 h-100 shadow-sm product-card"
+//    style={{
+//   borderRadius: "16px",
+//   overflow: "hidden",
+//   border: "5px solid rgba(236, 16, 38, 0.18)",
+//   boxShadow: "0 4px 14px rgba(243, 12, 35, 0.12)",
+//   transition: "all 0.3s ease",
+// }}
+//   >
+//     <Card.Body
+//       className="d-flex flex-column"
+//       style={{
+//         padding: "clamp(12px, 2vw, 20px)",
+//       }}
+//     >
 
-      {/* Price */}
-      <Card.Text
-        style={{
-          color: "#dc3545",
-          fontWeight: "600",
-          fontSize: "clamp(14px, 2vw, 22px)",
-          marginBottom: "15px",
-        }}
-      >
-        Rs. {price}
-      </Card.Text>
+//       {/* Product Name */}
+//       <Card.Title
+//         style={{
+//           fontWeight: "700",
+//           fontSize: "clamp(14px, 2vw, 20px)",
+//           lineHeight: "1.3",
+//           marginBottom: "10px",
+//           wordBreak: "break-word",
+//         }}
+//       >
+//         {name}
+//       </Card.Title>
 
-      {/* Spacer */}
-      <div className="mt-auto">
+//       {/* Price */}
+//       <Card.Text
+//         style={{
+//           color: "#dc3545",
+//           fontWeight: "600",
+//           fontSize: "clamp(14px, 2vw, 22px)",
+//           marginBottom: "15px",
+//         }}
+//       >
+//         Rs. {price}
+//       </Card.Text>
 
-        <Button
-          variant="danger"
-          className="w-100"
-          onClick={handleAddToCart}
-          disabled={loading}
-          style={{
-            borderRadius: "12px",
-            padding: "clamp(8px, 1.5vw, 12px)",
-            fontSize: "clamp(12px, 1.8vw, 16px)",
-            fontWeight: "600",
-            border: "none",
-          }}
-        >
-          {loading ? "Adding..." : "Add to Cart"}
-        </Button>
+//       {/* Spacer */}
+//       <div className="mt-auto">
 
-      </div>
+//         <Button
+//           variant="danger"
+//           className="w-100"
+//           onClick={handleAddToCart}
+//           disabled={loading}
+//           style={{
+//             borderRadius: "12px",
+//             padding: "clamp(8px, 1.5vw, 12px)",
+//             fontSize: "clamp(12px, 1.8vw, 16px)",
+//             fontWeight: "600",
+//             border: "none",
+//           }}
+//         >
+//           {loading ? "Adding..." : "Add to Cart"}
+//         </Button>
 
-    </Card.Body>
-  </Card>
+//       </div>
+
+//     </Card.Body>
+//   </Card>
 );
 };
 

@@ -15,6 +15,7 @@ import {
   FaCookie,
   FaUtensils,
 } from "react-icons/fa";
+import { useSearch } from "../context/seacrh";
 const Menu = () => {
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -23,6 +24,9 @@ const Menu = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+    const { searchQuery } = useSearch();
+
+  console.log("SEARCH:", searchQuery);
 const categoryIcons = [
   <FaPizzaSlice />,
   <FaHamburger />,
@@ -33,6 +37,7 @@ const categoryIcons = [
   <FaCookie />,
   <FaUtensils />,
 ];
+ 
   // ---------------- CATEGORIES ----------------
   const fetchCategories = async () => {
     setCategoryLoading(true);
@@ -97,26 +102,30 @@ const categoryIcons = [
     setSelectedCategory(category);
     setPage(1);
   };
+const filteredProducts = products.filter((item) => {
+  const name = item?.name?.toLowerCase() || "";
+  const search = searchQuery?.toLowerCase() || "";
+
+  return search
+    .split(" ")
+    .every((word) => name.includes(word));
+});
 
   return (
-    <Layout title="Menu - QuickFoodBite">
+    <Layout title="Menu - QuickFoodBite" >
 <div
   style={{
     display: "flex",
     width: "100%",
     minHeight: "100vh",
     paddingRight: "clamp(10px, 3vw, 40px)",
+    paddingLeft: "clamp(10px, 3vw, 40px)",
     boxSizing: "border-box",
   }}
 >
   {/* LEFT CATEGORY SIDEBAR */}
   <div
-    style={{
-      width: "clamp(90px, 20vw, 220px)",
-      padding: "12px",
-      flexShrink: 0,
-      overflowY: "auto",
-    }}
+    
   >
     
 
@@ -130,16 +139,10 @@ const categoryIcons = [
         ? "danger"
         : "light"
     }
-    className="rounded-pill text-start d-flex align-items-center gap-2"
-    style={{
-      fontSize: "clamp(11px, 1.8vw, 15px)",
-      padding: "8px 12px",
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      border: "none",
-      boxShadow: "none",
-    }}
+   className={`category-btn d-flex align-items-center gap-2 ${
+  selectedCategory === category.name ? "active" : ""
+}`}
+   
   >
     <span
   className="category-icon"
@@ -156,22 +159,24 @@ const categoryIcons = [
 
   {/* RIGHT PRODUCTS SECTION */}
  <div
-  style={{
-    flex: 1,
-    padding: "clamp(12px, 3vw, 32px)",
-    paddingRight: "clamp(16px, 5vw, 48px)",
-    overflow: "hidden",
-  }}
+  className="menu-content"
 >
-    <div className="my-4 w-100">
+    <div className="mb-4 w-100">
       {loading ? (
         <p className="text-center mt-5 text-danger">Loading products...</p>
       ) : (
         <>
     
-  {/* CATEGORY TITLE */}
- <div className="mb-3 text-center">
-  <h4
+
+
+<div className="menu-page">
+
+  <aside className="sidebar">
+    {/* categories */}
+  </aside>
+
+  <div className="menu-content">
+<h4
     style={{
       fontWeight: "600",
       fontSize: "clamp(18px, 2vw, 28px)",
@@ -181,9 +186,11 @@ const categoryIcons = [
   >
     {selectedCategory || "All Products"}
   </h4>
-</div>
+      <ProductsList products={filteredProducts} />
 
-  <ProductsList products={products} />
+  </div>
+
+</div>
 
   {/* PAGINATION */}
           <div className="d-flex justify-content-center mt-4 flex-wrap gap-2">
