@@ -2,7 +2,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import ProductCard from "../Components/Product/productCard";
 
-
+import "../styles/menu.css";
 const ProductsList = ({ products }) => {
   // Check if products list is empty
   if (products.length === 0) {
@@ -10,23 +10,14 @@ const ProductsList = ({ products }) => {
   }
 
   return (
-    <Container className="my-4">
-      <Row className="g-3">
-        {products.map((product) => (
-          <Col
-            key={product._id}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            xlg={3}
-            style={{ margin: "30px" }}
-          >
-            <ProductCard product={product} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
+     <div className="products-grid">
+      {products.map((product) => (
+        <ProductCard
+          key={product._id}
+          product={product}
+        />
+      ))}
+    </div>
   );
 };
 
