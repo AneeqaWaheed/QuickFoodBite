@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+
 const generateOrderNumber = () => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const numbers = "0123456789";
@@ -27,25 +27,18 @@ const proceedOrder = async ({
   clearCart,
   setShowModal,
   getId,
+  setFormError,
 }) => {
   if (loading) return;
 
   setLoading(true);
 const orderNumber = generateOrderNumber();
   try {
-    const { name, phone, location } = userInfo;
+     const { name, phone, location } = userInfo;
 
-    if (!name || !phone || !location) {
-      toast.error("Please Fill all fields");
-      return;
-    }
 
     const minOrder = settings?.minOrderPrice || 0;
 
-    if (summary.subtotal < minOrder) {
-      toast.error(`Minimum order is Rs ${minOrder}`);
-      return;
-    }
 
     const formattedItems = cart.map((item) => ({
       productId: getId(item),
@@ -83,7 +76,7 @@ const orderNumber = generateOrderNumber();
 
       console.log("Server Error:", text);
 
-      toast.error("Server error. Please try again.");
+      setFormError("Server Error. Please try again later")
 
       return;
     }
@@ -91,12 +84,12 @@ const orderNumber = generateOrderNumber();
     const data = await res.json();
 
     if (!data?.success) {
-      toast.error(data?.message || "Order failed");
+      setFormError("Order failed. Please try again later")
 
       return;
     }
-
-    const orderToken = data.token;
+console.log("order created is ",data?.order?._id);
+    const orderId = data?.order?._id;
 
     const message = `
 🧾 *ORDER #: ${orderNumber}*
@@ -123,8 +116,8 @@ Packaging: Rs ${summary.packagingCharge}
 
 💰 TOTAL: Rs ${summary.grandTotal}
 
-👉 *Pick Order Link:*
-${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
+🔗 *Track Order:*
+${process.env.REACT_APP_CLIENT_URL}/orderTrack/${orderId}
 `;
 
     const encodedMessage =
@@ -147,7 +140,7 @@ ${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
   } catch (error) {
     console.log(error);
 
-    toast.error("Something went wrong");
+    setFormError("Something went Wrong, Please Try again later")
   } finally {
     setLoading(false);
   }

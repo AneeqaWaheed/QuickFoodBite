@@ -25,7 +25,9 @@ const Layout = ({ children, title, description, keywords, author }) => {
 ></div>
 
       <main className="main-content">
-        <ToastContainer />
+        <ToastContainer 
+         position="top-right"
+        style={{ zIndex: 999999 }}/>
         {children}
       </main>
     </div>

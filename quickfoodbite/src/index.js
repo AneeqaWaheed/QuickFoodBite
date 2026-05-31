@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth";
 import { CartProvider } from "./context/cart";
 import { SearchProvider } from "./context/seacrh";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
@@ -20,6 +21,7 @@ root.render(
     </CartProvider>
   </AuthProvider>
 );
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

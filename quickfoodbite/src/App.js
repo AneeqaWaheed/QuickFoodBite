@@ -26,6 +26,7 @@ import ModeratorProfile from "./Pages/Moderator/ModeratorProfile";
 import ModeratorOrders from "./Pages/Moderator/ModeratorOrders";
 import ClaimRedirectPage from "./Pages/Moderator/OrderClaimPage";
 import AdminOrderStats from "./utils/AdminOrderStats";
+import TrackOrder from "./Pages/orderTrackPage";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
 
         </Route>
 
+        <Route path="/orderTrack/:orderId" element={<TrackOrder />} />
         <Route path="/Productpage/:id" element={<ProductPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactPage />} />

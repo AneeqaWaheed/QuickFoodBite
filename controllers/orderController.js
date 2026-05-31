@@ -1,6 +1,7 @@
 import Order from "../models/ordersModel.js";
 import { v4 as uuidv4 } from "uuid";
-
+import userModel from "../models/userModel.js";
+import admin from "../Services/firebase.js";
 // 🔥 CREATE ORDER
 export const createOrder = async (req, res) => {
 
@@ -16,7 +17,7 @@ export const createOrder = async (req, res) => {
       location,
       deliveryCharges,
       PackagingFee,
-      
+      fcmToken
     } = req.body;
 
     if (!items || items.length === 0) {
@@ -40,7 +41,44 @@ const token = uuidv4();
        claimToken: token,
        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     }).save();
+    console.log("📡 Sending notification to moderator...");
+const moderators = await userModel.find({
+  role: 0,
+  fcmToken: { $exists: true, $ne: null },
+});
+console.log("Moderators found:", moderators);
 
+   for (const moderator of moderators) {
+  if (!moderator.fcmToken) {
+    console.log("Skipping moderator:", moderator._id);
+    continue;
+  }
+
+  try {
+    const response = await admin.messaging().send({
+      token: moderator.fcmToken,
+      notification: {
+        title: "New Order Available",
+        body: `Order from ${location}`,
+      },
+      webpush: {
+    fcmOptions: {
+      link: `${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${order._id}`,
+    },
+  },
+
+      data: {
+        orderId: order._id.toString(),
+      },
+    });
+  
+
+    console.log("✅ FCM RESPONSE:", response );
+  } catch (err) {
+    console.log("❌ Notification Error:", err.code || err.message);
+    console.log("DB token:", moderator.fcmToken);
+  }
+}
     res.status(201).send({
       success: true,
       message: "Order placed successfully",
@@ -262,6 +300,30 @@ export const getMyModeratorOrders = async (req, res) => {
       success: false,
       message: "Server error in my-orders",
       error: error.message,
+    });
+  }
+};
+
+export const trackOrder = async (req, res) => {
+  console.log("Tracking ID:", req.params.id);
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).send({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.send({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Error fetching order",
     });
   }
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { toast } from "react-toastify";
 import { useCart } from "../../context/cart";
 import "./orderStyle.css";
 import { Button } from "react-bootstrap";
@@ -29,6 +28,13 @@ const [userInfo, setUserInfo] = useState({
 const [settings, setSettings] = useState({});
 const [charges, setCharges] = useState([]);
 const [loading, setLoading] = useState(false);
+const [errors, setErrors] = useState({
+  name: "",
+  phone: "",
+  location: "",
+  minOrder: "",
+});
+const [formError, setFormError] = useState("");
 const getId = (item) => item._id || item.id;
 const summary = calculateSummary(
   cart,
@@ -140,7 +146,9 @@ useEffect(() => {
               setUserInfo({ ...userInfo, name: e.target.value })
             }
           />
-
+{errors.name && (
+  <small style={{ color: "red" }}>{errors.name}</small>
+)}
     <input
   type="text"
   placeholder="Phone (92XXXXXXXXXX) *"
@@ -171,6 +179,9 @@ onChange={(e) => {
   setUserInfo({ ...userInfo, phone: value });
 }}
 />
+{errors.phone && (
+  <small style={{ color: "red" }}>{errors.phone}</small>
+)}
 
           <input
             type="text"
@@ -181,10 +192,14 @@ onChange={(e) => {
               setUserInfo({ ...userInfo, location: e.target.value })
             }
           />
+                {errors.location && (
+  <small style={{ color: "red" }}>{errors.location}</small>
+)}
         </div>
       </>
     )}
   </div>
+
 
   {/* 🔥 FIXED SUMMARY FOOTER */}
   {cart.length > 0 && (
@@ -232,21 +247,51 @@ onChange={(e) => {
 
               <h5>Total <span>Rs {s.grandTotal}</span></h5>
             </div>
+            {errors.minOrder && (
+  <div style={{ color: "red", marginBottom: "10px" }}>
+    {errors.minOrder}
+  </div>
+)}
 <Button
   variant="danger"
   className="w-100 checkout-btn"
   onClick={() => {
     const minOrder = settings?.minOrderPrice ?? 0;
+const newErrors = {
+  name: "",
+  phone: "",
+  location: "",
+  minOrder: "",
+};
 
-    if (s.subtotal < minOrder) {
-      toast.error(`Minimum order is Rs ${minOrder}`);
-      return;
-    }
+let hasError = false;
 
-    if (!userInfo.name || !userInfo.phone || !userInfo.location) {
-      toast.error("Please fill all fields");
-      return;
-    }
+if (!userInfo.name.trim()) {
+  newErrors.name = "Name is required";
+  hasError = true;
+}
+
+if (!userInfo.phone.trim()) {
+  newErrors.phone = "Phone number is required";
+  hasError = true;
+}
+
+if (!userInfo.location.trim()) {
+  newErrors.location = "Location is required";
+  hasError = true;
+}
+
+if (s.subtotal < minOrder) {
+  newErrors.minOrder = `Minimum order is Rs ${minOrder}`;
+  hasError = true;
+}
+
+setErrors(newErrors);
+
+if (hasError) return;
+
+setShowModal(true);
+setCartOpen(false);
 
     setShowModal(true);
     setCartOpen(false);
@@ -276,9 +321,12 @@ onChange={(e) => {
       clearCart,
       setShowModal,
       getId,
+      setFormError,
     })
   }
   loading={loading}
+    formError={formError}   // ✅ MUST be here
+
 />
   </>
 );
