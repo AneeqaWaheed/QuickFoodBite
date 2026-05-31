@@ -1,21 +1,16 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getMessaging } from "firebase/messaging";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDu0EXrDYRiwnY_iLv-ESMKwpyw35Ca1Sc",
-  authDomain: "burgershop-2975b.firebaseapp.com",
-  projectId: "burgershop-2975b",
-  storageBucket: "burgershop-2975b.appspot.com",
-  messagingSenderId: "908185664888",
-  appId: "1:908185664888:web:af2f96c792da4162e0dc8d",
+  apiKey: "AIzaSyAA20CGNPi0Ndv0-Nr1L0vSlCpIArh2Pvs",
+  authDomain: "delivery-notifications-b312c.firebaseapp.com",
+  projectId: "delivery-notifications-b312c",
+  storageBucket: "delivery-notifications-b312c.firebasestorage.app",
+  messagingSenderId: "73549844097",
+  appId: "1:73549844097:web:7d3b092d04cf075b178780",
+  measurementId: "G-7L74RCF56J"
 };
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+const app = initializeApp(firebaseConfig);
+
+export const messaging = getMessaging(app);

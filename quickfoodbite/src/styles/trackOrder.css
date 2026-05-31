@@ -1,0 +1,91 @@
+.track-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f172a;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.track-card {
+  background: #111827;
+  padding: 25px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #facc15;
+}
+
+.order-id {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.status {
+  text-align: center;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px auto;
+  width: fit-content;
+}
+
+.status.pending {
+  background: orange;
+  color: black;
+}
+
+.status.picked {
+  background: #3b82f6;
+}
+
+.status.delivered {
+  background: #22c55e;
+}
+
+.status.cancelled {
+  background: #ef4444;
+}
+
+.info-box {
+  background: #1f2937;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.info-box p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.timeline {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.step {
+  padding: 10px;
+  border-radius: 8px;
+  background: #1f2937;
+  opacity: 0.5;
+  position: relative;
+  padding-left: 15px;
+}
+
+.step.active {
+  opacity: 1;
+  border-left: 4px solid #22c55e;
+}

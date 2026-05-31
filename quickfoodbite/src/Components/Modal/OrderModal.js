@@ -5,6 +5,7 @@ const OrderModal = ({
   setShowModal,
   handleProceed,
   loading,
+  formError
 }) => {
   if (!showModal) return null;
 
@@ -14,6 +15,11 @@ const OrderModal = ({
       tabIndex="-1"
       style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
     >
+      {formError && (
+  <div style={{ color: "white", marginBottom: "10px", backgroundColor:"red", padding:"10px"}}>
+    {formError}
+  </div>
+)}
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-3 shadow">
 
