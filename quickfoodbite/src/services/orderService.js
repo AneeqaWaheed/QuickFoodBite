@@ -90,7 +90,7 @@ const orderNumber = generateOrderNumber();
     }
 console.log("order created is ",data?.order?._id);
     const orderId = data?.order?._id;
-
+const orderToken = data.token;
     const message = `
 🧾 *ORDER #: ${orderNumber}*
 🛒 *New Order Received*
