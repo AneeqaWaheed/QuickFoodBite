@@ -118,6 +118,9 @@ Packaging: Rs ${summary.packagingCharge}
 
 🔗 *Track Order:*
 ${process.env.REACT_APP_CLIENT_URL}/orderTrack/${orderId}
+
+👉 *Pick Order Link:*
+${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
 `;
 
     const encodedMessage =
