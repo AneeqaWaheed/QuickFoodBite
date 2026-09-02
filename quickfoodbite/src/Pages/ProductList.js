@@ -10,7 +10,7 @@ const ProductsList = ({ products }) => {
   }
 
   return (
-     <div className="products-grid">
+     <div className="fleent-product-grid">
       {products.map((product) => (
         <ProductCard
           key={product._id}

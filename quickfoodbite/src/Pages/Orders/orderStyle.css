@@ -266,11 +266,16 @@ a, a:hover, a:focus {
   margin-top: 8px;
   font-weight: bold;
 }
-
+.cnfrm-btn{
+  background-color: #6b7c2c !important;
+  border-color: #6b7c2c !important;
+}
 /* BUTTON */
 .checkout-btn {
   margin-top: 10px;
   border-radius: 8px;
+  background-color: #6b7c2c !important;
+  border-color: #6b7c2c !important;
 }
 @media (max-width: 576px) {
   .cart-footer {

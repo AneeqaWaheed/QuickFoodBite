@@ -36,6 +36,19 @@ const userSchema = new mongoose.Schema(
   type: String,
   default: null,
 },
+isOnline: {
+  type: Boolean,
+  default: false,
+},
+
+lastSeen: {
+  type: Date,
+  default: null,
+},
+creditBalance: {
+  type: Number,
+  default: 0,
+},
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },

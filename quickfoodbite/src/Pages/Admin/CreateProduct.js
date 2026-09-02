@@ -4,40 +4,49 @@ import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {  Select } from "antd";
+import { Select } from "antd";
 import { useAuth } from "../../context/auth";
-
 import { NavLink, useNavigate } from "react-router-dom";
+
 const { Option } = Select;
 
 const CreateProduct = () => {
   const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
-  const [loading, setLoading] = useState(false); // Add loading state
- const [auth, setAuth] = useAuth();
+  const [loading, setLoading] = useState(false);
 
-   const handleLogout = () => {
-      toast.success("Logout Successfully");
-      setAuth({
-        ...auth,
-        user: null,
-        token: "",
-      });
-  
-      localStorage.removeItem("auth");
-  
-      navigate("/login");
-    };
+  const [auth, setAuth] = useAuth();
+
+  const [imageUpload, setImageUpload] = useState(null);
+  const [image, setImage] = useState("");
+
+  // Logout
+  const handleLogout = () => {
+    toast.success("Logout Successfully");
+
+    setAuth({
+      ...auth,
+      user: null,
+      token: "",
+    });
+
+    localStorage.removeItem("auth");
+
+    navigate("/login");
+  };
+
   // Get all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/category/get-category`
       );
+
       if (data?.success) {
         setCategories(data?.category);
       }
@@ -51,65 +60,85 @@ const CreateProduct = () => {
     getAllCategory();
   }, []);
 
-  // Create product function
+  // Create Product
   const handleCreate = async (e) => {
     e.preventDefault();
-    try {
-     
 
+    try {
+      // Validate image
+      if (!imageUpload) {
+        toast.error("Please upload an image before submitting!");
+        return;
+      }
+
+      // Start loading
+      setLoading(true);
+
+      // Create FormData
       const productData = new FormData();
+
       productData.append("name", name);
       productData.append("category", category);
       productData.append("price", price);
       productData.append("type", type);
 
-      // Set loading state to true when the request starts
-      setLoading(true);
-      // Send the formData to the server
+      // Add actual image file
+      productData.append("image", imageUpload);
+
+      console.log("Product data:", {
+        name,
+        category,
+        price,
+        type,
+        image: imageUpload,
+      });
+
+      // Send to backend
       const { data } = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/product/create-product`,
-        productData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        productData
       );
 
       if (data?.success) {
         toast.success("Product created successfully!");
+
         navigate("/dashboard/admin/product");
       } else {
-        toast.error(data?.message);
+        toast.error(data?.message || "Failed to create product");
       }
     } catch (error) {
-      console.log(error.response.data);
-      toast.error("Something went wrong");
+      console.log("Create Product Error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong while creating product"
+      );
     } finally {
-      // Set loading state to false when the request ends
       setLoading(false);
     }
   };
 
   return (
     <>
-   <nav
-     className="navbar navbar-expand-lg"
-     style={{ backgroundColor: "#000", padding: "10px 20px" }}
-   >
-     <div className="container-fluid d-flex justify-content-end">
-   
-       <NavLink
-         onClick={handleLogout}
-         to="/login"
-         className="nav-link text-white"
-         style={{ fontWeight: "500" }}
-       >
-         Logout
-       </NavLink>
-   
-     </div>
-   </nav>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{
+          backgroundColor: "#000",
+          padding: "10px 20px",
+        }}
+      >
+        <div className="container-fluid d-flex justify-content-end">
+          <NavLink
+            onClick={handleLogout}
+            to="/login"
+            className="nav-link text-white"
+            style={{ fontWeight: "500" }}
+          >
+            Logout
+          </NavLink>
+        </div>
+      </nav>
+
       <div
         className="container-fluid"
         style={{
@@ -149,12 +178,12 @@ const CreateProduct = () => {
               overflowY: "auto",
             }}
           >
-            <h1 className="text-white text-center">Create Product</h1>
+            <h1 className="text-white text-center">
+              Create Product
+            </h1>
 
-            <div
-              className="m-1 bg-body-secondary p-4 rounded shadow"
-              // style={{ backgroundColor: "rgb(176, 98, 98)" }}
-            >
+            <div className="m-1 bg-body-secondary p-4 rounded shadow">
+
               {/* Category Selection */}
               <Select
                 placeholder="Select a category"
@@ -173,7 +202,35 @@ const CreateProduct = () => {
               </Select>
 
               {/* Image Upload */}
-              
+              <div className="mb-3">
+                <label className="btn btn-outline-secondary col-12 bg-white text-dark">
+                  {imageUpload
+                    ? imageUpload.name
+                    : "Upload Image"}
+
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => {
+                      setImageUpload(e.target.files[0]);
+                    }}
+                    hidden
+                  />
+                </label>
+              </div>
+
+              {/* Image Preview */}
+              {imageUpload && (
+                <div className="text-center mb-3">
+                  <img
+                    src={URL.createObjectURL(imageUpload)}
+                    alt="Product"
+                    height="200px"
+                    className="img-fluid rounded shadow"
+                  />
+                </div>
+              )}
 
               {/* Product Name */}
               <div className="mb-3">
@@ -182,10 +239,13 @@ const CreateProduct = () => {
                   value={name}
                   placeholder="Write name of Product"
                   className="form-control"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) =>
+                    setName(e.target.value)
+                  }
                 />
               </div>
 
+              {/* Food Type */}
               <Select
                 placeholder="Select Food Type"
                 showSearch
@@ -195,14 +255,13 @@ const CreateProduct = () => {
                 size="large"
                 onChange={(value) => setType(value)}
               >
-                
-                  <Option value="Solid">
-                   Solid
-                  </Option>
-                    <Option value="Liquid">
-                   Liquid
-                  </Option>
-                
+                <Option value="Solid">
+                  Solid
+                </Option>
+
+                <Option value="Liquid">
+                  Liquid
+                </Option>
               </Select>
 
               {/* Product Price */}
@@ -212,10 +271,11 @@ const CreateProduct = () => {
                   value={price}
                   placeholder="Write Price of Product"
                   className="form-control"
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) =>
+                    setPrice(e.target.value)
+                  }
                 />
               </div>
-              
 
               {/* Create Product Button */}
               <div className="mb-3">
@@ -224,14 +284,17 @@ const CreateProduct = () => {
                   onClick={handleCreate}
                   disabled={loading}
                 >
-                  {loading ? "Creating..." : "Create Product"}
+                  {loading
+                    ? "Creating..."
+                    : "Create Product"}
                 </button>
               </div>
+
             </div>
           </div>
         </div>
       </div>
-   </>
+    </>
   );
 };
 

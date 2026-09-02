@@ -27,14 +27,20 @@ import ModeratorOrders from "./Pages/Moderator/ModeratorOrders";
 import ClaimRedirectPage from "./Pages/Moderator/OrderClaimPage";
 import AdminOrderStats from "./utils/AdminOrderStats";
 import TrackOrder from "./Pages/orderTrackPage";
+import FleentLanding from "./Pages/FleentLanding";
+import OtherServices from "./Pages/OtherServices";
+import ModeratorDocumentation from "./Pages/Moderator/ModeratorDocumentation";
+import AdminPayments from "./Pages/Admin/AdminPayments";
+import ModeratorEditOrder from "./Pages/Moderator/ModeratorEditOrder";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Menu />} />
+        <Route path="/menu" element={<Menu />} />
         <Route path="/home" element={<HomePage />} />
-    
+        <Route path="/" element={<FleentLanding />} />
+        <Route path="/otherServices" element={<OtherServices />} />
      
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<AdminRoute />}>
@@ -47,13 +53,18 @@ function App() {
           <Route path="admin/users" element={<Users />} />
           <Route path="admin/orders" element={<AdminOrders />} />
           <Route path="admin/charges" element={<AdminCharges />} />
+          <Route path="admin/payments" element={<AdminPayments />} />
         </Route>
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
         <Route path="moderator/My-Profile" element={<ModeratorProfile/>}/>
         <Route path="moderator/orders" element={<ModeratorOrders/>}/>
         <Route path="moderator/claim/:orderId" element={<ClaimRedirectPage />} />
-
+        <Route path="moderator/docs" element={<ModeratorDocumentation />} />
+<Route
+  path="/dashboard/moderator/orders/edit/:orderId"
+  element={<ModeratorEditOrder />}
+/>
         </Route>
 
         <Route path="/orderTrack/:orderId" element={<TrackOrder />} />

@@ -49,6 +49,12 @@ const AdminMenu = () => {
               Orders
             </NavLink>
             <NavLink
+              to="/dashboard/admin/payments"
+              className="list-group-item list-group-item-action "
+            >
+              Payments
+            </NavLink>
+            <NavLink
               to="/dashboard/admin/charges"
               className="list-group-item list-group-item-action "
             >

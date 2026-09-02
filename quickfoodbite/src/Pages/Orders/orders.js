@@ -253,7 +253,7 @@ onChange={(e) => {
   </div>
 )}
 <Button
-  variant="danger"
+  
   className="w-100 checkout-btn"
   onClick={() => {
     const minOrder = settings?.minOrderPrice ?? 0;

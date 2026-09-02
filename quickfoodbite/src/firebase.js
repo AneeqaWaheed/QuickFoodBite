@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging } from "firebase/messaging";
-
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyAA20CGNPi0Ndv0-Nr1L0vSlCpIArh2Pvs",
   authDomain: "delivery-notifications-b312c.firebaseapp.com",
@@ -11,6 +11,6 @@ const firebaseConfig = {
   measurementId: "G-7L74RCF56J"
 };
 
-const app = initializeApp(firebaseConfig);
-
+export const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
 export const messaging = getMessaging(app);

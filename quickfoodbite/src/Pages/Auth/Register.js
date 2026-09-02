@@ -36,7 +36,7 @@ const Register = () => {
   };
 
   return (
-    <SimpleLayout title={"Register - QuickFoodBite"}>
+    <SimpleLayout title={"Register - Fleent"}>
       <div className="register-container">
         <div className="register-form">
           <h1 className="text-center my-4 text-danger">Registration Form</h1>

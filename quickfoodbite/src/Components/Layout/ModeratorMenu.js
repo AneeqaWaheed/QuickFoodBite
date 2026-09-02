@@ -9,10 +9,17 @@ const ModeratorMenu = () => {
           <h4 className="text-white">Moderator Panel</h4>
           <div>
             <NavLink
-              to="/dashboard/moderator/My-Profile"
+              to="/dashboard/moderator"
               aria-current="page"
               className="list-group-item list-group-item-action "
               activeClassName="active-link"
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/dashboard/moderator/My-Profile"
+              className="list-group-item list-group-item-action "
+              
             >
               My Profile
             </NavLink>
@@ -22,12 +29,12 @@ const ModeratorMenu = () => {
             >
               My Orders
             </NavLink>
-            {/* <NavLink
-              to="/dashboard/admin/product"
+            <NavLink
+              to="/dashboard/moderator/docs"
               className="list-group-item list-group-item-action "
             >
-              Products
-            </NavLink> */}
+              Documentation
+            </NavLink>
             {/* <NavLink
               to="/dashboard/admin/users"
               className="list-group-item list-group-item-action "

@@ -90,15 +90,15 @@ const redirectPath = location.state?.from?.pathname;
     }
   }, [finalRedirect, navigate]);
   return (
-    <SimpleLayout title={"Login - QuickFoodBite"}>
-      <div className="register-container" title="Login-QuickFoodBite">
+    <SimpleLayout title={"Login - Fleent"}>
+      <div className="register-container" title="Login-Fleent">
         <div className="register-form">
-          <h1 className="text-center my-4 text-danger">Login Form</h1>
+          <h1 className="text-center my-4 text-clr">Login Form</h1>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label
                 htmlFor="email"
-                className="form-label text-danger fw-semibold my-0 ms-1 fs-5"
+                className="form-label text-clr fw-semibold my-0 ms-1 fs-5"
               >
                 Email
               </label>
@@ -114,14 +114,14 @@ const redirectPath = location.state?.from?.pathname;
                 placeholder="Enter Your Email"
                 required
               />
-              <div id="emailHelp" class="form-text">
+              <div id="emailHelp" class="form-text text-clr">
                 We'll never share your email with anyone else.
               </div>
             </div>
             <div className="mb-3">
               <label
                 htmlFor="password"
-                className="form-label text-danger fw-semibold my-0 ms-1 fs-5"
+                className="form-label text-clr fw-semibold my-0 ms-1 fs-5"
               >
                 Password
               </label>
@@ -132,7 +132,7 @@ const redirectPath = location.state?.from?.pathname;
   setPassword(e.target.value);
   setErrorMessage(""); // clear error when user edits
 }}
-                className="form-control"
+                className="form-control "
                 id="password"
                 placeholder="Enter Your Password"
                 required
@@ -144,7 +144,7 @@ const redirectPath = location.state?.from?.pathname;
   </small>
 )}
 
-            <button type="submit" className="btn btn-danger">
+            <button type="submit" className="btn btn-clr">
               Submit
             </button>
 

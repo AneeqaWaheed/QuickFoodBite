@@ -4,7 +4,7 @@ import AdminMenu from "../../Components/Layout/AdminMenu";
 import bgImage from "../../assets/bg-boxed.jpg";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Select } from "antd";
+import { Button, Select } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 const { Option } = Select;
 const UpdateProduct = () => {
@@ -16,7 +16,9 @@ const UpdateProduct = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [id, setId] = useState("");
-  const [type, setType]= useState("")
+  const [type, setType]= useState("");
+  const [image, setImage] = useState("");
+   const [imageUpload, setImageUpload] = useState(null);
   console.log("nsabdmans", params);
   // get Single Product
   const getSingleProduct = async () => {
@@ -31,7 +33,7 @@ const UpdateProduct = () => {
       setPrice(data?.product?.price);
       setCategory(data?.product?.category);
       setType(data?.product?.type);
-      
+      setImage(data?.product?.image);
     } catch (error) {
       console.log("error ", error);
     }
@@ -62,7 +64,11 @@ const UpdateProduct = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-   
+    if (!imageUpload && !image) {
+        toast.error("Please upload an image before submitting!");
+        return; // Stop the function if no image is uploaded and no default image exists
+      }
+      
 
       const productData = new FormData();
       productData.append("name", name);
@@ -70,17 +76,18 @@ const UpdateProduct = () => {
       // productData.append("description", description);
       productData.append("price", price);
       productData.append("type", type);
-
+if (imageUpload) {
+  productData.append("image", imageUpload);
+} else {
+        // If no new image is uploaded, append the existing image
+        productData.append("image", image); // Existing image
+      }
     
       // Send the formData to the server
       const { data } = await axios.put(
         `${process.env.REACT_APP_API}/api/v1/product/update-product/${id}`,
         productData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+       
       );
 
       if (data?.success) {
@@ -160,7 +167,43 @@ const UpdateProduct = () => {
                   </Option>
                 ))}
               </Select>
-             
+             <div className="mb-3">
+                <label className="btn btn-outline-secondary col-md-12 bg-white color-black">
+                  {imageUpload
+                    ? imageUpload.name
+                    : image
+                    ? "Change Image"
+                    : "Upload Image"}
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => setImageUpload(e.target.files[0])}
+                    hidden
+                  />
+                </label>
+              </div>
+              {imageUpload ? (
+                <div className="text-center mb-3">
+                  <img
+                    src={URL.createObjectURL(imageUpload)}
+                    alt="Product Image"
+                    height={"200px"}
+                    className="img img-responsive"
+                  />
+                </div>
+              ) : (
+                image && (
+                  <div className="text-center mb-3">
+                    <img
+                      src={image} // Use the existing image URL
+                      alt="Product Image"
+                      height={"200px"}
+                      className="img img-responsive"
+                    />
+                  </div>
+                )
+              )}
 
 
               <div className="mb-3">

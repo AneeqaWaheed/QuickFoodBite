@@ -57,7 +57,7 @@ const OrderModal = ({
           <div className="modal-footer border-0 d-flex flex-column gap-2">
 
             <button
-              className="btn btn-success w-100"
+              className="btn cnfrm-btn  w-100"
               onClick={handleProceed}
               disabled={loading}
             >

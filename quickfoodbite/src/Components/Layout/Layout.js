@@ -3,7 +3,16 @@ import { Helmet } from "react-helmet";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/layout.css";
-import headerImg from "../../assets/header1.jpg";
+import { NavLink } from "react-router-dom";
+import { FaHome, FaSearch, FaClipboardList, FaTag, FaUser } from "react-icons/fa";
+
+const navItems = [
+  { label: "Home", to: "/", Icon: FaHome },
+  { label: "Explore", to: "/explore", Icon: FaSearch },
+  { label: "Orders", to: "/orders", Icon: FaClipboardList },
+  { label: "Deals", to: "/deals", Icon: FaTag },
+  { label: "Account", to: "/account", Icon: FaUser },
+];
 
 const Layout = ({ children, title, description, keywords, author }) => {
   return (
@@ -18,26 +27,25 @@ const Layout = ({ children, title, description, keywords, author }) => {
         <title>{title}</title>
       </Helmet>
 
-      {/* MOBILE BLUR BACKGROUND LAYER */}
-      <div
-  className="mobile-bg-overlay"
-  style={{ backgroundImage: `url(${headerImg})` }}
-></div>
-
       <main className="main-content">
-        <ToastContainer 
-         position="top-right"
-        style={{ zIndex: 999999 }}/>
+        <ToastContainer
+          position="top-right"
+          style={{ zIndex: 999999 }}
+          toastClassName="fleent-toast"
+        />
         {children}
       </main>
+
+      {/* Persistent bottom nav, same on every page, matching the reference UI */}
+      
     </div>
   );
 };
 
 Layout.defaultProps = {
-  title: "QUICK FOOD BITE",
-  description: "QUICK FOOD BITE for killing your hunger",
-  keywords: "BITE, ecommerce, food, fast food, hunger",
+  title: "FLEENT | Your Wish. Delivered.",
+  description: "Fleent delivers your wish to you — food, groceries and more.",
+  keywords: "fleent, food delivery, ecommerce, fast food, hunger",
   author: "Aneeqa",
 };
 

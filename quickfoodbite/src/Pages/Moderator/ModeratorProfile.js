@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
+import ModeratorNavbar from "../../Components/Layout/ModeratorNavbar";
 const ModeratorProfile = () => {
     const [auth, setAuth] = useAuth();
     console.log("Auth user:", auth)
@@ -25,16 +26,7 @@ const ModeratorProfile = () => {
   return (
    <>
  <SimpleLayout title="Moderator - Profile">
-
-  {/* NAVBAR */}
-  <nav className="navbar navbar-dark bg-dark px-3">
-    <div className="container-fluid justify-content-end">
-      <button onClick={handleLogout} className="btn btn-outline-light btn-sm">
-        Logout
-      </button>
-    </div>
-  </nav>
-
+<ModeratorNavbar  handleLogout={handleLogout} />
   {/* MAIN SECTION */}
  <div
         className="container-fluid"

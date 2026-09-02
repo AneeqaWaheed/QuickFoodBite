@@ -16,50 +16,207 @@ const itemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
+    // =========================
+    // CUSTOMER
+    // =========================
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: false,
     },
 
-    // 🔥 FIX HERE
-    items: [itemSchema],
+    userName: {
+      type: String,
+      required: true,
+    },
 
-    subtotal: Number,
-    discountTotal: Number,
-    total: Number,
-    deliveryCharges: Number,
-    PackagingFee: Number,
-    userName: String,
-    phone: String,
-    location: String,
+    phone: {
+      type: String,
+      required: true,
+    },
+
+    // =========================
+    // ORDER TYPE
+    // =========================
+
+    orderType: {
+      type: String,
+      enum: ["cafe", "service"],
+      required: true,
+      default: "cafe",
+    },
+
+    // =========================
+    // CAFE
+    // =========================
+
+    items: {
+      type: [itemSchema],
+      default: [],
+    },
+
+    location: {
+      type: String,
+      default: "",
+    },
+
+    // =========================
+    // OTHER SERVICES
+    // =========================
+
+    pickupPoint: {
+      type: String,
+      default: "",
+    },
+
+    deliveryPoint: {
+      type: String,
+      default: "",
+    },
+
+    category: {
+      type: String,
+      default: "",
+    },
+
+    description: {
+      type: String,
+      default: "",
+    },
+
+    specialNotes: {
+      type: String,
+      default: "",
+    },
+
+    // =========================
+    // CHARGES
+    // =========================
+
+    subtotal: {
+      type: Number,
+      default: 0,
+    },
+
+    discountTotal: {
+      type: Number,
+      default: 0,
+    },
+
+    deliveryCharges: {
+      type: Number,
+      default: 0,
+    },
+
+    PackagingFee: {
+      type: Number,
+      default: 0,
+    },
+
+    total: {
+      type: Number,
+      default: 0,
+    },
+
+    // =========================
+    // STATUS
+    // =========================
 
     status: {
       type: String,
-      enum: ["pending", "picked", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "picked",
+        "preparing",
+        "purchasing",
+        "on-the-way",
+        "delivered",
+        "cancelled",
+        "expired",
+      ],
       default: "pending",
     },
+
+    // =========================
+    // MODERATOR
+    // =========================
 
     assignedModerator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
+      default: null,
     },
-     // ✅ NEW FIELD (IMPORTANT)
+
+    // =========================
+    // CLAIM
+    // =========================
+
     claimToken: {
       type: String,
       unique: true,
+      sparse: true,
     },
 
-    // ✅ OPTIONAL (for expiry logic later)
     isClaimed: {
       type: Boolean,
       default: false,
     },
+
     expiresAt: {
-  type: Date,
-},
+      type: Date,
+      default: null,
+    },
+
+    // =========================
+    // ORDER UPDATES
+    // =========================
+
+    orderUpdates: [
+      {
+        updatedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "users",
+        },
+
+        changes: [
+          {
+            type: {
+              type: String,
+              enum: [
+                "added",
+                "removed",
+                "quantity_changed",
+              ],
+            },
+
+            productName: String,
+
+            oldQuantity: Number,
+
+            newQuantity: Number,
+          },
+        ],
+
+        oldSubtotal: Number,
+
+        newSubtotal: Number,
+
+        oldTotal: Number,
+
+        newTotal: Number,
+
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
-// 🔥 FIX MODEL CACHING ISSUE
-export default mongoose.models.Order || mongoose.model("Order", orderSchema);
+
+export default mongoose.models.Order ||
+  mongoose.model("Order", orderSchema);

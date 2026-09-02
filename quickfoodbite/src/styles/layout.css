@@ -1,39 +1,98 @@
+/* ==================== Fleent App Layout ==================== */
+
+:root {
+  --fleent-bg: #f8f4ea;
+  --fleent-ink: #26310e;
+  --fleent-olive: #3b4a16;
+  --fleent-olive-light: #6b7c2c;
+  --fleent-sage: #dadfc0;
+  --fleent-card: #ffffff;
+  --fleent-muted: rgba(38, 49, 14, 0.4);
+  --fleent-border: rgba(38, 49, 14, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--fleent-bg);
+  color: var(--fleent-ink);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
 .app-layout {
   position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--fleent-bg);
 }
 
-/* main content sits above background */
+/* ---------- Main content ---------- */
 .main-content {
-  position: relative;
-  z-index: 2;
- 
+  background: var(--fleent-bg);
+  min-height: calc(100vh - 72px);
+  /* leave room so content isn't hidden behind the fixed bottom nav */
+  padding-bottom: 76px;
 }
 
-/* MOBILE BLUR BACKGROUND */
-@media (max-width: 768px) {
-  .mobile-bg-overlay {
+/* ---------- Persistent bottom nav ---------- */
+.fleent-bottom-nav {
   position: fixed;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(3px);
-  transform: scale(1.05);
-  z-index: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--fleent-bg);
+  border-top: 1px solid var(--fleent-border);
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
 }
 
-  /* dark overlay for readability */
-  .mobile-bg-overlay::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-      background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.4)
-  );
-  }
+.fleent-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--fleent-muted);
+  font-size: 10px;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
 
-   .main-content {
-    padding-top: 80px; /* gives breathing space from navbar */
-  }
+.fleent-nav-item svg {
+  color: inherit;
+}
+
+.fleent-nav-item.active {
+  color: var(--fleent-olive);
+}
+
+/* ---------- Toast styling ---------- */
+.Toastify__toast,
+.fleent-toast {
+  border-radius: 12px !important;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.Toastify__toast--success {
+  background: var(--fleent-olive) !important;
+  color: #fff !important;
+}
+
+.Toastify__toast--error {
+  background: #b23a3a !important;
+  color: #fff !important;
+}
+
+.Toastify__progress-bar {
+  background: var(--fleent-olive-light) !important;
 }

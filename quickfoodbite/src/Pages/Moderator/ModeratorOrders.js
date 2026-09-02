@@ -7,6 +7,8 @@ import {useNavigate } from "react-router-dom";
 import ModeratorMenu from "../../Components/Layout/ModeratorMenu";
 import SimpleLayout from "../../Components/Layout/SimpleLayout";
 import OrderStats from "../../utils/OrderStats";
+import ModeratorNavbar from "../../Components/Layout/ModeratorNavbar";
+import ModeratorEditOrder from "./ModeratorEditOrder";
 
 const ModeratorOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -15,6 +17,8 @@ const ModeratorOrders = () => {
       const [productsPerPage] = useState(5); 
     const [auth, setAuth] = useAuth();
     const [loading, setLoading] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+const [selectedOrder, setSelectedOrder] = useState(null);
     console.log("Auth user:", auth)
     const navigate = useNavigate();
    const handleLogout = () => {
@@ -139,19 +143,14 @@ const filteredOrders = orders.filter((order) => {
     toast.error("Failed to update status");
   }
 };
-
+const handleEditOrder = (order) => {
+  setSelectedOrder(order);
+  setShowEditModal(true);
+};
   return (
    <>
  <SimpleLayout title="Moderator - Profile">
-
-  {/* NAVBAR */}
-  <nav className="navbar navbar-dark bg-dark px-3">
-    <div className="container-fluid justify-content-end">
-      <button onClick={handleLogout} className="btn btn-outline-light btn-sm">
-        Logout
-      </button>
-    </div>
-  </nav>
+<ModeratorNavbar  handleLogout={handleLogout} />
 
   {/* MAIN SECTION */}
    <div
@@ -306,19 +305,22 @@ const filteredOrders = orders.filter((order) => {
 
 <td style={{ minWidth: "140px" }}>
   {order?.status !== "Delivered" && (
+  <>
     <button
-  className="btn btn-success btn-sm"
-  style={{
-    fontSize: "12px",
-    padding: "4px 8px",
-    whiteSpace: "nowrap",
-    lineHeight: "1.2",
-  }}
-  onClick={() => updateOrderStatus(order._id)}
+  className="btn btn-primary btn-sm me-2"
+  onClick={() => handleEditOrder(order)}
 >
-  Delivered?
+  Edit
 </button>
-  )}
+
+    <button
+      className="btn btn-success btn-sm"
+      onClick={() => updateOrderStatus(order._id)}
+    >
+      Delivered?
+    </button>
+  </>
+)}
 </td>
                       <td style={{ minWidth: "150px" }}>
   <div>
@@ -371,6 +373,25 @@ const filteredOrders = orders.filter((order) => {
       </div>
 
 </SimpleLayout>
+
+
+<ModeratorEditOrder
+  show={showEditModal}
+  order={selectedOrder}
+  onClose={() => {
+    setShowEditModal(false);
+    setSelectedOrder(null);
+  }}
+  onUpdated={(updatedOrder) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order._id === updatedOrder._id
+          ? updatedOrder
+          : order
+      )
+    );
+  }}
+/>
    </>
   );
 };

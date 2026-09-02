@@ -4,29 +4,54 @@ import { Types } from "mongoose";
 import categoryModel from "../models/categoryModel.js";
 import { error } from "console";
 //create product
+import cloudinary from "../config/cloudinary.js";
+
 export const createProductController = async (req, res) => {
   try {
-    console.log("bamns", req.body);
-    const { name, price, category, type} = req.body;
+    console.log("Body:", req.body);
+    console.log("File:", req.file);
 
-    // Check if the fields are provided
+    const { name, price, category, type } = req.body;
+
+    // Check required fields
     if (!name) {
-      return res.send({ message: "Name is Required" });
+      return res.status(400).send({
+        success: false,
+        message: "Name is Required",
+      });
     }
-  
+
     if (!price) {
-      return res.send({ message: "Price is Required" });
+      return res.status(400).send({
+        success: false,
+        message: "Price is Required",
+      });
     }
+
     if (!category) {
-      return res.send({ message: "Category is Required" });
+      return res.status(400).send({
+        success: false,
+        message: "Category is Required",
+      });
     }
+
     if (!type) {
-      return res.send({ message: "Type is Required" });
+      return res.status(400).send({
+        success: false,
+        message: "Type is Required",
+      });
     }
- 
+
+    if (!req.file) {
+      return res.status(400).send({
+        success: false,
+        message: "Image is Required",
+      });
+    }
 
     // Check if product already exists
     const existingProduct = await Product.findOne({ name });
+
     if (existingProduct) {
       return res.status(200).send({
         success: false,
@@ -34,12 +59,32 @@ export const createProductController = async (req, res) => {
       });
     }
 
-    // Save the product
+    // Upload image to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "quickfoodbite/products",
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+
+      uploadStream.end(req.file.buffer);
+    });
+
+    // Save product
     const product = await new Product({
       name,
       price,
       category,
-      type
+      type,
+      image: result.secure_url,
     }).save();
 
     res.status(201).send({
@@ -47,12 +92,14 @@ export const createProductController = async (req, res) => {
       message: "Product added successfully",
       product,
     });
+
   } catch (error) {
-    console.log(error);
+    console.log("Create Product Error:", error);
+
     res.status(500).send({
       success: false,
-      error,
       message: "Error while adding Product",
+      error: error.message,
     });
   }
 };
@@ -84,7 +131,7 @@ export const singleProductController = async (req, res) => {
   try {
     // Use req.params.id if you're using a URL parameter
     const product = await Product.findOne({ _id: req.params.id }) // Assuming you're using MongoDB's default _id
-  
+      .select("-image")
       .populate("category");
 
     // Check if product is found
@@ -156,50 +203,112 @@ export const deleteProductController = async (req, res) => {
   }
 };
 
-//update Product
+
 export const updateProductController = async (req, res) => {
   try {
-    const { name, price, category, type} = req.body;
+    const { name, price, category, type } = req.body;
+
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
     // Validation
     switch (true) {
       case !name:
-        return res.status(400).send({ error: "Name is Required" });
+        return res.status(400).send({
+          success: false,
+          message: "Name is Required",
+        });
+
       case !price:
-        return res.status(400).send({ error: "Price is Required" });
+        return res.status(400).send({
+          success: false,
+          message: "Price is Required",
+        });
+
       case !category:
-        return res.status(400).send({ error: "Category is Required" });
+        return res.status(400).send({
+          success: false,
+          message: "Category is Required",
+        });
+
       case !type:
-        return res.status(400).send({error: "Type is required"});
+        return res.status(400).send({
+          success: false,
+          message: "Type is Required",
+        });
     }
 
-    // Find and update the product
+    // Find existing product
+    const existingProduct = await Product.findById(req.params.prId);
+
+    if (!existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Keep existing image
+    let image = existingProduct.image || "";
+
+    // If a new image was selected
+    if (req.file) {
+      console.log("Uploading new image to Cloudinary...");
+
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "quickfoodbite/products",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        uploadStream.end(req.file.buffer);
+      });
+
+      image = result.secure_url;
+
+      console.log("Cloudinary URL:", image);
+    }
+
+    // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.prId,
-      { name, price, category, type },
-      { new: true } // Returns the updated document
+      {
+        name,
+        price,
+        category,
+        type,
+        image,
+      },
+      {
+        new: true,
+      }
     );
-    if (!updatedProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
-    }
 
     res.status(200).send({
       success: true,
       message: "Product Updated Successfully",
       product: updatedProduct,
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("UPDATE PRODUCT ERROR:", error);
+
     res.status(500).send({
       success: false,
-      error,
       message: "Error in updating product",
+      error: error.message,
     });
   }
 };
-
 //product filter
 export const productFilterController = async (req, res) => {
   try {

@@ -31,11 +31,11 @@ const GeneralLayout = ({
 };
 
 GeneralLayout.defaultProps = {
-  title: "QuickFoodBite",
+  title: "Fleent",
   minHeight: "80vh",
-  description: "QuickFoodBite for killing your hunger",
+  description: "Fleent for killing your hunger",
   keywords: "Burger, ecommerce, food, fast food, hunger",
-  author: "Amayal Royy",
+  author: "Aneeqa",
 };
 
 export default GeneralLayout;

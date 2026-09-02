@@ -18,6 +18,8 @@
     align-items: center;
     padding: 20px;
     overflow-x: hidden;
+    background-color: #f8f4ea;
+
   }
   
   .register-form {
@@ -73,4 +75,10 @@
       font-size: 14px;
     }
   }
-  
+  .text-clr {
+    color: #6b7c2c;
+  }
+.btn-clr {
+   background-color: #6b7c2c;
+   color: antiquewhite;
+}

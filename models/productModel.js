@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema(
     enum: ["Liquid", "Solid"],
     required: true,
   },
+  image: {
+      type: String,
+      
+    },
   discount: { type: Number, default: 0 }
   },
   {

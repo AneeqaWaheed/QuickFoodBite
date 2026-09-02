@@ -1,5 +1,5 @@
 
-const generateOrderNumber = () => {
+export const generateOrderNumber = () => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const numbers = "0123456789";
 
@@ -38,9 +38,9 @@ const orderNumber = generateOrderNumber();
 
 
     const minOrder = settings?.minOrderPrice || 0;
-
-
+    
     const formattedItems = cart.map((item) => ({
+      
       productId: getId(item),
       name: item.name,
       price: Number(item.price),
@@ -59,6 +59,7 @@ const orderNumber = generateOrderNumber();
         },
 
         body: JSON.stringify({
+          orderType: "cafe",
           userName: name,
           phone,
           location,
@@ -88,7 +89,7 @@ const orderNumber = generateOrderNumber();
 
       return;
     }
-console.log("order created is ",data?.order?._id);
+
     const orderId = data?.order?._id;
 const orderToken = data.token;
     const message = `

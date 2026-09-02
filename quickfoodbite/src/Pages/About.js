@@ -7,7 +7,7 @@ import OurMission from "../Components/OurMission";
 
 const About = () => {
   return (
-    <Layout title={"About - QuickFoodBite"}>
+    <Layout title={"About - Fleent"}>
       <OurMission />
       <HomeSection1 imageUrl="Images/about1.jpg" />
       <FounderSays />

@@ -106,6 +106,7 @@ export const LoginController = async (req, res) => {
         role: user.role,
         studentId: user.studentId,
         phone: user.phone,
+        creditBalance: user.creditBalance,
         _id: user._id
 
       },

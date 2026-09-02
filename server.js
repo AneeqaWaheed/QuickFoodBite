@@ -10,6 +10,8 @@ import paymentRoute from "./routes/paymentRoute.js";
 import orderRoute from "./routes/orderRoute.js";
 import contactRoute from "./routes/contactRoute.js";
 import chargesRoutes from "./routes/chargesRoute.js";
+import moderatorRoute from "./routes/moderatorRoute.js";
+import AdminRoute from "./routes/AdminRoute.js";
 import cron from "node-cron";
 import Order from "./models/ordersModel.js";
 
@@ -46,6 +48,8 @@ app.use("/api/v1/product", productRoute);
 app.use("/api/v1/payment", paymentRoute);
 app.use("/api/v1/contact", contactRoute);
 app.use("/api/v1/charges", chargesRoutes);
+app.use("/api/v1/moderator", moderatorRoute);
+app.use("/api/v1/admin", AdminRoute);
 // app.use("/api/v1/setting", SettingSchema);
 
 app.use("/api/v1/orders", orderRoute);
@@ -71,7 +75,7 @@ cron.schedule("* * * * *", async () => {
   }
 });
 app.get("/", (req, res) => {
-  res.send("<h1>Welcome to QUICKFOODBITE</h1>");
+  res.send("<h1>Welcome to Fleent</h1>");
 });
 //PORT
 const PORT = process.env.PORT || 8080;

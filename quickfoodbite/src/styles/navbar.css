@@ -1,52 +1,145 @@
-.navbar {
-  font-family: "Play", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  /* position: absolute; */
+/* ==================== Fleent Navbar ==================== */
+
+.fleent-navbar {
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
-  z-index: 1000; /* Make sure it's above the image */
-  /* Semi-transparent background */
-  padding: 10px 20px;
-}
-.active {
-  border-bottom: 2px solid red;
+  z-index: 200;
+  background: #9fb364ea;
+  border-bottom: 1px solid rgba(38, 49, 14, 0.08);
 }
 
-.navbar-brand {
-  font-weight: 700;
-  letter-spacing: 3px;
-}
-.faburger {
-  display: inline-block;
-  font-size: 1.5em;
-  margin: 10px;
-}
-
-.brand-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-@media (max-width: 576px) {
-  .faburger {
-    font-size: 1rem;
-  }
-
-  .brand-text {
-    font-size: 0.9rem;
-  }
+.fleent-navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
-.cart-circle {
-  background-color: rgb(225, 29, 72); /* red */
-  color: white;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+/* ---------- Left: menu + brand ---------- */
+.fleent-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.fleent-navbar-menu {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  padding: 2px;
+  background: none;
+  border: none;
+  color: #26310e;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.fleent-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+
+}
+.fleent-navbar-logo {
+  width: 150px;
+height: 55px;
+  object-fit: contain;
+  display: block;
+}
+.fleent-navbar-brand span {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+}
+
+/* ---------- Center: search ---------- */
+.fleent-navbar-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.fleent-navbar-search input {
+  width: 100%;
+  max-width: 340px;
+  border: 1px solid rgba(38, 49, 14, 0.12);
+  background: #fff;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  color: #26310e;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.fleent-navbar-search input:focus {
+  border-color: #6b7c2c;
+}
+
+.fleent-navbar-search input::placeholder {
+  color: rgba(38, 49, 14, 0.4);
+}
+
+/* ---------- Right: bell + cart ---------- */
+.fleent-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.fleent-navbar-bell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #26310e;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.fleent-navbar-cart {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(38, 49, 14, 0.2);
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  color: #26310e;
+  transition: border-color 0.15s ease;
+}
+
+.fleent-navbar-cart:hover {
+  border-color: #6b7c2c;
+}
+
+.fleent-navbar-cart-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #6b7c2c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .fleent-navbar-search {
+    display: none;
+  }
 }

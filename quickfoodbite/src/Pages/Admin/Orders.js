@@ -8,7 +8,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Button } from "react-bootstrap";
 import AdminOrderStats from "../../utils/AdminOrderStats.js";
+import { Modal } from "react-bootstrap";
 const AdminOrders = () => {
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+const [selectedOrder, setSelectedOrder] = useState(null);
   const [moderatorSearch, setModeratorSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [orders, setOrders] = useState([]);
@@ -100,7 +103,40 @@ const filteredOrders = orders.filter((order) => {
       setCurrentPage(currentPage - 1);
     }
   };
+const handleDeleteOrder = async (orderId) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this order?"
+  );
 
+  if (!confirmDelete) return;
+
+  try {
+    const { data } = await axios.delete(
+      `${process.env.REACT_APP_API}/api/v1/orders/delete/${orderId}`,
+      {
+        headers: {
+          Authorization: auth?.token,
+        },
+      }
+    );
+
+    if (data.success) {
+      toast.success("Order deleted successfully");
+
+      // Remove it immediately from the table
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order._id !== orderId)
+      );
+    }
+  } catch (error) {
+    console.error("Delete order error:", error);
+
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to delete order"
+    );
+  }
+};
 
 
   return (
@@ -225,7 +261,9 @@ const filteredOrders = orders.filter((order) => {
 <th scope="col">Packaging Charges</th>
                     <th scope="col">Status</th>
                     <th scope="col">Assigned Mod</th>
+                    <th scope="col">Updates</th>
                     <th scope="col">Order Date</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
 
@@ -252,10 +290,36 @@ const filteredOrders = orders.filter((order) => {
       <td>{order?.status}</td>
       <td>{order?.assignedModerator?.firstName}</td>
       <td>
+  {order?.orderUpdates?.length > 0 ? (
+    <Button
+      variant="warning"
+      size="sm"
+      onClick={() => {
+        setSelectedOrder(order);
+        setShowUpdateModal(true);
+      }}
+    >
+      Updated ({order.orderUpdates.length})
+    </Button>
+  ) : (
+    <span className="text-muted">No updates</span>
+  )}
+</td>
+      <td>
   {new Date(order?.createdAt).toLocaleDateString()}{" "}
   {new Date(order?.createdAt).toLocaleTimeString()}
 </td>
+<td>
+  <Button
+    variant="danger"
+    size="sm"
+    onClick={() => handleDeleteOrder(order._id)}
+  >
+    Delete
+  </Button>
+</td>
     </tr>
+
   ))}
 </tbody>
               </table>
@@ -289,6 +353,107 @@ const filteredOrders = orders.filter((order) => {
           </div>
         </div>
       </div>
+      <Modal
+  show={showUpdateModal}
+  onHide={() => {
+    setShowUpdateModal(false);
+    setSelectedOrder(null);
+  }}
+  centered
+  size="lg"
+>
+  <Modal.Header closeButton>
+    <Modal.Title>
+      Order Update History
+    </Modal.Title>
+  </Modal.Header>
+
+  <Modal.Body>
+    {selectedOrder?.orderUpdates?.length > 0 ? (
+      selectedOrder.orderUpdates
+        .slice()
+        .reverse()
+        .map((update, index) => (
+          <div
+            key={index}
+            className="border rounded p-3 mb-3"
+          >
+            <div className="d-flex justify-content-between mb-2">
+              <strong>
+                Update #{selectedOrder.orderUpdates.length - index}
+              </strong>
+
+              <small className="text-muted">
+                {new Date(update.createdAt).toLocaleString()}
+              </small>
+            </div>
+
+            <div className="mb-2">
+              <strong>Changes:</strong>
+            </div>
+
+            {update.changes?.map((change, changeIndex) => (
+              <div
+                key={changeIndex}
+                className="mb-1"
+              >
+                {change.type === "added" && (
+                  <span className="text-success">
+                    ➕ {change.productName} ×{" "}
+                    {change.newQuantity} added
+                  </span>
+                )}
+
+                {change.type === "removed" && (
+                  <span className="text-danger">
+                    ➖ {change.productName} removed
+                  </span>
+                )}
+
+                {change.type === "quantity_changed" && (
+                  <span className="text-primary">
+                    🔄 {change.productName}:{" "}
+                    {change.oldQuantity} →{" "}
+                    {change.newQuantity}
+                  </span>
+                )}
+              </div>
+            ))}
+
+            <hr />
+
+            <div>
+              <strong>Subtotal:</strong>{" "}
+              Rs {update.oldSubtotal} → Rs{" "}
+              {update.newSubtotal}
+            </div>
+
+            <div>
+              <strong>Total:</strong>{" "}
+              Rs {update.oldTotal} → Rs{" "}
+              {update.newTotal}
+            </div>
+          </div>
+        ))
+    ) : (
+      <p className="text-center mb-0">
+        No updates found for this order.
+      </p>
+    )}
+  </Modal.Body>
+
+  <Modal.Footer>
+    <Button
+      variant="secondary"
+      onClick={() => {
+        setShowUpdateModal(false);
+        setSelectedOrder(null);
+      }}
+    >
+      Close
+    </Button>
+  </Modal.Footer>
+</Modal>
     </>
   );
 };
