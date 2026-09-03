@@ -12,6 +12,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(5); // Number of products per page
  const [auth, setAuth] = useAuth();
+ const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
    const handleLogout = () => {
       toast.success("Logout Successfully");
@@ -60,19 +61,26 @@ const Products = () => {
       console.log("Error deleting Product", error);
     }
   };
+const filteredProducts = products.filter((p) => {
+  const search = searchTerm.toLowerCase();
 
+  return (
+    p.name?.toLowerCase().includes(search) ||
+    p.category?.name?.toLowerCase().includes(search) ||
+    p.type?.toLowerCase().includes(search)
+  );
+});
   // Calculate the index of the last product on the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   // Calculate the index of the first product on the current page
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   // Get the current products
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
-
+const currentProducts = filteredProducts.slice(
+  indexOfFirstProduct,
+  indexOfLastProduct
+);
   // Handle pagination
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -85,7 +93,9 @@ const Products = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm]);
   return (
        <>
       <nav
@@ -136,13 +146,27 @@ const Products = () => {
             </div>
             <div className="col-md-9">
               <h1 className="text-center text-white">All Products</h1>
-
+<div className="d-flex justify-content-center mb-4">
+  <input
+    type="text"
+    className="form-control"
+    placeholder="Search products by name, category or type..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    style={{
+      maxWidth: "500px",
+      borderRadius: "8px",
+      padding: "12px",
+    }}
+  />
+</div>
               {/* Responsive Table Wrapper */}
               <div className="table-responsive">
                 <table className="table table-striped table-bordered text-center">
                   <thead className="table-dark">
                     <tr>
-                     
+                         <th scope="col">Image</th>
+
                       <th scope="col">Name</th>
                       <th scope="col">Category</th>
                       <th scope="col">Type</th>
@@ -154,33 +178,56 @@ const Products = () => {
                   </thead>
 
                   <tbody>
-                    {currentProducts.map((p) => (
-                      <tr key={p._id}>
-                        
-                        <td>{p.name}</td>
-                        <td>{p.category ? p.category.name : "No Category"}</td>
-                        <td>{p.type}</td>
-                       
-                        <td>Rs. {p.price}</td>
-                        <td>
-                          <div className="d-flex flex-wrap justify-content-center">
-                            <Link to={`/dashboard/admin/product/${p._id}`}>
-                              <button className="btn btn-success mb-1">
-                                Update
-                              </button>
-                            </Link>
+  {currentProducts.length > 0 ? (
+    currentProducts.map((p) => (
+      <tr key={p._id}>
+        <td>
+    {p.image ? (
+      <img
+        src={p.image}
+        alt={p.name}
+        style={{
+          width: "70px",
+          height: "70px",
+          objectFit: "cover",
+          borderRadius: "8px",
+        }}
+      />
+    ) : (
+      <span className="text-muted">No Image</span>
+    )}
+  </td>
+        <td>{p.name}</td>
+        <td>{p.category ? p.category.name : "No Category"}</td>
+        <td>{p.type}</td>
+        <td>Rs. {p.price}</td>
 
-                            <button
-                              className="btn btn-danger ms-2 mb-1"
-                              onClick={() => handleDelete(p._id)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
+        <td>
+          <div className="d-flex flex-wrap justify-content-center">
+            <Link to={`/dashboard/admin/product/${p._id}`}>
+              <button className="btn btn-success mb-1">
+                Update
+              </button>
+            </Link>
+
+            <button
+              className="btn btn-danger ms-2 mb-1"
+              onClick={() => handleDelete(p._id)}
+            >
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="5" className="text-center">
+        No products found
+      </td>
+    </tr>
+  )}
+</tbody>
                 </table>
               </div>
 
