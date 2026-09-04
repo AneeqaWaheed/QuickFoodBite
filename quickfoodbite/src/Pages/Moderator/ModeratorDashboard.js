@@ -64,51 +64,60 @@ const ModeratorDashboard = () => {
   // =========================
   // FCM SETUP
   // =========================
-  useEffect(() => {
-    const initFCM = async () => {
-      try {
-        console.log("Starting FCM setup...");
+useEffect(() => {
+  const initFCM = async () => {
+    try {
+      console.log("Starting FCM setup...");
 
-        const permission = await Notification.requestPermission();
+      const permission = await Notification.requestPermission();
 
-        console.log("Notification permission:", permission);
+      console.log("Notification permission:", permission);
 
-        if (permission !== "granted") {
-          console.log("Permission denied");
-          return;
-        }
+      if (permission !== "granted") {
+        console.log("Permission denied");
+        return;
+      }
 
-        const fcmToken = await getToken(messaging, {
-          vapidKey:
-            "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
-        });
-
-        console.log("NEW TOKEN:", fcmToken);
-
-        if (!fcmToken) {
-          console.log("No token generated");
-          return;
-        }
-
-        const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/v1/auth/save-fcm-token`,
-          {
-            userId: auth?.user?._id,
-            fcmToken,
-          }
+      // Register Firebase messaging service worker
+      const registration =
+        await navigator.serviceWorker.register(
+          "/firebase-messaging-sw.js"
         );
 
-        console.log("Token saved:", response.data);
-      } catch (error) {
-        console.log("FCM FULL ERROR:", error);
+      console.log("Service worker registered:", registration);
+
+      const fcmToken = await getToken(messaging, {
+        vapidKey:
+          "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
+        serviceWorkerRegistration: registration,
+      });
+
+      console.log("NEW TOKEN:", fcmToken);
+
+      if (!fcmToken) {
+        console.log("No token generated");
+        return;
       }
-    };
 
-    if (auth?.user?._id) {
-      initFCM();
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/auth/save-fcm-token`,
+        {
+          userId: auth?.user?._id,
+          fcmToken,
+        }
+      );
+
+      console.log("Token saved:", response.data);
+
+    } catch (error) {
+      console.log("FCM FULL ERROR:", error);
     }
-  }, [auth?.user?._id]);
+  };
 
+  if (auth?.user?._id) {
+    initFCM();
+  }
+}, [auth?.user?._id]);
 
   // =========================
   // GO ONLINE / OFFLINE
