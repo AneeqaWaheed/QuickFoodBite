@@ -32,21 +32,23 @@ import OtherServices from "./Pages/OtherServices";
 import ModeratorDocumentation from "./Pages/Moderator/ModeratorDocumentation";
 import AdminPayments from "./Pages/Admin/AdminPayments";
 import ModeratorEditOrder from "./Pages/Moderator/ModeratorEditOrder";
+import Development from "./Pages/Deveopment";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/" element={<Development />} />
+        {/* <Route path="/menu" element={<Menu />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/" element={<FleentLanding />} />
         <Route path="/otherServices" element={<OtherServices />} />
      
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<AdminRoute />}>
-          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin" element={<AdminDashboard />} /> */}
           {/* <Route path="admin/stats" element={<AdminOrderStats />} /> */}
-          <Route path="admin/create-category" element={<CreateCategory />} />
+          {/* <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/product" element={<Products />} />
           <Route path="admin/product/:id" element={<UpdateProducts />} />
@@ -75,7 +77,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/checkout-success/success" element={<Checkout />} />
-        <Route path="*" element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} /> */}
       </Routes>
     </>
   );
