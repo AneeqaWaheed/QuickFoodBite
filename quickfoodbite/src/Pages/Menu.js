@@ -3,6 +3,7 @@ import Layout from "../Components/Layout/Layout";
 import { toast } from "react-toastify";
 import ProductsList from "./ProductList";
 import "../styles/menu.css";
+import { useCart } from "../context/cart";
 import {
   FaPizzaSlice,
   FaHamburger,
@@ -15,6 +16,7 @@ import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
+  FaShoppingCart, FaArrowRight
 } from "react-icons/fa";
 import { useSearch } from "../context/seacrh";
 
@@ -38,6 +40,20 @@ const Menu = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { searchQuery } = useSearch();
+  const {
+  cart,
+  setCartOpen,
+} = useCart();
+
+const cartItemCount = cart.reduce(
+  (total, item) => total + item.quantity,
+  0
+);
+
+const cartTotal = cart.reduce(
+  (total, item) => total + (item.price * item.quantity),
+  0
+);
 
   // ---------------- CATEGORIES ----------------
   const fetchCategories = async () => {
@@ -87,18 +103,23 @@ const Menu = () => {
   useEffect(() => {
     fetchProducts();
   }, [page, selectedCategory]);
-
+useEffect(() => {
+  setPage(1);
+}, [searchQuery]);
   // ---------------- CATEGORY CHANGE ----------------
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
     setPage(1);
   };
 
-  const filteredProducts = products.filter((item) => {
-    const name = item?.name?.toLowerCase() || "";
-    const search = searchQuery?.toLowerCase() || "";
-    return search.split(" ").every((word) => name.includes(word));
-  });
+ const filteredProducts = products.filter((item) => {
+  const name = item?.name?.toLowerCase() || "";
+  const search = searchQuery?.trim().toLowerCase() || "";
+
+  if (!search) return true;
+
+  return name.includes(search);
+});
 
   return (
     <Layout title="Menu - Fleent">
@@ -162,7 +183,7 @@ const Menu = () => {
           )}
         </div>
 
-        {/* Pagination */}
+               {/* Pagination */}
         {!loading && filteredProducts.length > 0 && (
           <div className="fleent-pagination">
             <button
@@ -188,6 +209,35 @@ const Menu = () => {
             </button>
           </div>
         )}
+
+        {/* FIXED MINI CART BAR */}
+        {cart.length > 0 && (
+          <div className="menu-mini-cart">
+
+            <div
+              className="menu-mini-cart-left"
+              onClick={() => setCartOpen(true)}
+            >
+              <FaShoppingCart />
+              <span>{cartItemCount} Items</span>
+            </div>
+
+            <div className="menu-mini-cart-total">
+              Rs. {cartTotal}
+            </div>
+
+            <button
+              type="button"
+              className="menu-mini-cart-view"
+              onClick={() => setCartOpen(true)}
+            >
+              View Cart
+              <FaArrowRight />
+            </button>
+
+          </div>
+        )}
+
       </div>
     </Layout>
   );

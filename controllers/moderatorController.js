@@ -48,7 +48,7 @@ export const toggleModeratorStatus = async (req, res) => {
       userId,
       {
         isOnline,
-        lastSeen: isOnline ? new Date() : null,
+        
       },
       { new: true }
     );

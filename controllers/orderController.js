@@ -172,9 +172,6 @@ export const createOrder = async (req, res) => {
   role: 0,
   isOnline: true,
   fcmToken: { $exists: true, $ne: null },
-  lastSeen: {
-    $gte: new Date(Date.now() - 2 * 60 * 1000),
-  },
   $expr: {
     $lte: [
       {
@@ -218,13 +215,14 @@ export const createOrder = async (req, res) => {
 
           webpush: {
             fcmOptions: {
-              link: `${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${order._id}`,
+              link: `${process.env.REACT_ADDRESS}/dashboard/moderator/claim/${order._id}`,
             },
           },
 
           data: {
             orderId: order._id.toString(),
             orderType: orderType,
+            url: `/dashboard/moderator/claim/${order._id}`
           },
         });
 

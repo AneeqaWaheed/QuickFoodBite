@@ -22,7 +22,7 @@ router.put("/assign/:id", assignModerator);
 
 
 router.delete("/delete/:id", deleteOrder);
-router.put("/claim/:token", requireSignIn, claimOrder);
+router.put("/claim/:token", claimOrder);
 router.get("/my-orders", requireSignIn, getMyModeratorOrders);
 router.delete("/delete/:orderId",requireSignIn,deleteOrder);
 router.get(

@@ -12,6 +12,7 @@ import {
   FaDoorOpen,
 } from "react-icons/fa";
 import "../styles/OtherServices.css";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { generateOrderNumber } from "../services/orderService.js";
 const OtherServices = () => {
@@ -26,6 +27,7 @@ const OtherServices = () => {
     wish: "",
     specialNotes: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -145,49 +147,7 @@ const handleSubmit = async (e) => {
 
     console.log("Service order created:", orderId);
 
-    const message = `
-🧾 *ORDER #: ${orderNumber}*
-🧾 *NEW SERVICE REQUEST*
-
-👤 *Customer:* ${name}
-📞 *Phone:* ${phone}
-
-📍 *Pickup Point:*
-${pickupPoint}
-
-🏠 *Delivery Point:*
-${deliveryPoint}
-
-📦 *Category:* ${category}
-
-📝 *What they need:*
-${wish}
-
-${
-  specialNotes?.trim()
-    ? `📌 *Special Notes:*\n${specialNotes}`
-    : ""
-}
-
-🔗 *Track Order:*
-${process.env.REACT_APP_CLIENT_URL}/orderTrack/${orderId}
-`;
-
-    const encodedMessage = encodeURIComponent(message);
-
-    const isMobile =
-      /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    const whatsappURL = isMobile
-      ? `whatsapp://send?phone=923265349097&text=${encodedMessage}`
-      : `https://web.whatsapp.com/send?phone=923265349097&text=${encodedMessage}`;
-
-    console.log("================================");
-    console.log("✅ ORDER CREATED");
-    console.log("Order ID:", orderId);
-    console.log("WhatsApp URL:", whatsappURL);
-    console.log("================================");
-
+  
     setFormData({
       name: "",
       phone: "",
@@ -198,7 +158,7 @@ ${process.env.REACT_APP_CLIENT_URL}/orderTrack/${orderId}
       specialNotes: "",
     });
 
-    window.location.assign(whatsappURL);
+    navigate(`/orderTrack/${orderId}`);
 
   } catch (error) {
     console.log("SERVICE ORDER ERROR:", error);

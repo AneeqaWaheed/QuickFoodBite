@@ -61,7 +61,7 @@ const OrderModal = ({
               onClick={handleProceed}
               disabled={loading}
             >
-              {loading ? "Processing..." : "Confirm Order via WhatsApp"}
+              {loading ? "Processing..." : "Confirm Order"}
             </button>
 
             <button

@@ -7,78 +7,165 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
-  if ("serviceWorker" in navigator) {
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-
-    if (publicUrl.origin !== window.location.origin) {
-      return;
-    }
-
-    window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-
-      if (isLocalhost) {
-        checkValidServiceWorker(swUrl, config);
-
-        navigator.serviceWorker.ready.then(() => {
-          console.log("Service worker ready.");
-        });
-      } else {
-        registerValidSW(swUrl, config);
-      }
-    });
+  if (!("serviceWorker" in navigator)) {
+    return;
   }
+
+  const publicUrl = new URL(
+    process.env.PUBLIC_URL,
+    window.location.href
+  );
+
+  if (publicUrl.origin !== window.location.origin) {
+    return;
+  }
+
+  window.addEventListener("load", () => {
+
+    const swUrl =
+      `${process.env.PUBLIC_URL}/service-worker.js`;
+
+    if (isLocalhost) {
+
+      checkValidServiceWorker(swUrl, config);
+
+      navigator.serviceWorker.ready.then(() => {
+        console.log("[SW] Ready");
+      });
+
+    } else {
+
+      registerValidSW(swUrl, config);
+
+    }
+  });
 }
 
+
 function registerValidSW(swUrl, config) {
-  navigator.serviceWorker
+
+  return navigator.serviceWorker
     .register(swUrl)
+
     .then((registration) => {
-      console.log("SW registered: ", registration);
+
+      console.log(
+        "[SW] Registered:",
+        registration
+      );
 
       registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
 
-        if (installingWorker == null) {
+        const installingWorker =
+          registration.installing;
+
+        if (!installingWorker) {
           return;
         }
 
         installingWorker.onstatechange = () => {
-          if (installingWorker.state === "installed") {
+
+          if (
+            installingWorker.state === "installed"
+          ) {
+
             if (navigator.serviceWorker.controller) {
-              console.log("New content available.");
+
+              console.log(
+                "[SW] New content available."
+              );
+
             } else {
-              console.log("Content cached for offline use.");
+
+              console.log(
+                "[SW] Content cached for offline use."
+              );
+
             }
           }
         };
       };
+
+      return registration;
     })
+
     .catch((error) => {
-      console.error("Error during SW registration:", error);
+
+      console.error(
+        "[SW] Registration error:",
+        error
+      );
+
+      throw error;
     });
 }
 
+
 function checkValidServiceWorker(swUrl, config) {
+
   fetch(swUrl)
+
     .then((response) => {
-      const contentType = response.headers.get("content-type");
+
+      const contentType =
+        response.headers.get("content-type");
 
       if (
         response.status === 404 ||
-        (contentType != null &&
-          contentType.indexOf("javascript") === -1)
+        (
+          contentType != null &&
+          contentType.indexOf("javascript") === -1
+        )
       ) {
-        navigator.serviceWorker.ready.then((registration) => {
-          registration.unregister().then(() => {
-            window.location.reload();
+
+        navigator.serviceWorker.ready
+          .then((registration) => {
+
+            registration.unregister()
+              .then(() => {
+
+                window.location.reload();
+
+              });
+
           });
-        });
+
       } else {
+
         registerValidSW(swUrl, config);
+
       }
     })
+
     .catch(() => {
-      console.log("No internet connection.");
+
+      console.log(
+        "[SW] No internet connection."
+      );
+
     });
+}
+
+
+export function unregister() {
+
+  if ("serviceWorker" in navigator) {
+
+    navigator.serviceWorker.ready
+
+      .then((registration) => {
+
+        registration.unregister();
+
+      })
+
+      .catch((error) => {
+
+        console.error(
+          "[SW] Unregister error:",
+          error.message
+        );
+
+      });
+  }
 }

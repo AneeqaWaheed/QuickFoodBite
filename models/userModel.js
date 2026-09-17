@@ -41,10 +41,6 @@ isOnline: {
   default: false,
 },
 
-lastSeen: {
-  type: Date,
-  default: null,
-},
 creditBalance: {
   type: Number,
   default: 0,
