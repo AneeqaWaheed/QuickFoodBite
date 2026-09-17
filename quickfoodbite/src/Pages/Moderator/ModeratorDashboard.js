@@ -60,65 +60,183 @@ const ModeratorDashboard = () => {
     }
   }, [auth?.user?._id]);
 
-
-  // =========================
-  // FCM SETUP
-  // =========================
+// =========================
+// FCM SETUP
+// =========================
 useEffect(() => {
+
   const initFCM = async () => {
+
     try {
+
+      console.log("=================================");
       console.log("Starting FCM setup...");
+      console.log("=================================");
 
-      const permission = await Notification.requestPermission();
 
-      console.log("Notification permission:", permission);
+      // -------------------------------------------------
+      // CHECK BROWSER SUPPORT
+      // -------------------------------------------------
 
-      if (permission !== "granted") {
-        console.log("Permission denied");
-        return;
-      }
+      if (!("Notification" in window)) {
 
-      // Register Firebase messaging service worker
-      const registration =
-        await navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js"
+        console.log(
+          "This browser does not support notifications."
         );
 
-      console.log("Service worker registered:", registration);
-
-      const fcmToken = await getToken(messaging, {
-        vapidKey:
-          "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
-        serviceWorkerRegistration: registration,
-      });
-
-      console.log("NEW TOKEN:", fcmToken);
-
-      if (!fcmToken) {
-        console.log("No token generated");
         return;
       }
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/api/v1/auth/save-fcm-token`,
+
+      if (!("serviceWorker" in navigator)) {
+
+        console.log(
+          "This browser does not support service workers."
+        );
+
+        return;
+      }
+
+
+      // -------------------------------------------------
+      // NOTIFICATION PERMISSION
+      // -------------------------------------------------
+
+      let permission =
+        Notification.permission;
+
+
+      console.log(
+        "Current notification permission:",
+        permission
+      );
+
+
+      if (permission !== "granted") {
+
+        permission =
+          await Notification.requestPermission();
+
+        console.log(
+          "Notification permission after request:",
+          permission
+        );
+      }
+
+
+      if (permission !== "granted") {
+
+        console.log(
+          "Notification permission was not granted."
+        );
+
+        return;
+      }
+
+
+      // -------------------------------------------------
+      // GET EXISTING SERVICE WORKER
+      // -------------------------------------------------
+
+      const registration =
+        await navigator.serviceWorker.ready;
+
+
+      console.log(
+        "Using service worker:",
+        registration
+      );
+
+
+      console.log(
+        "SW scope:",
+        registration.scope
+      );
+
+
+      // -------------------------------------------------
+      // GET FCM TOKEN
+      // -------------------------------------------------
+
+      const fcmToken = await getToken(
+        messaging,
         {
-          userId: auth?.user?._id,
-          fcmToken,
+          vapidKey:
+            "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
+
+          serviceWorkerRegistration:
+            registration
         }
       );
 
-      console.log("Token saved:", response.data);
+
+      console.log(
+        "NEW FCM TOKEN:",
+        fcmToken
+      );
+
+
+      if (!fcmToken) {
+
+        console.log(
+          "Firebase did not return an FCM token."
+        );
+
+        return;
+      }
+
+
+      // -------------------------------------------------
+      // SAVE TOKEN TO BACKEND
+      // -------------------------------------------------
+
+      const response = await axios.post(
+
+        `${process.env.REACT_APP_API}/api/v1/auth/save-fcm-token`,
+
+        {
+          userId: auth?.user?._id,
+          fcmToken
+        }
+
+      );
+
+
+      console.log(
+        "Token saved:",
+        response.data
+      );
+
+
+      console.log(
+        "================================="
+      );
+
+      console.log(
+        "FCM SETUP COMPLETE"
+      );
+
+      console.log(
+        "=================================");
+
 
     } catch (error) {
-      console.log("FCM FULL ERROR:", error);
+
+      console.error(
+        "FCM FULL ERROR:",
+        error
+      );
+
     }
   };
+
 
   if (auth?.user?._id) {
     initFCM();
   }
-}, [auth?.user?._id]);
 
+
+}, [auth?.user?._id]);
   // =========================
   // GO ONLINE / OFFLINE
   // =========================
@@ -148,46 +266,93 @@ useEffect(() => {
   // =========================
   // GO OFFLINE WHEN WEBSITE CLOSES
   // =========================
-  useEffect(() => {
-    const handleClose = () => {
-      if (!auth?.user?._id || !isOnline) return;
+  // useEffect(() => {
+  //   const handleClose = () => {
+  //     if (!auth?.user?._id || !isOnline) return;
 
-      const data = JSON.stringify({
-        userId: auth.user._id,
-        isOnline: false,
-      });
+  //     const data = JSON.stringify({
+  //       userId: auth.user._id,
+  //       isOnline: false,
+  //     });
 
-      navigator.sendBeacon(
-        `${process.env.REACT_APP_API}/api/v1/moderator/status`,
-        new Blob([data], {
-          type: "application/json",
-        })
-      );
-    };
+  //     navigator.sendBeacon(
+  //       `${process.env.REACT_APP_API}/api/v1/moderator/status`,
+  //       new Blob([data], {
+  //         type: "application/json",
+  //       })
+  //     );
+  //   };
 
-    window.addEventListener("beforeunload", handleClose);
+  //   window.addEventListener("beforeunload", handleClose);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleClose);
-    };
-  }, [auth?.user?._id, isOnline]);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleClose);
+  //   };
+  // }, [auth?.user?._id, isOnline]);
 
 
   // =========================
   // FOREGROUND NOTIFICATIONS
   // =========================
-  useEffect(() => {
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("Foreground notification:", payload);
+useEffect(() => {
+  const unsubscribe = onMessage(messaging, async (payload) => {
+    console.log("Foreground notification:", payload);
 
-      toast.info(
-        `${payload.notification.title} - ${payload.notification.body}`
+    const title =
+      payload.notification?.title ||
+      payload.data?.title ||
+      "QuickFoodBite";
+
+    const body =
+      payload.notification?.body ||
+      payload.data?.body ||
+      "You have a new order.";
+
+    const orderId = payload.data?.orderId;
+
+    const url =
+      payload.data?.url ||
+      `/dashboard/moderator/claim/${orderId}`;
+
+    try {
+      if (Notification.permission !== "granted") {
+        console.log("Notification permission is not granted.");
+        return;
+      }
+
+      const registration = await navigator.serviceWorker.ready;
+
+      console.log("Showing foreground notification...");
+
+      await registration.showNotification(title, {
+        body,
+        icon: "/logo192.png",
+        badge: "/logo192.png",
+        requireInteraction: true,
+
+        data: {
+          url,
+          orderId,
+        },
+
+        tag: orderId
+          ? `quickfoodbite-order-${orderId}`
+          : "quickfoodbite-notification",
+
+        renotify: true,
+      });
+
+      console.log("Foreground notification shown.");
+    } catch (error) {
+      console.error(
+        "Failed to show foreground notification:",
+        error
       );
-    });
+    }
+  });
 
-    return unsubscribe;
-  }, []);
-
+  return unsubscribe;
+}, []);
 
   return (
     <SimpleLayout title="Moderator - Profile">

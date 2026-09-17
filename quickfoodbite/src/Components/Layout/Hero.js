@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import "../../styles/Hero.css";
-
+import { useSearch } from "../../context/seacrh";
 const Hero = () => {
+   const { searchQuery, setSearchQuery } = useSearch();
   return (
     <section className="fleent-hero">
       <div className="fleent-hero-bar" />
@@ -46,10 +47,12 @@ const Hero = () => {
             type="text"
             placeholder="What are you craving today?"
             aria-label="Search for food"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button type="submit">Search</button>
+          
         </form>
-
       </div>
     </section>
   );

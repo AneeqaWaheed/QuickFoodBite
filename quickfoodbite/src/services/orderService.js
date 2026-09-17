@@ -17,6 +17,7 @@ export const generateOrderNumber = () => {
 
   return result;
 };
+
 const proceedOrder = async ({
   loading,
   setLoading,
@@ -28,6 +29,7 @@ const proceedOrder = async ({
   setShowModal,
   getId,
   setFormError,
+  navigate,
 }) => {
   if (loading) return;
 
@@ -35,7 +37,6 @@ const proceedOrder = async ({
 const orderNumber = generateOrderNumber();
   try {
      const { name, phone, location } = userInfo;
-
 
     const minOrder = settings?.minOrderPrice || 0;
     
@@ -92,55 +93,12 @@ const orderNumber = generateOrderNumber();
 
     const orderId = data?.order?._id;
 const orderToken = data.token;
-    const message = `
-🧾 *ORDER #: ${orderNumber}*
-🛒 *New Order Received*
-*Location:* ${location}
-
-📦 *Items:*
-${cart
-  .map(
-    (item) =>
-      `• ${item.name} x${item.quantity} = Rs ${
-        item.price * item.quantity
-      }`
-  )
-  .join("\n")}
-
-📊 *Summary:*
-
-Subtotal: Rs ${summary.subtotal}
-${summary.itemDiscount !== 0 ? `Item Discount: -Rs ${summary.itemDiscount}\n` : ""}
-${summary.globalDiscountAmount !== 0 ? `Global Discount: -Rs ${summary.globalDiscountAmount}\n` : ""}
-Delivery: Rs ${summary.deliveryCharge}
-Packaging: Rs ${summary.packagingCharge}
-
-💰 TOTAL: Rs ${summary.grandTotal}
-
-🔗 *Track Order:*
-${process.env.REACT_APP_CLIENT_URL}/orderTrack/${orderId}
-
-👉 *Pick Order Link:*
-${process.env.REACT_APP_CLIENT_URL}/dashboard/moderator/claim/${orderToken}
-`;
-
-    const encodedMessage =
-      encodeURIComponent(message);
-
-    const isMobile =
-      /Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-      );
-
-    const whatsappURL = isMobile
-      ? `whatsapp://send?phone=923265349097&text=${encodedMessage}`
-      : `https://web.whatsapp.com/send?phone=923265349097&text=${encodedMessage}`;
 
     clearCart();
 
     setShowModal(false);
 
-    window.location.href = whatsappURL;
+     navigate(`/orderTrack/${orderId}`);
   } catch (error) {
     console.log(error);
 
