@@ -90,15 +90,19 @@ const orderNumber = generateOrderNumber();
 
       return;
     }
-
-    const orderId = data?.order?._id;
+const orderId = data?.order?._id;
 const orderToken = data.token;
 
-    clearCart();
+console.log("Order ID:", orderId);
+console.log("Navigate:", navigate);
 
-    setShowModal(false);
+clearCart();
 
-     navigate(`/orderTrack/${orderId}`);
+setShowModal(false);
+
+console.log("Navigating to:", `/orderTrack/${orderId}`);
+
+navigate(`/orderTrack/${orderId}`);
   } catch (error) {
     console.log(error);
 

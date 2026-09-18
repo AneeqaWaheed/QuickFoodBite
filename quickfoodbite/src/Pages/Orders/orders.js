@@ -8,6 +8,7 @@ import { FaWhatsapp } from "react-icons/fa6";
 import OrderModal from "../../Components/Modal/OrderModal";
 import calculateSummary from "../../utils/calculateSummary";
 import proceedOrder from "../../services/orderService";
+import { useNavigate } from "react-router-dom";
 const CartPage = () => {
   const {
   cart,
@@ -19,7 +20,7 @@ const CartPage = () => {
   clearCart   // 🔥 ADD THIS
 } = useCart();
   const [showModal, setShowModal] = useState(false);
-
+const navigate = useNavigate();
 const [userInfo, setUserInfo] = useState({
   name: "",
   phone: "",
@@ -220,7 +221,7 @@ onChange={(e) => {
               {s.globalDiscountAmount !== 0 && (
                 <p>Global Discount <span>-Rs {s.globalDiscountAmount}</span></p>
               )}
-              <p>
+              
                 <div>
   Delivery{" "}
   
@@ -242,7 +243,7 @@ onChange={(e) => {
     </small>
   )}
 </div>
-</p>
+
               <p>Packaging <span>Rs {s.packagingCharge}</span></p>
 
               <h5>Total <span>Rs {s.grandTotal}</span></h5>
@@ -322,6 +323,7 @@ setCartOpen(false);
       setShowModal,
       getId,
       setFormError,
+      navigate
     })
   }
   loading={loading}
