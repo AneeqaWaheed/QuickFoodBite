@@ -43,6 +43,7 @@ const Menu = () => {
   const {
   cart,
   setCartOpen,
+  cartOpen
 } = useCart();
 
 const cartItemCount = cart.reduce(
@@ -209,34 +210,30 @@ useEffect(() => {
             </button>
           </div>
         )}
+{cart.length > 0 && !cartOpen && (
+  <div className="menu-mini-cart">
+    <div
+      className="menu-mini-cart-left"
+      onClick={() => setCartOpen(true)}
+    >
+      <FaShoppingCart />
+      <span>{cartItemCount} Items</span>
+    </div>
 
-        {/* FIXED MINI CART BAR */}
-        {cart.length > 0 && (
-          <div className="menu-mini-cart">
+    <div className="menu-mini-cart-total">
+      Rs. {cartTotal}
+    </div>
 
-            <div
-              className="menu-mini-cart-left"
-              onClick={() => setCartOpen(true)}
-            >
-              <FaShoppingCart />
-              <span>{cartItemCount} Items</span>
-            </div>
-
-            <div className="menu-mini-cart-total">
-              Rs. {cartTotal}
-            </div>
-
-            <button
-              type="button"
-              className="menu-mini-cart-view"
-              onClick={() => setCartOpen(true)}
-            >
-              View Cart
-              <FaArrowRight />
-            </button>
-
-          </div>
-        )}
+    <button
+      type="button"
+      className="menu-mini-cart-view"
+      onClick={() => setCartOpen(true)}
+    >
+      View Cart
+      <FaArrowRight />
+    </button>
+  </div>
+)}
 
       </div>
     </Layout>
