@@ -231,17 +231,33 @@ export const createOrder = async (req, res) => {
           response
         );
       } catch (err) {
-        console.log(
-          "❌ Notification Error:",
-          err.code || err.message
-        );
+         console.log(
+    "❌ Notification Error:",
+    err.code || err.message
+  );
 
-        console.log(
-          "Moderator:",
-          moderator._id
-        );
+  console.log("Moderator:", moderator._id);
+
+  // Remove invalid FCM token
+  if (
+    err.code === "messaging/registration-token-not-registered" ||
+    err.code === "messaging/invalid-registration-token"
+  ) {
+    await userModel.findByIdAndUpdate(
+      moderator._id,
+      {
+        $unset: {
+          fcmToken: 1,
+        },
       }
-    }
+    );
+
+    console.log(
+      `🗑️ Removed invalid FCM token for moderator ${moderator._id}`
+    );
+  }
+      }}
+
 
     // ==========================================
     // RESPONSE

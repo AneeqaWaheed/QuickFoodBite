@@ -40,16 +40,25 @@ const orderNumber = generateOrderNumber();
 
     const minOrder = settings?.minOrderPrice || 0;
     
-    const formattedItems = cart.map((item) => ({
-      
-      productId: getId(item),
-      name: item.name,
-      price: Number(item.price),
-      quantity: Number(item.quantity),
-      category: item.category,
-      type: item.type,
-      discount: Number(item.discount || 0),
-    }));
+   const formattedItems = cart.map((item) => {
+  const productId = item._id || item.id || item.productId;
+
+  if (!productId) {
+    console.error("❌ Cart item has no product ID:", item);
+
+    throw new Error(`Product ID missing for "${item.name}"`);
+  }
+
+  return {
+    productId,
+    name: item.name,
+    price: Number(item.price),
+    quantity: Number(item.quantity),
+    category: item.category,
+    type: item.type,
+    discount: Number(item.discount || 0),
+  };
+});
 
     const res = await fetch(
       `${process.env.REACT_APP_API}/api/v1/orders/create-order`,

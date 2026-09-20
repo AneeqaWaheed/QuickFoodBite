@@ -294,8 +294,6 @@ if (hasError) return;
 setShowModal(true);
 setCartOpen(false);
 
-    setShowModal(true);
-    setCartOpen(false);
   }}
 >
   Proceed to Checkout

@@ -64,178 +64,83 @@ const ModeratorDashboard = () => {
 // FCM SETUP
 // =========================
 useEffect(() => {
+  if (!auth?.user?._id) return;
+
+  let interval;
 
   const initFCM = async () => {
-
     try {
-
       console.log("=================================");
       console.log("Starting FCM setup...");
       console.log("=================================");
 
-
-      // -------------------------------------------------
-      // CHECK BROWSER SUPPORT
-      // -------------------------------------------------
-
       if (!("Notification" in window)) {
-
-        console.log(
-          "This browser does not support notifications."
-        );
-
+        console.log("Browser does not support notifications.");
         return;
       }
-
 
       if (!("serviceWorker" in navigator)) {
-
-        console.log(
-          "This browser does not support service workers."
-        );
-
+        console.log("Browser does not support service workers.");
         return;
       }
 
-
-      // -------------------------------------------------
-      // NOTIFICATION PERMISSION
-      // -------------------------------------------------
-
-      let permission =
-        Notification.permission;
-
-
-      console.log(
-        "Current notification permission:",
-        permission
-      );
-
+      let permission = Notification.permission;
 
       if (permission !== "granted") {
-
-        permission =
-          await Notification.requestPermission();
-
-        console.log(
-          "Notification permission after request:",
-          permission
-        );
+        permission = await Notification.requestPermission();
       }
 
-
       if (permission !== "granted") {
-
-        console.log(
-          "Notification permission was not granted."
-        );
-
+        console.log("Notification permission not granted.");
         return;
       }
-
-
-      // -------------------------------------------------
-      // GET EXISTING SERVICE WORKER
-      // -------------------------------------------------
 
       const registration =
         await navigator.serviceWorker.ready;
 
+      console.log("Using service worker:", registration);
+      console.log("SW scope:", registration.scope);
 
-      console.log(
-        "Using service worker:",
-        registration
-      );
+      const fcmToken = await getToken(messaging, {
+        vapidKey:
+          "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
 
+        serviceWorkerRegistration: registration,
+      });
 
-      console.log(
-        "SW scope:",
-        registration.scope
-      );
-
-
-      // -------------------------------------------------
-      // GET FCM TOKEN
-      // -------------------------------------------------
-
-      const fcmToken = await getToken(
-        messaging,
-        {
-          vapidKey:
-            "BKQwpiRumTxDEg0Sdsjw_RTT_KI7y76DW5lupgextS8rkmrKb5Ze2zOaIVNqyxO4Xd3K4e0dADN5lpgKGtW2Grc",
-
-          serviceWorkerRegistration:
-            registration
-        }
-      );
-
-
-      console.log(
-        "NEW FCM TOKEN:",
-        fcmToken
-      );
-
+      console.log("CURRENT FCM TOKEN:", fcmToken);
 
       if (!fcmToken) {
-
-        console.log(
-          "Firebase did not return an FCM token."
-        );
-
+        console.log("Firebase did not return an FCM token.");
         return;
       }
 
-
-      // -------------------------------------------------
-      // SAVE TOKEN TO BACKEND
-      // -------------------------------------------------
-
-      const response = await axios.post(
-
+      await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/save-fcm-token`,
-
         {
           userId: auth?.user?._id,
-          fcmToken
+          fcmToken,
         }
-
       );
 
-
-      console.log(
-        "Token saved:",
-        response.data
-      );
-
-
-      console.log(
-        "================================="
-      );
-
-      console.log(
-        "FCM SETUP COMPLETE"
-      );
-
-      console.log(
-        "=================================");
-
-
+      console.log("✅ FCM token saved successfully");
     } catch (error) {
-
-      console.error(
-        "FCM FULL ERROR:",
-        error
-      );
-
+      console.error("❌ FCM SETUP ERROR:", error);
     }
   };
 
+  // Initial setup
+  initFCM();
 
-  if (auth?.user?._id) {
+  // Check token periodically
+  interval = setInterval(() => {
+    console.log("🔄 Checking FCM token...");
     initFCM();
-  }
+  }, 2 * 60 * 1000); // every 2 minutes
 
-
+  return () => {
+    clearInterval(interval);
+  };
 }, [auth?.user?._id]);
   // =========================
   // GO ONLINE / OFFLINE
@@ -326,8 +231,8 @@ useEffect(() => {
 
       await registration.showNotification(title, {
         body,
-        icon: "/logo192.png",
-        badge: "/logo192.png",
+        icon: "/FleentLogo.png",
+        badge: "/FleentLogo.png",
         requireInteraction: true,
 
         data: {
