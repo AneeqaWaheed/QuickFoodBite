@@ -24,6 +24,6 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
-    icon: "/logo192.png",
+    icon: "/FleentLogo.png",
   });
 });

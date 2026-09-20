@@ -84,6 +84,12 @@ export const LoginController = async (req, res) => {
         message: "Email is not registered ",
       });
     }
+    if (user.isSuspended) {
+  return res.status(403).json({
+    success: false,
+    message: "Your account has been suspended by the administrator.",
+  });
+}
     const match = await comparePassword(password, user.password);
     if (!match) {
       return res.status(401).send({

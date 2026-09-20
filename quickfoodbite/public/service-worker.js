@@ -80,9 +80,9 @@ const orderId = payload.data?.orderId;
   const notificationOptions = {
     body: notificationBody,
 
-    icon: "/logo192.png",
+    icon: "/FleentLogo.png",
 
-    badge: "/logo192.png",
+    badge: "/FleentLogo.png",
 
 
     

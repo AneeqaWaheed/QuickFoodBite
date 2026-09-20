@@ -70,7 +70,67 @@ const currentProducts = filteredUsers.slice(
       setCurrentPage(currentPage - 1);
     }
   };
+const handleToggleSuspension = async (userId) => {
+  try {
+    const confirmed = window.confirm(
+      "Are you sure you want to change this user's account status?"
+    );
 
+    if (!confirmed) return;
+
+    const response = await axios.put(
+      `${process.env.REACT_APP_API}/api/v1/admin/users/${userId}/toggle-suspension`
+    );
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userId
+            ? {
+                ...user,
+                isSuspended: !user.isSuspended,
+              }
+            : user
+        )
+      );
+    }
+  } catch (error) {
+    console.error("Error changing user status:", error);
+
+    toast.error(
+      error.response?.data?.message || "Failed to update user status"
+    );
+  }
+};
+const handleDeleteUser = async (userId) => {
+  try {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete this user?"
+    );
+
+    if (!confirmed) return;
+
+    const response = await axios.delete(
+      `${process.env.REACT_APP_API}/api/v1/admin/users/${userId}`
+    );
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user._id !== userId)
+      );
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+
+    toast.error(
+      error.response?.data?.message || "Failed to delete user"
+    );
+  }
+};
   return (
     <>
      <nav
@@ -148,9 +208,11 @@ const currentProducts = filteredUsers.slice(
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">Phone</th>
-                    <th scope="col">Email</th>
                     <th scope="col">Student Id</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Role</th>
+                    <th scope="col">Status</th>
+<th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,6 +225,37 @@ const currentProducts = filteredUsers.slice(
                       <td>{user.studentId}</td>
                       <td>{user.email}</td>
                       <td>{user.role === 1 ? "Admin" : "Moderator"}</td>
+                      <td>
+  {user.isSuspended ? (
+    <span className="badge bg-danger">Suspended</span>
+  ) : (
+    <span className="badge bg-success">Active</span>
+  )}
+</td>
+
+<td>
+  {user.role === 1 ? (
+    <span className="text-muted">Admin</span>
+  ) : (
+    <div className="d-flex justify-content-center gap-2">
+      <button
+        className={`btn btn-sm ${
+          user.isSuspended ? "btn-success" : "btn-warning"
+        }`}
+        onClick={() => handleToggleSuspension(user._id)}
+      >
+        {user.isSuspended ? "Unsuspend" : "Suspend"}
+      </button>
+
+      <button
+        className="btn btn-sm btn-danger"
+        onClick={() => handleDeleteUser(user._id)}
+      >
+        Delete
+      </button>
+    </div>
+  )}
+</td>
                     </tr>
                   ))}
                 </tbody>

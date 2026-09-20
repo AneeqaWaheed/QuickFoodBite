@@ -40,7 +40,10 @@ isOnline: {
   type: Boolean,
   default: false,
 },
-
+isSuspended: {
+  type: Boolean,
+  default: false,
+},
 creditBalance: {
   type: Number,
   default: 0,
