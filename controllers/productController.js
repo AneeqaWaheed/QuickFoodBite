@@ -131,7 +131,6 @@ export const singleProductController = async (req, res) => {
   try {
     // Use req.params.id if you're using a URL parameter
     const product = await Product.findOne({ _id: req.params.id }) // Assuming you're using MongoDB's default _id
-      .select("-image")
       .populate("category");
 
     // Check if product is found

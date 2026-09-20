@@ -32,7 +32,7 @@ router.get(
 );
 router.put(
   "/update-items/:orderId",
-  requireSignIn,
+    requireSignIn,
   updateOrderItems
 );
 

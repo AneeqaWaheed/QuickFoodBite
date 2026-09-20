@@ -19,6 +19,10 @@ const UpdateProduct = () => {
   const [type, setType]= useState("");
   const [image, setImage] = useState("");
    const [imageUpload, setImageUpload] = useState(null);
+   useEffect(() => {
+  console.log("IMAGE STATE CHANGED:", image);
+  console.log("IMAGE STATE TYPE:", typeof image);
+}, [image]);
   console.log("nsabdmans", params);
   // get Single Product
   const getSingleProduct = async () => {
@@ -26,14 +30,20 @@ const UpdateProduct = () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/product/single-product/${params.id}`
       );
-      console.log("asdjashdjas", data);
-      setName(data?.product?.name);
-      setId(data?.product?._id);
-      // setDescription(data?.product?.description);
-      setPrice(data?.product?.price);
-      setCategory(data?.product?.category);
-      setType(data?.product?.type);
-      setImage(data?.product?.image);
+      console.log("========== PRODUCT DEBUG ==========");
+console.log("FULL API RESPONSE:", data);
+console.log("PRODUCT:", data?.product);
+console.log("PRODUCT IMAGE:", data?.product?.image);
+console.log("IMAGE TYPE:", typeof data?.product?.image);
+console.log("IMAGE LENGTH:", data?.product?.image?.length);
+console.log("===================================");
+
+setName(data?.product?.name);
+setId(data?.product?._id);
+setPrice(data?.product?.price);
+setCategory(data?.product?.category);
+setType(data?.product?.type);
+setImage(data?.product?.image);
     } catch (error) {
       console.log("error ", error);
     }
@@ -167,46 +177,40 @@ if (imageUpload) {
                   </Option>
                 ))}
               </Select>
+            <div className="mb-3">
+  <label className="btn btn-outline-secondary col-md-12 bg-white color-black">
+    {/* Show new image if selected, otherwise show existing image */}
+{imageUpload || image ? (
+  <div className="text-center mb-3">
+    <img
+      src={imageUpload ? URL.createObjectURL(imageUpload) : image}
+      alt="Product"
+      height="200px"
+      className="img img-responsive"
+      onLoad={() => {
+        console.log("✅ IMAGE LOADED SUCCESSFULLY");
+      }}
+      onError={(e) => {
+        console.log("❌ IMAGE FAILED TO LOAD");
+        console.log("IMAGE SRC:", e.target.src);
+        console.log("IMAGE STATE:", image);
+      }}
+    />
+  </div>
+) : (
+  <p className="text-danger">No image found</p>
+)}
+
+    <input
+      type="file"
+      name="image"
+      accept="image/*"
+      onChange={(e) => setImageUpload(e.target.files[0])}
+      hidden
+    />
+  </label>
+</div>
              <div className="mb-3">
-                <label className="btn btn-outline-secondary col-md-12 bg-white color-black">
-                  {imageUpload
-                    ? imageUpload.name
-                    : image
-                    ? "Change Image"
-                    : "Upload Image"}
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={(e) => setImageUpload(e.target.files[0])}
-                    hidden
-                  />
-                </label>
-              </div>
-              {imageUpload ? (
-                <div className="text-center mb-3">
-                  <img
-                    src={URL.createObjectURL(imageUpload)}
-                    alt="Product Image"
-                    height={"200px"}
-                    className="img img-responsive"
-                  />
-                </div>
-              ) : (
-                image && (
-                  <div className="text-center mb-3">
-                    <img
-                      src={image} // Use the existing image URL
-                      alt="Product Image"
-                      height={"200px"}
-                      className="img img-responsive"
-                    />
-                  </div>
-                )
-              )}
-
-
-              <div className="mb-3">
                 <input
                   type="text"
                   value={name}

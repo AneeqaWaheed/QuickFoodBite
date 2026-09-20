@@ -23,9 +23,33 @@ const ModeratorEditOrder = ({
   */
 useEffect(() => {
   if (order) {
+    console.log("ORDER RECEIVED BY EDIT MODAL:", order);
+    console.log("ORDER ID RECEIVED:", order?._id);
+
+    const mergedItems = [];
+
+    order.items.forEach((item) => {
+      const productId = item.productId?._id || item.productId;
+
+      const existingItem = mergedItems.find(
+        (existing) =>
+          existing.productId?.toString() === productId?.toString()
+      );
+
+      if (existingItem) {
+        existingItem.quantity =
+          Number(existingItem.quantity) + Number(item.quantity);
+      } else {
+        mergedItems.push({
+          ...item,
+          productId,
+        });
+      }
+    });
+
     setEditingOrder({
       ...order,
-      items: [...order.items],
+      items: mergedItems,
     });
   }
 }, [order]);
@@ -170,73 +194,58 @@ useEffect(() => {
   /*
     Save changes
   */
-  const saveChanges = async () => {
-    if (!editingOrder.items.length) {
-      toast.error("Order must contain at least one item");
-      return;
-    }
+const saveChanges = async () => {
+  if (!editingOrder?._id) {
+    console.error("ORDER ID IS MISSING:", editingOrder);
+    toast.error("Order ID is missing");
+    return;
+  }
 
-    const newSubtotal = calculateSubtotal();
-    const oldSubtotal = Number(editingOrder.subtotal || 0);
+  try {
+    setSaving(true);
 
-    if (newSubtotal < oldSubtotal) {
-      toast.error(
-        `Subtotal cannot be less than Rs.${oldSubtotal}`
-      );
-      return;
-    }
+    const items = editingOrder.items.map((item) => ({
+      productId: item.productId?._id || item.productId,
+      quantity: Number(item.quantity),
+    }));
 
-    try {
-      setSaving(true);
+    console.log("ORDER ID BEING SENT:", editingOrder._id);
+    console.log("ITEMS BEING SENT:", items);
 
-      const items = editingOrder.items.map((item) => ({
-        productId: item.productId,
-        quantity: Number(item.quantity),
-      }));
-
-      const { data } = await axios.put(
-        `${process.env.REACT_APP_API}/api/v1/orders/update-items/${editingOrder._id}`,
-        { items },
-        {
-          headers: {
-            Authorization: auth?.token,
-          },
-        }
-      );
-
-      if (data.success) {
-        toast.success("Order updated successfully");
-
-        /*
-          Tell Orders page about updated order
-        */
-        if (onUpdated) {
-          onUpdated(data.order);
-        }
-
-        /*
-          Close modal
-        */
-        onClose();
-
-        /*
-          Open WhatsApp
-        */
-        if (data.whatsappUrl) {
-          window.open(data.whatsappUrl, "_blank");
-        }
+    const { data } = await axios.put(
+      `${process.env.REACT_APP_API}/api/v1/orders/update-items/${editingOrder._id}`,
+      { items },
+      {
+        headers: {
+          Authorization: auth?.token,
+        },
       }
-    } catch (error) {
-      console.log("UPDATE ORDER ERROR:", error);
+    );
 
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to update order"
-      );
-    } finally {
-      setSaving(false);
+    console.log("UPDATE RESPONSE:", data);
+
+    if (data.success) {
+      toast.success("Order updated successfully");
+
+      if (data.whatsappUrl) {
+        window.open(data.whatsappUrl, "_blank");
+      }
+
+      onClose();
     }
-  };
+  } catch (error) {
+    console.log("UPDATE ORDER ERROR:", error);
+    console.log("STATUS:", error.response?.status);
+    console.log("SERVER RESPONSE:", error.response?.data);
+
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update order"
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   const subtotal = calculateSubtotal();
 
@@ -290,7 +299,7 @@ useEffect(() => {
 
               {editingOrder.items.map((item) => (
                 <div
-                  key={item.productId}
+                  key={item.productId?._id || item.productId || item._id}
                   className="row align-items-center border-bottom py-2"
                 >
                   <div className="col-md-4">

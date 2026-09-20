@@ -119,7 +119,7 @@ const filteredOrders = orders.filter((order) => {
   try {
     const { data } = await axios.put(
       `${process.env.REACT_APP_API}/api/v1/orders/status/${orderId}`,
-      { status: "Delivered" },
+      { status: "delivered" },
       {
         headers: {
           Authorization: auth?.token,
