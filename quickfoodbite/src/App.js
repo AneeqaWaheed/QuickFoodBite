@@ -33,6 +33,7 @@ import ModeratorDocumentation from "./Pages/Moderator/ModeratorDocumentation";
 import AdminPayments from "./Pages/Admin/AdminPayments";
 import ModeratorEditOrder from "./Pages/Moderator/ModeratorEditOrder";
 import Development from "./Pages/Deveopment";
+import TemporaryUnavailable from "./Pages/TempUnavailable";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         {/* <Route path="/" element={<Development />} /> */}
         <Route path="/menu" element={<Menu />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/temUnavail" element={<TemporaryUnavailable />} />
         <Route path="/" element={<FleentLanding />} />
         <Route path="/otherServices" element={<OtherServices />} />
      

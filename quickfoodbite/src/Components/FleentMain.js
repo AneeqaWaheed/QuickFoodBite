@@ -54,7 +54,8 @@ const FleentMain = () => {
 </Link>
 
           {/* Other Services */}
-          <Link to="/otherServices" className="text-decoration-none">
+          {/* <Link to="/otherServices" className="text-decoration-none"> */}
+          <Link to="/temUnavail" className="text-decoration-none">
           <div
             className="service-card other-card"
             onClick={() => handleServiceClick("Other Services")}
