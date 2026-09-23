@@ -5,8 +5,7 @@ import admin from "../Services/firebase.js";
 // 🔥 CREATE ORDER
 // CREATE ORDER
 export const createOrder = async (req, res) => {
-   console.log("REQ BODY:", req.body);
-  console.log("ORDER TYPE:", req.body.orderType);
+  
   try {
     const {
       userId,
@@ -402,7 +401,7 @@ export const assignModerator = async (req, res) => {
     }
 
     // ❌ Expired (10 minutes)
-    const TEN_MIN = 10 * 60 * 1000;
+    const TEN_MIN = 12 * 60 * 1000;
     if (Date.now() - new Date(order.createdAt).getTime() > TEN_MIN) {
       return res.status(400).send({
         success: false,
@@ -650,3 +649,30 @@ export const getModeratorOrder = async (req, res) => {
   }
 };
 
+export const getPendingOrdersController = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      status: "pending",
+      $or: [
+        { assignedModerator: { $exists: false } },
+        { assignedModerator: null },
+      ],
+    })
+      .populate("items.productId")
+      .sort({ createdAt: 1 });
+
+    return res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    console.log("Get pending orders error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Error getting pending orders",
+      error,
+    });
+  }
+};

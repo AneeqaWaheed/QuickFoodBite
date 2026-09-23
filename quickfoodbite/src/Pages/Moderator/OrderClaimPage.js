@@ -15,9 +15,10 @@ const ClaimRedirectPage = () => {
   // ✅ Claim Order Function
   const claimOrder = async () => {
     try {
+       
       const { data } = await axios.put(
         `${process.env.REACT_APP_API}/api/v1/orders/claim/${orderId}`,
-        {},
+     
         {
           headers: {
             Authorization: auth?.token,
@@ -44,7 +45,7 @@ const message = `${itemsText}\nPicked by ${auth?.user?.firstName}. It will be de
   navigate("/dashboard/moderator/orders", { replace: true });
 }
     } catch (err) {
-  console.log("ERROR:", err.response?.data);
+
 
 if (err.response?.status === 400) {
   setErrorMsg("⚠️ This order is already picked by another moderator");

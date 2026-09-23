@@ -34,6 +34,7 @@ import AdminPayments from "./Pages/Admin/AdminPayments";
 import ModeratorEditOrder from "./Pages/Moderator/ModeratorEditOrder";
 import Development from "./Pages/Deveopment";
 import TemporaryUnavailable from "./Pages/TempUnavailable";
+import ModeratorPendingOrders from "./Pages/Moderator/ModeratorsPendingOrders";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
         <Route path="moderator/My-Profile" element={<ModeratorProfile/>}/>
+        <Route path="moderator/Pending-Orders" element={<ModeratorPendingOrders/>}/>
         <Route path="moderator/orders" element={<ModeratorOrders/>}/>
         <Route path="moderator/claim/:orderId" element={<ClaimRedirectPage />} />
         <Route path="moderator/docs" element={<ModeratorDocumentation />} />

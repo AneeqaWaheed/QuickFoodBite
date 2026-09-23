@@ -69,7 +69,7 @@ const cartTotal = cart.reduce(
       }
       setCategories(data?.category || []);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      
       toast.error(error.message || "Category load failed");
     } finally {
       setCategoryLoading(false);
@@ -89,7 +89,7 @@ const cartTotal = cart.reduce(
       setProducts(data?.products || []);
       setTotalPages(data?.totalPages || 1);
     } catch (error) {
-      console.error("API Error:", error);
+     
       toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
