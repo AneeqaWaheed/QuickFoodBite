@@ -1,6 +1,6 @@
 // routes/orderRoutes.js
 import express from "express";
-import { createOrder, getAllOrders,getSingleOrder, assignModerator,deleteOrder, updateOrderStatus, claimOrder, getMyModeratorOrders, trackOrder, getModeratorOrder } from "../controllers/orderController.js";
+import { createOrder, getAllOrders,getSingleOrder, assignModerator,deleteOrder, updateOrderStatus, claimOrder, getMyModeratorOrders, trackOrder, getModeratorOrder, getPendingOrdersController } from "../controllers/orderController.js";
 import { requireSignIn } from "../middlewares/authMiddleware.js";
 import isModerator from "../middlewares/isModerator.js";
 import { updateOrderItems } from "../controllers/UpdateOrderItemController.js";
@@ -22,7 +22,7 @@ router.put("/assign/:id", assignModerator);
 
 
 router.delete("/delete/:id", deleteOrder);
-router.put("/claim/:token", claimOrder);
+router.put("/claim/:token", requireSignIn, claimOrder);
 router.get("/my-orders", requireSignIn, getMyModeratorOrders);
 router.delete("/delete/:orderId",requireSignIn,deleteOrder);
 router.get(
@@ -34,6 +34,11 @@ router.put(
   "/update-items/:orderId",
     requireSignIn,
   updateOrderItems
+);
+router.get(
+  "/pending-moderator-orders",
+  requireSignIn,
+  getPendingOrdersController
 );
 
 export default router;

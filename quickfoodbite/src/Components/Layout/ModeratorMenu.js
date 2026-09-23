@@ -24,6 +24,13 @@ const ModeratorMenu = () => {
               My Profile
             </NavLink>
             <NavLink
+              to="/dashboard/moderator/Pending-Orders"
+              className="list-group-item list-group-item-action "
+              
+            >
+              Pending Orders (New)
+            </NavLink>
+            <NavLink
               to="/dashboard/moderator/orders"
               className="list-group-item list-group-item-action "
             >
