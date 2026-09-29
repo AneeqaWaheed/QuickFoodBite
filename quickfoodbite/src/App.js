@@ -35,6 +35,7 @@ import ModeratorEditOrder from "./Pages/Moderator/ModeratorEditOrder";
 import Development from "./Pages/Deveopment";
 import TemporaryUnavailable from "./Pages/TempUnavailable";
 import ModeratorPendingOrders from "./Pages/Moderator/ModeratorsPendingOrders";
+import AdminPromoAd from "./Pages/Admin/PromoAd";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="admin/orders" element={<AdminOrders />} />
           <Route path="admin/charges" element={<AdminCharges />} />
           <Route path="admin/payments" element={<AdminPayments />} />
+          <Route path="admin/promoads" element={<AdminPromoAd />} />
         </Route>
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
