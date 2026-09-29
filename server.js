@@ -12,6 +12,7 @@ import contactRoute from "./routes/contactRoute.js";
 import chargesRoutes from "./routes/chargesRoute.js";
 import moderatorRoute from "./routes/moderatorRoute.js";
 import AdminRoute from "./routes/AdminRoute.js";
+import AdRoute from "./routes/AdRoute.js";
 import cron from "node-cron";
 import Order from "./models/ordersModel.js";
 
@@ -50,6 +51,7 @@ app.use("/api/v1/contact", contactRoute);
 app.use("/api/v1/charges", chargesRoutes);
 app.use("/api/v1/moderator", moderatorRoute);
 app.use("/api/v1/admin", AdminRoute);
+app.use("/api/v1/ads",  AdRoute);
 // app.use("/api/v1/setting", SettingSchema);
 
 app.use("/api/v1/orders", orderRoute);
