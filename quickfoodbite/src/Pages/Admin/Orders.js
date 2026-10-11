@@ -31,6 +31,7 @@ const [selectedOrder, setSelectedOrder] = useState(null);
   
       navigate("/login");
     };
+    
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -52,9 +53,11 @@ const filteredOrders = orders.filter((order) => {
   const orderDate = new Date(order.createdAt);
 
   // 🔎 moderator filter
-  const moderatorName =
-    order?.assignedModerator?.firstName?.toLowerCase() || "";
-
+const moderatorName = order?.assignedModerator
+  ? `${order.assignedModerator.firstName || ""} ${order.assignedModerator.lastName || ""}`
+      .trim()
+      .toLowerCase()
+  : "";
   const matchModerator = moderatorName.includes(
     moderatorSearch.toLowerCase()
   );
@@ -288,7 +291,9 @@ const handleDeleteOrder = async (orderId) => {
       <td>Rs {order?.deliveryCharges || 0}</td>
 <td>Rs {order?.PackagingFee || 0}</td>
       <td>{order?.status}</td>
-      <td>{order?.assignedModerator?.firstName}</td>
+      <td>
+  {`${order?.assignedModerator?.firstName || ""} ${order?.assignedModerator?.lastName || ""}`.trim()}
+</td>
       <td>
   {order?.orderUpdates?.length > 0 ? (
     <Button

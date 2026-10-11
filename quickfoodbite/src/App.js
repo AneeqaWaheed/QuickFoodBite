@@ -36,6 +36,8 @@ import Development from "./Pages/Deveopment";
 import TemporaryUnavailable from "./Pages/TempUnavailable";
 import ModeratorPendingOrders from "./Pages/Moderator/ModeratorsPendingOrders";
 import AdminPromoAd from "./Pages/Admin/PromoAd";
+import ModeratorAvailability from "./Pages/Moderator/ModeratorAvailability";
+import AdminAvailability from "./Pages/Admin/AdminAvailability";
 
 function App() {
   return (
@@ -61,6 +63,8 @@ function App() {
           <Route path="admin/charges" element={<AdminCharges />} />
           <Route path="admin/payments" element={<AdminPayments />} />
           <Route path="admin/promoads" element={<AdminPromoAd />} />
+          <Route path="admin/availability" element={<AdminAvailability />}
+/>
         </Route>
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
@@ -69,6 +73,7 @@ function App() {
         <Route path="moderator/orders" element={<ModeratorOrders/>}/>
         <Route path="moderator/claim/:orderId" element={<ClaimRedirectPage />} />
         <Route path="moderator/docs" element={<ModeratorDocumentation />} />
+        <Route path="moderator/availability" element={<ModeratorAvailability />} />
 <Route
   path="/dashboard/moderator/orders/edit/:orderId"
   element={<ModeratorEditOrder />}

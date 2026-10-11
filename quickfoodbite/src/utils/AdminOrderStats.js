@@ -11,9 +11,9 @@ const AdminOrderStats = ({ orders }) => {
     0
   );
 
-  const moderatorEarnings = Math.round(deliveryTotal * 0.83);
+  const moderatorEarnings = Math.round(deliveryTotal * 0.80);
 
-  const adminEarnings = Math.round(deliveryTotal * 0.17 + packagingTotal);
+  const adminEarnings = Math.round(deliveryTotal * 0.20 + packagingTotal);
 
   return (
     <div className="row text-white mb-3">

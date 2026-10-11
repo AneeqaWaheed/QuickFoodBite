@@ -51,8 +51,8 @@ const OrderStats = ({ orders, filter }) => {
     0
   );
 
-  const adminDeliveryShare = Math.round(deliveryTotal * 0.17);
-  const userEarnings = Math.round(deliveryTotal * 0.83);
+  const adminDeliveryShare = Math.round(deliveryTotal * 0.20);
+  const userEarnings = Math.round(deliveryTotal * 0.80);
 
   const adminReturn = Math.round(adminDeliveryShare + packagingTotal);
 
