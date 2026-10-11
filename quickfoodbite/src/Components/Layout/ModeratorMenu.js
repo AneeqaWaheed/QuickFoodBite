@@ -12,7 +12,7 @@ const ModeratorMenu = () => {
               to="/dashboard/moderator"
               aria-current="page"
               className="list-group-item list-group-item-action "
-              activeClassName="active-link"
+              
             >
               Dashboard
             </NavLink>
@@ -23,6 +23,12 @@ const ModeratorMenu = () => {
             >
               My Profile
             </NavLink>
+            <NavLink
+  to="/dashboard/moderator/availability"
+  className="list-group-item list-group-item-action "
+>
+  Set Availability
+</NavLink>
             <NavLink
               to="/dashboard/moderator/Pending-Orders"
               className="list-group-item list-group-item-action "

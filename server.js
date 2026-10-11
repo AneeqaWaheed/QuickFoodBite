@@ -15,6 +15,7 @@ import AdminRoute from "./routes/AdminRoute.js";
 import AdRoute from "./routes/AdRoute.js";
 import cron from "node-cron";
 import Order from "./models/ordersModel.js";
+import availabilityRoute from "./routes/availabilityRoute.js";
 
 // import deliveryChargeRoute from "./routes/SettingSchemaRoute.js";
 // import SettingSchema from "./models/SettingSchema.js";
@@ -52,6 +53,7 @@ app.use("/api/v1/charges", chargesRoutes);
 app.use("/api/v1/moderator", moderatorRoute);
 app.use("/api/v1/admin", AdminRoute);
 app.use("/api/v1/ads",  AdRoute);
+app.use("/api/v1/availability", availabilityRoute );
 // app.use("/api/v1/setting", SettingSchema);
 
 app.use("/api/v1/orders", orderRoute);
