@@ -96,7 +96,7 @@ const OrderStats = ({ orders, filter }) => {
 
       <div className="col-6">
         <p className="mb-0">
-          <strong>Admin (17%):</strong> Rs.{" "}
+          <strong>Admin (20%):</strong> Rs.{" "}
           {stats.adminReturn.toFixed(0)}
         </p>
       </div>
