@@ -43,17 +43,17 @@ function App() {
   return (
     <>
       <Routes>
-        {/* <Route path="/" element={<Development />} /> */}
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/" element={<Development />} />
+        {/* <Route path="/menu" element={<Menu />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/temUnavail" element={<TemporaryUnavailable />} />
         <Route path="/" element={<FleentLanding />} />
         <Route path="/otherServices" element={<OtherServices />} />
      
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<AdminRoute />}>
-          <Route path="admin" element={<AdminDashboard />} />
-          {/* <Route path="admin/stats" element={<AdminOrderStats />} /> */}
+        <Route path="/dashboard" element={<AdminRoute />}> */}
+          {/* <Route path="admin" element={<AdminDashboard />} /> */}
+          {/* <Route path="admin/stats" element={<AdminOrderStats />} />
           <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/product" element={<Products />} />
@@ -64,8 +64,8 @@ function App() {
           <Route path="admin/payments" element={<AdminPayments />} />
           <Route path="admin/promoads" element={<AdminPromoAd />} />
           <Route path="admin/availability" element={<AdminAvailability />}
-/>
-        </Route>
+/> */}
+        {/* </Route>
         <Route path="/dashboard" element={<ModeratorRoute/>}>
         <Route path="moderator" element={<ModeratorDashboard/>}/>
         <Route path="moderator/My-Profile" element={<ModeratorProfile/>}/>
@@ -88,7 +88,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/checkout-success/success" element={<Checkout />} />
-        <Route path="*" element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} /> */}
       </Routes>
     </>
   );
