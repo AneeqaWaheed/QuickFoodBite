@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const paymentRequestSchema = new mongoose.Schema(
@@ -8,14 +9,10 @@ const paymentRequestSchema = new mongoose.Schema(
       required: true,
     },
 
-    totalEarnings: {
+    amount: {
       type: Number,
       required: true,
-    },
-
-    adminFee: {
-      type: Number,
-      required: true,
+      min: 100,
     },
 
     receipt: {
@@ -28,10 +25,15 @@ const paymentRequestSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+
+    approvedAt: {
+      type: Date,
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-export default mongoose.model("PaymentRequest", paymentRequestSchema);
+export default mongoose.model(
+  "PaymentRequest",
+  paymentRequestSchema
+);

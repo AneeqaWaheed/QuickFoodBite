@@ -448,6 +448,7 @@ export const deleteOrder = async (req, res) => {
   }
 };
 // CLAIM ORDER
+
 export const claimOrder = async (req, res) => {
   try {
     const { token } = req.params;
@@ -459,12 +460,9 @@ export const claimOrder = async (req, res) => {
       });
     }
 
-   const order = await Order.findById(token);
+    const order = await Order.findById(token);
 
-    // ==========================================
     // ORDER NOT FOUND
-    // ==========================================
-
     if (!order) {
       return res.status(404).send({
         success: false,
@@ -472,10 +470,7 @@ export const claimOrder = async (req, res) => {
       });
     }
 
-    // ==========================================
     // ALREADY CLAIMED
-    // ==========================================
-
     if (order.isClaimed || order.assignedModerator) {
       return res.status(400).send({
         success: false,
@@ -483,10 +478,7 @@ export const claimOrder = async (req, res) => {
       });
     }
 
-    // ==========================================
     // EXPIRED
-    // ==========================================
-
     if (
       order.expiresAt &&
       new Date() > new Date(order.expiresAt)
@@ -500,10 +492,7 @@ export const claimOrder = async (req, res) => {
       });
     }
 
-    // ==========================================
     // GET MODERATOR
-    // ==========================================
-
     const moderator = await userModel.findById(req.user._id);
 
     if (!moderator) {
@@ -513,37 +502,45 @@ export const claimOrder = async (req, res) => {
       });
     }
 
-    // ==========================================
-    // CREDIT CHECK
-    // ==========================================
+    // CREDIT CALCULATION
+    const ADMIN_FEE_PERCENTAGE = 20;
+    const MINIMUM_ALLOWED_BALANCE = -10;
 
-    const currentCredits = moderator.creditBalance || 0;
-    const deliveryCharge = order.deliveryCharges || 0;
+    const currentCredits = Number(moderator.creditBalance || 0);
+    const deliveryCharge = Number(order.deliveryCharges || 0);
 
-    if (currentCredits + deliveryCharge > 1000) {
+    const adminFee =
+      (deliveryCharge * ADMIN_FEE_PERCENTAGE) / 100;
+
+    const newBalance = currentCredits - adminFee;
+
+    // CHECK CREDIT LIMIT
+    if (newBalance < MINIMUM_ALLOWED_BALANCE) {
       return res.status(400).send({
         success: false,
-        message: `You cannot claim this order. Your current credits are Rs. ${currentCredits} and this order has a delivery charge of Rs. ${deliveryCharge}. Your remaining limit is Rs. ${1000 - currentCredits}.`,
+        message: `Insufficient credits! Your current balance is Rs. ${currentCredits}. This order requires Rs. ${adminFee} admin fee. Please deposit more credits to continue.`,
+        currentCredits,
+        requiredCredits: adminFee,
       });
     }
 
-    moderator.creditBalance = currentCredits + deliveryCharge;
-await moderator.save();
-
-    // ==========================================
     // CLAIM ORDER
-    // ==========================================
-
     order.assignedModerator = req.user._id;
     order.status = "picked";
     order.isClaimed = true;
 
     await order.save();
 
+    // DEDUCT ADMIN FEE
+    moderator.creditBalance = newBalance;
+    await moderator.save();
+
     return res.status(200).send({
       success: true,
       message: "Order assigned successfully",
       order,
+      adminFee,
+      creditBalance: moderator.creditBalance,
     });
 
   } catch (error) {
@@ -556,6 +553,7 @@ await moderator.save();
     });
   }
 };
+
 export const getMyModeratorOrders = async (req, res) => {
   try {
     if (!req.user || !req.user._id) {
